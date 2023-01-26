@@ -50,7 +50,8 @@ Partial Class Form1
         Me.solveColourBtn = New System.Windows.Forms.Button()
         Me.mazeColourBtn = New System.Windows.Forms.Button()
         Me.bgColourBtn = New System.Windows.Forms.Button()
-        Me.mazePanel = New System.Windows.Forms.Panel()
+        Me.mazeBox = New System.Windows.Forms.PictureBox()
+        CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Title
@@ -179,6 +180,7 @@ Partial Class Form1
         '
         'mazeEntryCombo
         '
+        Me.mazeEntryCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.mazeEntryCombo.ForeColor = System.Drawing.Color.DimGray
         Me.mazeEntryCombo.FormattingEnabled = True
         resources.ApplyResources(Me.mazeEntryCombo, "mazeEntryCombo")
@@ -187,6 +189,7 @@ Partial Class Form1
         'generationCombo
         '
         Me.generationCombo.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.generationCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.generationCombo.ForeColor = System.Drawing.Color.DimGray
         Me.generationCombo.FormattingEnabled = True
         resources.ApplyResources(Me.generationCombo, "generationCombo")
@@ -195,6 +198,7 @@ Partial Class Form1
         'solveCombo
         '
         Me.solveCombo.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.solveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.solveCombo.ForeColor = System.Drawing.Color.DimGray
         Me.solveCombo.FormattingEnabled = True
         resources.ApplyResources(Me.solveCombo, "solveCombo")
@@ -240,17 +244,18 @@ Partial Class Form1
         Me.bgColourBtn.Name = "bgColourBtn"
         Me.bgColourBtn.UseVisualStyleBackColor = False
         '
-        'mazePanel
+        'mazeBox
         '
-        resources.ApplyResources(Me.mazePanel, "mazePanel")
-        Me.mazePanel.Name = "mazePanel"
+        resources.ApplyResources(Me.mazeBox, "mazeBox")
+        Me.mazeBox.Name = "mazeBox"
+        Me.mazeBox.TabStop = False
         '
         'Form1
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImage = Global.Maze.My.Resources.Resources.backgroubd
-        Me.Controls.Add(Me.mazePanel)
+        Me.Controls.Add(Me.mazeBox)
         Me.Controls.Add(Me.bgColourBtn)
         Me.Controls.Add(Me.mazeColourBtn)
         Me.Controls.Add(Me.solveColourBtn)
@@ -279,6 +284,7 @@ Partial Class Form1
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form1"
+        CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -311,5 +317,5 @@ Partial Class Form1
     Friend WithEvents solveColourBtn As Button
     Friend WithEvents mazeColourBtn As Button
     Friend WithEvents bgColourBtn As Button
-    Friend WithEvents mazePanel As Panel
+    Friend WithEvents mazeBox As PictureBox
 End Class

@@ -430,7 +430,7 @@
     <value>12</value>
   </data>
   <data name="widthTxtBox.Text" xml:space="preserve">
-    <value>2 - 500</value>
+    <value>50</value>
   </data>
   <data name="widthTxtBox.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
@@ -460,7 +460,7 @@
     <value>13</value>
   </data>
   <data name="heightTxtBox.Text" xml:space="preserve">
-    <value>2 - 268</value>
+    <value>27</value>
   </data>
   <data name="heightTxtBox.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
@@ -642,9 +642,6 @@
   <data name="mazeEntryCombo.TabIndex" type="System.Int32, mscorlib">
     <value>26</value>
   </data>
-  <data name="mazeEntryCombo.Text" xml:space="preserve">
-    <value>Select An Option</value>
-  </data>
   <data name="&gt;&gt;mazeEntryCombo.Name" xml:space="preserve">
     <value>mazeEntryCombo</value>
   </data>
@@ -657,6 +654,9 @@
   <data name="&gt;&gt;mazeEntryCombo.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
+  <metadata name="generationCombo.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="generationCombo.Location" type="System.Drawing.Point, System.Drawing">
     <value>258, 242</value>
   </data>
@@ -665,9 +665,6 @@
   </data>
   <data name="generationCombo.TabIndex" type="System.Int32, mscorlib">
     <value>27</value>
-  </data>
-  <data name="generationCombo.Text" xml:space="preserve">
-    <value>Select An Option</value>
   </data>
   <data name="&gt;&gt;generationCombo.Name" xml:space="preserve">
     <value>generationCombo</value>
@@ -681,6 +678,9 @@
   <data name="&gt;&gt;generationCombo.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
+  <metadata name="solveCombo.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="solveCombo.Location" type="System.Drawing.Point, System.Drawing">
     <value>258, 282</value>
   </data>
@@ -689,9 +689,6 @@
   </data>
   <data name="solveCombo.TabIndex" type="System.Int32, mscorlib">
     <value>28</value>
-  </data>
-  <data name="solveCombo.Text" xml:space="preserve">
-    <value>Select An Option</value>
   </data>
   <data name="&gt;&gt;solveCombo.Name" xml:space="preserve">
     <value>solveCombo</value>
@@ -828,25 +825,25 @@
   <data name="&gt;&gt;bgColourBtn.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="mazePanel.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="mazeBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>466, 121</value>
   </data>
-  <data name="mazePanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>500, 268</value>
+  <data name="mazeBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>500, 270</value>
   </data>
-  <data name="mazePanel.TabIndex" type="System.Int32, mscorlib">
-    <value>33</value>
+  <data name="mazeBox.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
   </data>
-  <data name="&gt;&gt;mazePanel.Name" xml:space="preserve">
-    <value>mazePanel</value>
+  <data name="&gt;&gt;mazeBox.Name" xml:space="preserve">
+    <value>mazeBox</value>
   </data>
-  <data name="&gt;&gt;mazePanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;mazeBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mazePanel.Parent" xml:space="preserve">
+  <data name="&gt;&gt;mazeBox.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;mazePanel.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;mazeBox.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
