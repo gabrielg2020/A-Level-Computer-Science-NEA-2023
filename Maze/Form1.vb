@@ -1,5 +1,8 @@
-﻿Public Class Form1
-    Public maze As mazeClass = New mazeClass
+﻿Imports Microsoft.VisualBasic.PowerPacks
+Public Class Form1
+    Public shapeCon As New ShapeContainer
+
+    Public maze As MazeClass = New MazeClass
     ' Pen used to draw objects
     Dim pen As Pen = New Pen(Color.Black, 2)
     ' Brush used to fill polygon objects
@@ -7,35 +10,69 @@
     ' Controls when the from draws
     Dim drawControl As String = ""
 
-    Public Class mazeClass
-        ' Class Attributes
-        Public width As Integer ' Width of the grid  Stores 1 less than the actual width, for working with arrays
-        Public height As Integer ' Height of the grid; Stores 1 less than the actual height, for working with arrays
-        ' This stores the cells that the maze uses
-        Public grid As Rectangle(,)
-        ' Creates the array that will be used to manipulate the maze
-        Public Sub createGrid(ByVal w As Integer, ByVal h As Integer)
-            grid = New Rectangle(w, h) {}
+    Public Class Cell
+        Public posX As Integer
+        Public posY As Integer
+        Public wallsBool(3)
+        Public walls(3) As LineShape
+
+
+        Public Sub New()
+            ' A New cell will always have all 4 walls next to them
+            For i As Integer = 0 To 3
+                wallsBool(i) = True
+                walls(i) = New LineShape
+            Next
+        End Sub
+    End Class
+
+    Public Class MazeClass
+        Public width As Integer
+        Public height As Integer
+        Public grid As Cell(,)
+
+        Public Sub initializeGrid(ByVal w, ByVal h, ByRef shapeCon)
             width = w
             height = h
-            ' Fills the array with the cells to be drawn
-            For i As Integer = 0 To w
-                For j As Integer = 0 To h
-                    grid(i, j) = New Rectangle(i * 10, j * 10, 10, 10)
+
+            grid = New Cell(w, h) {}
+            For i As Integer = 0 To width
+                For j As Integer = 0 To height
+                    grid(i, j) = New Cell
+                    grid(i, j).posX = i
+                    grid(i, j).posY = j
+                    For k As Integer = 0 To 3
+                        grid(i, j).walls(k).Parent = shapeCon
+                        If k = 0 Then ' Top
+                            grid(i, j).walls(k).StartPoint = New System.Drawing.Point(i * 10, j * 10)
+                            grid(i, j).walls(k).EndPoint = New System.Drawing.Point((i * 10) + 10, j * 10)
+                        ElseIf k = 1 Then ' Right
+                            grid(i, j).walls(k).StartPoint = New System.Drawing.Point((i * 10) + 10, j * 10)
+                            grid(i, j).walls(k).EndPoint = New System.Drawing.Point((i * 10) + 10, (j * 10) + 10)
+                        ElseIf k = 2 Then ' Bottom
+                            grid(i, j).walls(k).StartPoint = New System.Drawing.Point(i * 10, (j * 10) + 10)
+                            grid(i, j).walls(k).EndPoint = New System.Drawing.Point((i * 10) + 10, (j * 10) + 10)
+                        ElseIf k = 3 Then '  Left
+                            grid(i, j).walls(k).StartPoint = New System.Drawing.Point(i * 10, j * 10)
+                            grid(i, j).walls(k).EndPoint = New System.Drawing.Point(i * 10, (j * 10) + 10)
+                        End If
+
+
+                    Next
 
                 Next
             Next
-
         End Sub
     End Class
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        shapeCon.Parent = mazeBox
         ' Populate Combobox Options
         ' Generation Combo Box
         generationCombo.Items.Add("DFS Backtracker")
         generationCombo.Items.Add("Wave Function Collapse")
         generationCombo.Items.Add("Randomised Prims")
-        generationCombo.SelectedIndex = 1 ' Makes index 0 default displayed on the combo list(so currently shows "DFS Backtracker" initially
+        generationCombo.SelectedIndex = 2 ' Makes index 0 default displayed on the combo list(so currently shows "DFS Backtracker" initially
         ' Solve Combo Box
         solveCombo.Items.Add("Dijkstra's Algorithm")
         solveCombo.Items.Add("Breath Frist Search")
@@ -49,70 +86,24 @@
 
     ' Painting Maze Cells
     ' This paint procedure constantly runs
+    Private Sub drawBaseMaze()
+
+    End Sub
     Private Sub mazeBox_Paint(sender As Object, e As PaintEventArgs) Handles mazeBox.Paint
         Select Case drawControl
-            Case "Initialize Maze Grid" ' Allows the drawing of the maze to start
-                ' Draws an empty maze, Allows control of every maze cell
-                For w As Integer = 0 To maze.width
-                    For h As Integer = 0 To maze.height
-                        ' If the cell is on the edge then it will be filled in and be a maze border
-                        If w = 0 Or h = 0 Or w = maze.width Or h = maze.height Then
-                            e.Graphics.FillRectangle(brush, maze.grid(w, h))
-                        End If
-                        e.Graphics.DrawRectangle(pen, maze.grid(w, h))
-                    Next
-                Next
-                generateMazeEntryExit(e)
-            Case "DFS Backtracker"
-                '
-                dfsBacktracker(e)
-
-
-                '
-            Case 0
+            Case drawControl = "Initialize Maze Grid"
+                
         End Select
+    End Sub
+    Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
 
+
+        maze.initializeGrid(widthTxtBox.Text - 1, heightTxtBox.Text - 1, shapeCon)
+        drawControl = "Initialize Maze Grid"
+        'mazeBox.Invalidate()
     End Sub
 
 
-    Public Sub generateMazeEntryExit(ByRef e As PaintEventArgs)
-        Dim x1, y1, x2, y2 As Integer
-        Randomize()
-        Select Case mazeEntryCombo.Text
-            Case "Top - Bottom"
-                ' Start Coordiantes
-                x1 = Int(((maze.width - 1) * Rnd()) + 1)
-                y1 = 0
-                ' End Coordiantes
-                x2 = Int(((maze.width - 1) * Rnd()) + 1)
-                y2 = maze.height
-            Case "Diagonal"
-                ' Start Coordiantes
-                x1 = 0
-                y1 = (maze.height - ((maze.height - 1)))
-                ' End Coordianates
-                x2 = maze.width
-                y2 = (maze.height - 1)
-            Case "Right - Left"
-                x1 = 0
-                y1 = Int(((maze.height - 1) * Rnd()) + 1)
-                ' End Coordiantes
-                x2 = maze.width
-                y2 = Int(((maze.height - 1) * Rnd()) + 1)
-        End Select
-        ' Marks the entry and exit points on the maze
-        Dim tempColour = brush.Color
-        brush.Color = Color.White
-        e.Graphics.FillRectangle(brush, maze.grid(x1, y1))
-        e.Graphics.FillRectangle(brush, maze.grid(x2, y2))
-        brush.Color = tempColour
-
-    End Sub
-
-    Private Sub dfsBacktracker(ByRef e As PaintEventArgs)
-
-
-    End Sub
 
     ' USER INPUT START
     Private Sub imageInputBtn_Click(sender As Object, e As EventArgs) Handles imageInputBtn.Click
@@ -171,31 +162,11 @@
         Dim mazeEntry = mazeEntryCombo.SelectedItem
     End Sub
 
-    Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
 
-
-        Dim x As Integer = 0
-        Dim y As Integer = 0
-
-        ' This will try and convert the width and height inputs to integers and make sure the integers > 3
-        ' If successful x and y will equal width and height and the program will run
-        If Integer.TryParse(widthTxtBox.Text, x) And x > 2 And Integer.TryParse(heightTxtBox.Text, y) And y > 2 Then
-            maze.createGrid(x - 1, y - 1)
-            drawControl = "Initialize Maze Grid"
-            mazeBox.Invalidate()
-            If generationCombo.Text = "DFS Backtracker" Then
-                drawControl = "DFS Backtracker"
-            End If
-        Else
-            ' Error Messsage
-            MsgBox("Make sure width and height are integers greater than 3")
-        End If
-
-
-    End Sub
 
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
 
+        shapeCon.Update()
     End Sub
 
     Private Sub downloadBtn_Click(sender As Object, e As EventArgs) Handles downloadBtn.Click
@@ -206,8 +177,7 @@
 
     End Sub
 
-    Private Sub mazeBox_LoadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs) Handles mazeBox.LoadCompleted
-    End Sub
-
     ' USER INPUT END
+
+
 End Class
