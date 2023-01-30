@@ -1,33 +1,40 @@
 ﻿Public Class Form1
-    Public maze As mazeClass = New mazeClass
+    ' Constants
+    Public M As Integer = 10
+    Public maze As Cell(,)
     ' Pen used to draw objects
-    Dim pen As Pen = New Pen(Color.Black, 2)
-    ' Brush used to fill polygon objects
-    Public brush As New SolidBrush(Color.Black)
+    Public pen As Pen = New Pen(Color.Black, 1)
+    Public brush As SolidBrush = New SolidBrush(Color.Black)
+    Public brush2 As SolidBrush = New SolidBrush(Color.Black)
+    ' Maze properties
+    Public width As Integer
+    Public height As Integer
+    Public mazeEntryType As String
+    Public mazeEntry As Point
+    Public mazeExit As Point
+    Public mazeColour As Color
+    Public solveColour As Color
+
     ' Controls when the from draws
     Dim drawControl As String = ""
 
-    Public Class mazeClass
-        ' Class Attributes
-        Public width As Integer ' Width of the grid  Stores 1 less than the actual width, for working with arrays
-        Public height As Integer ' Height of the grid; Stores 1 less than the actual height, for working with arrays
-        ' This stores the cells that the maze uses
-        Public grid As Rectangle(,)
-        ' Creates the array that will be used to manipulate the maze
-        Public Sub createGrid(ByVal w As Integer, ByVal h As Integer)
-            grid = New Rectangle(w, h) {}
-            width = w
-            height = h
-            ' Fills the array with the cells to be drawn
-            For i As Integer = 0 To w
-                For j As Integer = 0 To h
-                    grid(i, j) = New Rectangle(i * 10, j * 10, 10, 10)
+    Public Class Cell
+        Public xPos As Integer
+        Public yPos As Integer
+        Public walls(3) As Boolean
+        Public wallPos(3, 1) As Point
+        Public mazeWallBool As Boolean = False
+        Public mazeEntryBool As Boolean = False
+        Public mazeExitBool As Boolean = False
 
-                Next
+        Public Sub New()
+            For i As Integer = 0 To 3
+                walls(i) = True
             Next
-
         End Sub
     End Class
+
+
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Populate Combobox Options
@@ -41,9 +48,10 @@
         solveCombo.Items.Add("Breath Frist Search")
         solveCombo.SelectedIndex = 1 ' Default displays (Dijkstra's Algortimn)
         ' Maze Entry Box
+        mazeEntryCombo.Items.Add("Random")
         mazeEntryCombo.Items.Add("Top - Bottom")
-        mazeEntryCombo.Items.Add("Diagonal")
         mazeEntryCombo.Items.Add("Right - Left")
+        mazeEntryCombo.Items.Add("Diagonal")
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Top - Bottom"
     End Sub
 
@@ -51,68 +59,182 @@
     ' This paint procedure constantly runs
     Private Sub mazeBox_Paint(sender As Object, e As PaintEventArgs) Handles mazeBox.Paint
         Select Case drawControl
-            Case "Initialize Maze Grid" ' Allows the drawing of the maze to start
-                ' Draws an empty maze, Allows control of every maze cell
-                For w As Integer = 0 To maze.width
-                    For h As Integer = 0 To maze.height
-                        ' If the cell is on the edge then it will be filled in and be a maze border
-                        If w = 0 Or h = 0 Or w = maze.width Or h = maze.height Then
-                            e.Graphics.FillRectangle(brush, maze.grid(w, h))
-                        End If
-                        e.Graphics.DrawRectangle(pen, maze.grid(w, h))
-                    Next
-                Next
-                generateMazeEntryExit(e)
-            Case "DFS Backtracker"
-                '
-                dfsBacktracker(e)
+            Case "Initialize Maze Grid"
+                'Draws an empty maze, with maze border & maze entry and exit points
+                setMazeEntryExit()
+                initializeMazeDraw()
+                'breakWall(0, 2, 2)
+                'breakWall(1, 2, 2)
+                'breakWall(2, 2, 2)
+                'breakWall(3, 2, 2)
+                drawMaze(e)
 
+            Case "Solve"
 
-                '
             Case 0
         End Select
+    End Sub
+    Private Sub initializeMazeDraw()
+        maze = New Cell(width, height) {}
+        For i As Integer = 0 To width
+            For j As Integer = 0 To height
+                maze(i, j) = New Cell
+                maze(i, j).xPos = i * M
+                maze(i, j).yPos = j * 10
+
+
+                If i = mazeEntry.X And j = mazeEntry.Y Then
+                    maze(i, j).mazeEntryBool = True
+                ElseIf i = mazeExit.X And j = mazeExit.Y Then
+                    maze(i, j).mazeExitBool = True
+                ElseIf i = 0 Or j = 0 Or i = width Or j = height Then
+                    maze(i, j).mazeWallBool = True
+                End If
+                For k As Integer = 0 To 3
+                    Select Case k
+                        Case 0 ' Top line
+                            ' Start Point
+                            maze(i, j).wallPos(k, 0) = New Point(maze(i, j).xPos, maze(i, j).yPos)
+                            ' End Point
+                            maze(i, j).wallPos(k, 1) = New Point(maze(i, j).xPos + M, maze(i, j).yPos)
+                        Case 1 ' Rigth line
+                            ' Start Point
+                            maze(i, j).wallPos(k, 0) = New Point(maze(i, j).xPos + M, maze(i, j).yPos)
+                            ' End Point
+                            maze(i, j).wallPos(k, 1) = New Point(maze(i, j).xPos + M, maze(i, j).yPos + M)
+                        Case 2 ' Left Line
+                            ' Start Point
+                            maze(i, j).wallPos(k, 0) = New Point(maze(i, j).xPos, maze(i, j).yPos + M)
+                            ' End Point
+                            maze(i, j).wallPos(k, 1) = New Point(maze(i, j).xPos + M, maze(i, j).yPos + M)
+                        Case 3 ' Bottom Line
+                            ' Start Point
+                            maze(i, j).wallPos(k, 0) = New Point(maze(i, j).xPos, maze(i, j).yPos)
+                            ' End Point
+                            maze(i, j).wallPos(k, 1) = New Point(maze(i, j).xPos, maze(i, j).yPos + M)
+                    End Select
+                Next
+            Next
+        Next
+    End Sub
+    Private Sub drawMaze(ByRef e As PaintEventArgs)
+        For type As Integer = 0 To 1
+            For i As Integer = 0 To width
+                For j As Integer = 0 To height
+                    Select Case type
+                        Case 0 ' Drawing base maze
+                            For k As Integer = 0 To 3
+                                If maze(i, j).walls(k) = True Then
+                                    e.Graphics.DrawLine(pen, maze(i, j).wallPos(k, 0), maze(i, j).wallPos(k, 1))
+                                End If
+                            Next
+                        Case 1 ' Drawing maze walls
+                            If maze(i, j).mazeWallBool = True Then
+                                e.Graphics.FillRectangle(brush, maze(i, j).wallPos(0, 0).X, maze(i, j).wallPos(0, 0).Y, M, M)
+                            End If
+                    End Select
+                Next
+            Next
+        Next
+        If maze(mazeEntry.X, mazeEntry.Y).mazeEntryBool = True Then ' Draws the maze entry
+            brush2.Color = Color.Green
+            e.Graphics.FillRectangle(brush2, maze(mazeEntry.X, mazeEntry.Y).wallPos(0, 0).X, maze(mazeEntry.X, mazeEntry.Y).wallPos(0, 0).Y, M, M)
+        End If
+        If maze(mazeExit.X, mazeExit.Y).mazeExitBool = True Then ' Draws the maze exit
+            brush2.Color = Color.Red
+            e.Graphics.FillRectangle(brush2, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).X, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).Y, M, M)
+        End If
 
     End Sub
+    Private Sub breakWall(ByVal side As Integer, ByVal xPos As Integer, ByVal yPos As Integer)
+        Select Case side
+            Case 0 ' Take away top wall
+                maze(xPos, yPos).walls(0) = False
+                Try
+                    maze(xPos, yPos - 1).walls(2) = False
+                Catch ex As Exception
+                    ' Do nothing as this must be a maze wall
+                End Try
 
+            Case 1 ' Take away right wall
+                maze(xPos, yPos).walls(1) = False
+                Try
+                    maze(xPos + 1, yPos).walls(3) = False
+                Catch ex As Exception
+                    ' Do nothing as this must be a maze wall
+                End Try
 
-    Public Sub generateMazeEntryExit(ByRef e As PaintEventArgs)
-        Dim x1, y1, x2, y2 As Integer
-        Randomize()
-        Select Case mazeEntryCombo.Text
-            Case "Top - Bottom"
-                ' Start Coordiantes
-                x1 = Int(((maze.width - 1) * Rnd()) + 1)
-                y1 = 0
-                ' End Coordiantes
-                x2 = Int(((maze.width - 1) * Rnd()) + 1)
-                y2 = maze.height
-            Case "Diagonal"
-                ' Start Coordiantes
-                x1 = 0
-                y1 = (maze.height - ((maze.height - 1)))
-                ' End Coordianates
-                x2 = maze.width
-                y2 = (maze.height - 1)
-            Case "Right - Left"
-                x1 = 0
-                y1 = Int(((maze.height - 1) * Rnd()) + 1)
-                ' End Coordiantes
-                x2 = maze.width
-                y2 = Int(((maze.height - 1) * Rnd()) + 1)
+            Case 2 ' Take away bottom wall
+                maze(xPos, yPos).walls(2) = False
+                Try
+                    maze(xPos, yPos + 1).walls(0) = False
+                Catch ex As Exception
+                    ' Do nothing as this must be a maze wall
+                End Try
+
+            Case 3 ' Take away left wall
+                maze(xPos, yPos).walls(3) = False
+                Try
+                    maze(xPos - 1, yPos).walls(1) = False
+                Catch ex As Exception
+                    ' Do nothing as this must be a maze wall
+                End Try
         End Select
-        ' Marks the entry and exit points on the maze
-        Dim tempColour = brush.Color
-        brush.Color = Color.White
-        e.Graphics.FillRectangle(brush, maze.grid(x1, y1))
-        e.Graphics.FillRectangle(brush, maze.grid(x2, y2))
-        brush.Color = tempColour
+    End Sub
+
+
+    Private Sub setMazeEntryExit()
+        Select Case mazeEntryType
+            Case "Random"
+                Randomize()
+                Dim randomType As Integer = Int((3 * Rnd()))
+                ' Chooses randomly what type of maze entry it will be
+                Select Case randomType
+                    Case 0 ' Start at a random top postion, finish at a random bottom position
+                        mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                        mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                    Case 1 ' Start at a random bottom postion, finish at a random top position
+                        mazeEntry = New Point(Int((width * Rnd()) + 1), height - 1)
+                        mazeExit = New Point(Int((width * Rnd()) + 1), 1)
+                    Case 2 ' Start at a random right postion, finish at a random left positon
+                        mazeEntry = New Point(1, Int(((height - 1) * Rnd()) + 1))
+                        mazeExit = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
+                    Case 3 ' Start at a random left postion, finish at a random right positon
+                        mazeEntry = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
+                        mazeExit = New Point(1, Int(((height - 1) * Rnd()) + 1))
+                End Select
+                If mazeEntry.X = 0 Or mazeEntry.Y = 0 Or mazeExit.X = 0 Or mazeExit.Y = 0 Then
+                    mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                    mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                End If
+            Case "Top - Bottom"
+                mazeEntry = New Point(Math.Round(width / 2) + 1, 1)
+                mazeExit = New Point(Math.Round(width / 2) + 1, height - 1)
+            Case "Right - Left"
+                mazeEntry = New Point(1, Math.Round(height / 2))
+                mazeExit = New Point(width - 1, Math.Round(height / 2))
+            Case "Diagonal"
+                mazeEntry = New Point(1, 1)
+                mazeExit = New Point(width - 1, height - 1)
+        End Select
 
     End Sub
 
-    Private Sub dfsBacktracker(ByRef e As PaintEventArgs)
+    Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
+        'Save Maze Properties inputted by the user
+        width = Int(widthTxtBox.Text) - 1
+        height = Int(heightTxtBox.Text) - 1
+        mazeEntryType = mazeEntryCombo.Text
 
-
+        drawControl = "Initialize Maze Grid"
+        mazeBox.Invalidate()
     End Sub
+
+    Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
+        drawControl = "Solve"
+        mazeBox.Invalidate()
+    End Sub
+
 
     ' USER INPUT START
     Private Sub imageInputBtn_Click(sender As Object, e As EventArgs) Handles imageInputBtn.Click
@@ -123,20 +245,20 @@
 
     Private Sub bgColourBtn_Click(sender As Object, e As EventArgs) Handles bgColourBtn.Click
         Dim bgColour As Color = selectColour() ' Selects background colour 
-        bgColourBtn.Text = bgColour.ToString ' Sets text to the colour
         mazeBox.BackColor = bgColour ' Sets background = background colour
+        bgColourBtn.Text = bgColour.ToString
     End Sub
 
     Private Sub mazeColourBtn_Click(sender As Object, e As EventArgs) Handles mazeColourBtn.Click
-        Dim mazeColour As Color = selectColour() ' Selects maze colour 
-        brush.Color = mazeColour
+        mazeColour = selectColour() ' Selects maze colour 
         pen.Color = mazeColour
-        mazeColourBtn.Text = mazeColour.ToString ' Sets text to the colour
+        brush.Color = mazeColour
+        mazeColourBtn.Text = mazeColour.ToString
     End Sub
 
     Private Sub solveColourBtn_Click(sender As Object, e As EventArgs) Handles solveColourBtn.Click
         Dim solveColour As Color = selectColour() ' Selects solve colour 
-        solveColourBtn.Text = solveColour.ToString ' Sets text to the colour
+        solveColourBtn.Text = solveColour.ToString
     End Sub
 
     Private Sub widthTxtBox_TextChanged(sender As Object, e As EventArgs) Handles widthTxtBox.TextChanged
@@ -169,33 +291,6 @@
 
     Private Sub mazeEntryCombo_SelectedValueChanged(sender As Object, e As EventArgs) Handles mazeEntryCombo.SelectedValueChanged
         Dim mazeEntry = mazeEntryCombo.SelectedItem
-    End Sub
-
-    Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
-
-
-        Dim x As Integer = 0
-        Dim y As Integer = 0
-
-        ' This will try and convert the width and height inputs to integers and make sure the integers > 3
-        ' If successful x and y will equal width and height and the program will run
-        If Integer.TryParse(widthTxtBox.Text, x) And x > 2 And Integer.TryParse(heightTxtBox.Text, y) And y > 2 Then
-            maze.createGrid(x - 1, y - 1)
-            drawControl = "Initialize Maze Grid"
-            mazeBox.Invalidate()
-            If generationCombo.Text = "DFS Backtracker" Then
-                drawControl = "DFS Backtracker"
-            End If
-        Else
-            ' Error Messsage
-            MsgBox("Make sure width and height are integers greater than 3")
-        End If
-
-
-    End Sub
-
-    Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
-
     End Sub
 
     Private Sub downloadBtn_Click(sender As Object, e As EventArgs) Handles downloadBtn.Click

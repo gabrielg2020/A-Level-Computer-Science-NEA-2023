@@ -246,6 +246,7 @@ Partial Class Form1
         '
         'mazeBox
         '
+        Me.mazeBox.BackColor = System.Drawing.Color.White
         resources.ApplyResources(Me.mazeBox, "mazeBox")
         Me.mazeBox.Name = "mazeBox"
         Me.mazeBox.TabStop = False
