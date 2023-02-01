@@ -60,17 +60,7 @@
     ' This paint procedure constantly runs
     Private Sub mazeBox_Paint(sender As Object, e As PaintEventArgs) Handles mazeBox.Paint
         Select Case drawControl
-            Case "Initialize Maze Grid"
-                'Draws an empty maze, with maze border & maze entry and exit points
-                'setMazeEntryExit()
-                initializeMazeDraw()
-                'breakWall(0, 2, 2)
-                'breakWall(1, 2, 2)
-                'breakWall(2, 2, 2)
-                'breakWall(3, 2, 2)
-                drawMaze(e)
-
-            Case "Solve"
+            Case "Generate"
                 randomisedDFS()
                 drawMaze(e)
             Case 0
@@ -149,8 +139,6 @@
             brush2.Color = Color.Red
             e.Graphics.FillRectangle(brush2, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).X, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).Y, M, M)
         End If
-        Randomize()
-        Debug.WriteLine(Int((height - 1) * Rnd()) + 1)
     End Sub
     Private Sub breakWall(ByVal side As Integer, ByVal xPos As Integer, ByVal yPos As Integer)
         Select Case side
@@ -329,8 +317,12 @@
         height = Int(heightTxtBox.Text) - 1
         mazeEntryType = mazeEntryCombo.Text
 
-        drawControl = "Initialize Maze Grid"
+        setMazeEntryExit()
+        initializeMazeDraw()
+
+        drawControl = "Generate"
         mazeBox.Invalidate()
+
     End Sub
 
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
