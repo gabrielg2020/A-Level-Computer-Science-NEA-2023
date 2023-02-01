@@ -26,6 +26,9 @@
         Public mazeWallBool As Boolean = False
         Public mazeEntryBool As Boolean = False
         Public mazeExitBool As Boolean = False
+        Public visited As Boolean = False
+
+
 
         Public Sub New()
             For i As Integer = 0 To 3
@@ -61,7 +64,7 @@
         Select Case drawControl
             Case "Initialize Maze Grid"
                 'Draws an empty maze, with maze border & maze entry and exit points
-                setMazeEntryExit()
+                'setMazeEntryExit()
                 initializeMazeDraw()
                 'breakWall(0, 2, 2)
                 'breakWall(1, 2, 2)
@@ -70,7 +73,8 @@
                 drawMaze(e)
 
             Case "Solve"
-
+                randomisedDFS()
+                drawMaze(e)
             Case 0
         End Select
     End Sub
@@ -85,10 +89,13 @@
 
                 If i = mazeEntry.X And j = mazeEntry.Y Then
                     maze(i, j).mazeEntryBool = True
+                    maze(i, j).visited = True
                 ElseIf i = mazeExit.X And j = mazeExit.Y Then
                     maze(i, j).mazeExitBool = True
+                    maze(i, j).visited = True
                 ElseIf i = 0 Or j = 0 Or i = width Or j = height Then
                     maze(i, j).mazeWallBool = True
+                    maze(i, j).visited = True
                 End If
                 For k As Integer = 0 To 3
                     Select Case k
@@ -144,7 +151,6 @@
             brush2.Color = Color.Red
             e.Graphics.FillRectangle(brush2, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).X, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).Y, M, M)
         End If
-
     End Sub
     Private Sub breakWall(ByVal side As Integer, ByVal xPos As Integer, ByVal yPos As Integer)
         Select Case side
@@ -181,8 +187,6 @@
                 End Try
         End Select
     End Sub
-
-
     Private Sub setMazeEntryExit()
         Select Case mazeEntryType
             Case "Random"
@@ -219,6 +223,58 @@
         End Select
 
     End Sub
+    Private Function checkOpenNeighbours(x As Integer, y As Integer)
+        ' If a cell has a open neighbour => output = True
+        Dim neighbours As List(Of Boolean) = New List(Of Boolean)
+        For pos As Integer = 0 To 3
+            Select Case pos
+                Case 0 ' Checking above the cell
+                    Try
+                        If maze(x, y - 1).visited = True Then
+                            neighbours.Add(False)
+                        Else
+                            neighbours.Add(True)
+                        End If
+                    Catch ex As Exception
+                        neighbours.Add(False)
+                    End Try
+                Case 1 ' Checking right of the cell
+                    Try
+                        If maze(x + 1, y).visited = True Then
+                            neighbours.Add(False)
+                        Else
+                            neighbours.Add(True)
+                        End If
+                    Catch ex As Exception
+                        neighbours.Add(False)
+                    End Try
+                Case 2 ' Checking below the cell
+                    Try
+                        If maze(x, y + 1).visited = True Then
+                            neighbours.Add(False)
+                        Else
+                            neighbours.Add(True)
+                        End If
+                    Catch ex As Exception
+                        neighbours.Add(False)
+                    End Try
+                Case 3 ' Checking left of the cell
+                    Try
+                        If maze(x - 1, y).visited = True Then
+                            neighbours.Add(False)
+                        Else
+                            neighbours.Add(True)
+                        End If
+                    Catch ex As Exception
+                        neighbours.Add(False)
+                    End Try
+            End Select
+        Next
+        Return neighbours
+    End Function
+
+
+
 
     Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
         'Save Maze Properties inputted by the user
