@@ -37,8 +37,6 @@
         End Sub
     End Class
 
-
-
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Populate Combobox Options
         ' Generation Combo Box
@@ -151,6 +149,8 @@
             brush2.Color = Color.Red
             e.Graphics.FillRectangle(brush2, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).X, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).Y, M, M)
         End If
+        Randomize()
+        Debug.WriteLine(Int((height - 1) * Rnd()) + 1)
     End Sub
     Private Sub breakWall(ByVal side As Integer, ByVal xPos As Integer, ByVal yPos As Integer)
         Select Case side
@@ -273,8 +273,55 @@
         Return neighbours
     End Function
 
+    Private Sub randomisedDFS()
+        Dim stack As Stack(Of Point) = New Stack(Of Point)
+        Dim node As Point = New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1)
+        stack.Push(node)
+        Dim direction As Integer
+
+        Dim subList As List(Of Integer) = New List(Of Integer)
+        Dim neigbours As List(Of Boolean) = New List(Of Boolean)
 
 
+
+        While stack.Count <> 0
+            neigbours = checkOpenNeighbours(node.X, node.Y)
+
+            Dim c As Integer = 0
+            For i As Integer = 0 To 3
+                If neigbours(i) = False Then
+                    c += 1
+                End If
+            Next
+
+            direction = Int(4 * Rnd())
+            If c = 4 Then ' There are no open neighbours
+                maze(node.X, node.Y).visited = True
+                node = stack.Pop()
+            Else ' There is an open neighbour
+                While neigbours(direction) = False ' Makes sure it moves into an open neighbour
+                    direction = Int(4 * Rnd())
+                End While
+                If stack.Peek <> node Then ' Makes sure the first node searched doesnt get inputted twice
+                    stack.Push(node)
+                End If
+                maze(node.X, node.Y).visited = True
+                breakWall(direction, node.X, node.Y)
+                ' Changes the value of node depending on what direction
+                Select Case direction
+                    Case 0 ' Moved to the cell above
+                        node = New Point(node.X, node.Y - 1)
+                    Case 1 ' Moved to the cell on the right
+                        node = New Point(node.X + 1, node.Y)
+                    Case 2 ' Moved to the cell below
+                        node = New Point(node.X, node.Y + 1)
+                    Case 3 ' Moved to the cell on the left
+                        node = New Point(node.X - 1, node.Y)
+                End Select
+            End If
+        End While
+
+    End Sub
 
     Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
         'Save Maze Properties inputted by the user
