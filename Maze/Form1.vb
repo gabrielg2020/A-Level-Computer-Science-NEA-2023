@@ -10,6 +10,7 @@
     Public width As Integer
     Public height As Integer
     Public mazeEntryType As String
+    Public generationType As String
     Public mazeEntry As Point
     Public mazeExit As Point
     Public mazeColour As Color
@@ -21,18 +22,20 @@
     Public Class Cell
         Public xPos As Integer
         Public yPos As Integer
-        Public walls(3) As Boolean
+        Public walls As List(Of Boolean) = New List(Of Boolean)
         Public wallPos(3, 1) As Point
         Public mazeWallBool As Boolean = False
         Public mazeEntryBool As Boolean = False
         Public mazeExitBool As Boolean = False
+
+        Public wieght As Integer
         Public visited As Boolean = False
 
 
 
         Public Sub New()
             For i As Integer = 0 To 3
-                walls(i) = True
+                walls.Add(True)
             Next
         End Sub
     End Class
@@ -43,11 +46,11 @@
         generationCombo.Items.Add("DFS Backtracker")
         generationCombo.Items.Add("Wave Function Collapse")
         generationCombo.Items.Add("Randomised Prims")
-        generationCombo.SelectedIndex = 1 ' Makes index 0 default displayed on the combo list(so currently shows "DFS Backtracker" initially
+        generationCombo.SelectedIndex = 0 ' Makes index 0 default displayed on the combo list(so currently shows "DFS Backtracker" initially
         ' Solve Combo Box
         solveCombo.Items.Add("Dijkstra's Algorithm")
         solveCombo.Items.Add("Breath Frist Search")
-        solveCombo.SelectedIndex = 1 ' Default displays (Dijkstra's Algortimn)
+        solveCombo.SelectedIndex = 0 ' Default displays (Dijkstra's Algortimn)
         ' Maze Entry Box
         mazeEntryCombo.Items.Add("Random")
         mazeEntryCombo.Items.Add("Top - Bottom")
@@ -61,9 +64,15 @@
     Private Sub mazeBox_Paint(sender As Object, e As PaintEventArgs) Handles mazeBox.Paint
         Select Case drawControl
             Case "Generate"
-                randomisedDFS()
-                drawMaze(e)
-            Case 0
+                If generationCombo.Text = "DFS Backtracker" Then
+                    randomisedDFS(e)
+                    drawMaze(e)
+                End If
+            Case "Solve"
+                If solveCombo.Text = "Dijkstra's Algorithm" Then
+                    dijkstra()
+
+                End If
         End Select
     End Sub
     Private Sub initializeMazeDraw()
@@ -72,7 +81,7 @@
             For j As Integer = 0 To height
                 maze(i, j) = New Cell
                 maze(i, j).xPos = i * M
-                maze(i, j).yPos = j * 10
+                maze(i, j).yPos = j * M
 
 
                 If i = mazeEntry.X And j = mazeEntry.Y Then
@@ -179,7 +188,7 @@
         Select Case mazeEntryType
             Case "Random"
                 Randomize()
-                Dim randomType As Integer = Int((3 * Rnd()))
+                Dim randomType As Integer = Int((4 * Rnd()))
                 ' Chooses randomly what type of maze entry it will be
                 Select Case randomType
                     Case 0 ' Start at a random top postion, finish at a random bottom position
@@ -211,7 +220,7 @@
         End Select
 
     End Sub
-    Private Function checkOpenNeighbours(x As Integer, y As Integer)
+    Private Function checkUnvisitedNeighbours(x As Integer, y As Integer)
         ' If a cell has a open neighbour => output = True
         Dim neighbours As List(Of Boolean) = New List(Of Boolean)
         For pos As Integer = 0 To 3
@@ -260,9 +269,9 @@
         Next
         Return neighbours
     End Function
-
-    Private Sub randomisedDFS()
+    Private Sub randomisedDFS(ByRef e As PaintEventArgs)
         Dim stack As Stack(Of Point) = New Stack(Of Point)
+        Randomize()
         Dim node As Point = New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1)
         stack.Push(node)
         Dim direction As Integer
@@ -270,10 +279,8 @@
         Dim subList As List(Of Integer) = New List(Of Integer)
         Dim neigbours As List(Of Boolean) = New List(Of Boolean)
 
-
-
         While stack.Count <> 0
-            neigbours = checkOpenNeighbours(node.X, node.Y)
+            neigbours = checkUnvisitedNeighbours(node.X, node.Y)
 
             Dim c As Integer = 0
             For i As Integer = 0 To 3
@@ -282,12 +289,15 @@
                 End If
             Next
 
+            Randomize()
             direction = Int(4 * Rnd())
             If c = 4 Then ' There are no open neighbours
                 maze(node.X, node.Y).visited = True
                 node = stack.Pop()
             Else ' There is an open neighbour
                 While neigbours(direction) = False ' Makes sure it moves into an open neighbour
+                    Randomize()
+
                     direction = Int(4 * Rnd())
                 End While
                 If stack.Peek <> node Then ' Makes sure the first node searched doesnt get inputted twice
@@ -310,6 +320,81 @@
         End While
 
     End Sub
+    Private Function checkConnectedCell(x As Integer, y As Integer) ' Checks connection between one cell and its: Top, Right, Bottom, Left neigbour
+        Dim connection As List(Of Boolean) = New List(Of Boolean)
+        For i As Integer = 0 To 3
+            Select Case i
+                ' Checking [_] connection
+                Case 0 ' Top
+                    If maze(x, y).walls(0) = False And maze(x, y - 1).walls(2) = False And maze(x, y - 1).mazeWallBool = False Then
+                        connection.Add(True)
+                    Else
+                        connection.Add(False)
+                    End If
+                Case 1 ' Right
+                    If maze(x, y).walls(1) = False And maze(x + 1, y).walls(3) = False And maze(x + 1, y).mazeWallBool = False Then
+                        connection.Add(True)
+                    Else
+                        connection.Add(False)
+                    End If
+                Case 2 ' Bottom
+                    If maze(x, y).walls(2) = False And maze(x, y + 1).walls(0) = False And maze(x, y + 1).mazeWallBool = False Then
+                        connection.Add(True)
+                    Else
+                        connection.Add(False)
+                    End If
+                Case 3 ' Left
+                    If maze(x, y).walls(3) = False And maze(x - 1, y).walls(1) = False And maze(x - 1, y).mazeWallBool = False Then
+                        connection.Add(True)
+                    Else
+                        connection.Add(False)
+                    End If
+            End Select
+        Next
+        Return connection
+    End Function
+
+    Private Sub dijkstra()
+        Dim startNode As Point = New Point(1, 1)
+        Dim tempPoint As Point
+        Dim queue As Queue(Of Point) = New Queue(Of Point)
+        Dim connections As List(Of Boolean) = New List(Of Boolean)
+        Dim weight As Integer = 0
+        ' last move list, if false then we didnt move there
+
+        queue.Enqueue(startNode)
+        While queue.Count <> 0
+            For i As Integer = 0 To queue.Count
+                tempPoint = queue.Dequeue()
+                maze(tempPoint.X, tempPoint.Y).wieght = weight
+                connections = checkConnectedCell(tempPoint.X, tempPoint.Y)
+
+                For j As Integer = 0 To 3
+                    Select Case j
+                        Case 0 ' Top
+                            If connections(j) = True Then
+                                queue.Enqueue(New Point(tempPoint.X, tempPoint.Y - 1))
+                            End If
+                        Case 1 ' Right
+                            If connections(j) = True Then
+                                queue.Enqueue(New Point(tempPoint.X + 1, tempPoint.Y))
+                            End If
+                        Case 2 ' Bottom
+                            If connections(j) = True Then
+                                queue.Enqueue(New Point(tempPoint.X, tempPoint.Y + 1))
+                            End If
+                        Case 3 ' Left
+                            If connections(j) = True Then
+                                queue.Enqueue(New Point(tempPoint.X - 1, tempPoint.Y))
+                            End If
+                    End Select
+
+                Next
+                weight += 1
+            Next
+
+        End While
+    End Sub
 
     Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
         'Save Maze Properties inputted by the user
@@ -317,7 +402,7 @@
         height = Int(heightTxtBox.Text) - 1
         mazeEntryType = mazeEntryCombo.Text
 
-        setMazeEntryExit()
+        'setMazeEntryExit()
         initializeMazeDraw()
 
         drawControl = "Generate"
@@ -398,6 +483,8 @@
 
     Private Sub mazeBox_LoadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs) Handles mazeBox.LoadCompleted
     End Sub
+
+
 
     ' USER INPUT END
 End Class
