@@ -1,6 +1,6 @@
 ﻿Public Class Form1
     ' Constants
-    Public M As Integer = 10
+    Public M As Integer = 30
     Public maze As Cell(,)
     ' Pen used to draw objects
     Public pen As Pen = New Pen(Color.Black, 1)
@@ -30,8 +30,6 @@
 
         Public wieght As Integer
         Public visited As Boolean = False
-
-
 
         Public Sub New()
             For i As Integer = 0 To 3
@@ -71,10 +69,54 @@
             Case "Solve"
                 If solveCombo.Text = "Dijkstra's Algorithm" Then
                     dijkstra()
-
+                    For i As Integer = 0 To width
+                        For j As Integer = 0 To height
+                            If maze(i, j).mazeWallBool = False Then
+                                Debug.WriteLine(maze(i, j).wieght)
+                            End If
+                        Next
+                    Next
                 End If
         End Select
     End Sub
+
+    Private Sub setMazeEntryExit()
+        Select Case mazeEntryType
+            Case "Random"
+                Randomize()
+                Dim randomType As Integer = Int((4 * Rnd()))
+                ' Chooses randomly what type of maze entry it will be
+                Select Case randomType
+                    Case 0 ' Start at a random top postion, finish at a random bottom position
+                        mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                        mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                    Case 1 ' Start at a random bottom postion, finish at a random top position
+                        mazeEntry = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                        mazeExit = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                    Case 2 ' Start at a random right postion, finish at a random left positon
+                        mazeEntry = New Point(1, Int(((height - 1) * Rnd()) + 1))
+                        mazeExit = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
+                    Case 3 ' Start at a random left postion, finish at a random right positon
+                        mazeEntry = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
+                        mazeExit = New Point(1, Int(((height - 1) * Rnd()) + 1))
+                End Select
+                If mazeEntry.X = 0 Or mazeEntry.Y = 0 Or mazeExit.X = 0 Or mazeExit.Y = 0 Then
+                    mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                    mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                End If
+            Case "Top - Bottom"
+                mazeEntry = New Point(Math.Round(width / 2) + 1, 1)
+                mazeExit = New Point(Math.Round(width / 2) + 1, height - 1)
+            Case "Right - Left"
+                mazeEntry = New Point(1, Math.Round(height / 2))
+                mazeExit = New Point(width - 1, Math.Round(height / 2))
+            Case "Diagonal"
+                mazeEntry = New Point(1, 1)
+                mazeExit = New Point(width - 1, height - 1)
+        End Select
+
+    End Sub
+
     Private Sub initializeMazeDraw()
         maze = New Cell(width, height) {}
         For i As Integer = 0 To width
@@ -86,10 +128,10 @@
 
                 If i = mazeEntry.X And j = mazeEntry.Y Then
                     maze(i, j).mazeEntryBool = True
-                    maze(i, j).visited = True
+                    'maze(i, j).visited = True
                 ElseIf i = mazeExit.X And j = mazeExit.Y Then
                     maze(i, j).mazeExitBool = True
-                    maze(i, j).visited = True
+                    'maze(i, j).visited = True
                 ElseIf i = 0 Or j = 0 Or i = width Or j = height Then
                     maze(i, j).mazeWallBool = True
                     maze(i, j).visited = True
@@ -184,42 +226,6 @@
                 End Try
         End Select
     End Sub
-    Private Sub setMazeEntryExit()
-        Select Case mazeEntryType
-            Case "Random"
-                Randomize()
-                Dim randomType As Integer = Int((4 * Rnd()))
-                ' Chooses randomly what type of maze entry it will be
-                Select Case randomType
-                    Case 0 ' Start at a random top postion, finish at a random bottom position
-                        mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                        mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                    Case 1 ' Start at a random bottom postion, finish at a random top position
-                        mazeEntry = New Point(Int((width * Rnd()) + 1), height - 1)
-                        mazeExit = New Point(Int((width * Rnd()) + 1), 1)
-                    Case 2 ' Start at a random right postion, finish at a random left positon
-                        mazeEntry = New Point(1, Int(((height - 1) * Rnd()) + 1))
-                        mazeExit = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
-                    Case 3 ' Start at a random left postion, finish at a random right positon
-                        mazeEntry = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
-                        mazeExit = New Point(1, Int(((height - 1) * Rnd()) + 1))
-                End Select
-                If mazeEntry.X = 0 Or mazeEntry.Y = 0 Or mazeExit.X = 0 Or mazeExit.Y = 0 Then
-                    mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                    mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                End If
-            Case "Top - Bottom"
-                mazeEntry = New Point(Math.Round(width / 2) + 1, 1)
-                mazeExit = New Point(Math.Round(width / 2) + 1, height - 1)
-            Case "Right - Left"
-                mazeEntry = New Point(1, Math.Round(height / 2))
-                mazeExit = New Point(width - 1, Math.Round(height / 2))
-            Case "Diagonal"
-                mazeEntry = New Point(1, 1)
-                mazeExit = New Point(width - 1, height - 1)
-        End Select
-
-    End Sub
     Private Function checkUnvisitedNeighbours(x As Integer, y As Integer)
         ' If a cell has a open neighbour => output = True
         Dim neighbours As List(Of Boolean) = New List(Of Boolean)
@@ -276,12 +282,13 @@
         stack.Push(node)
         Dim direction As Integer
 
-        Dim subList As List(Of Integer) = New List(Of Integer)
         Dim neigbours As List(Of Boolean) = New List(Of Boolean)
 
         While stack.Count <> 0
             neigbours = checkUnvisitedNeighbours(node.X, node.Y)
-
+            If node = New Point(0, 0) Then
+                Debug.WriteLine("")
+            End If
             Dim c As Integer = 0
             For i As Integer = 0 To 3
                 If neigbours(i) = False Then
@@ -297,7 +304,6 @@
             Else ' There is an open neighbour
                 While neigbours(direction) = False ' Makes sure it moves into an open neighbour
                     Randomize()
-
                     direction = Int(4 * Rnd())
                 End While
                 If stack.Peek <> node Then ' Makes sure the first node searched doesnt get inputted twice
@@ -318,6 +324,7 @@
                 End Select
             End If
         End While
+        ' Make sure that the entryCell and exitCell have walls broken
 
     End Sub
     Private Function checkConnectedCell(x As Integer, y As Integer) ' Checks connection between one cell and its: Top, Right, Bottom, Left neigbour
@@ -355,45 +362,77 @@
     End Function
 
     Private Sub dijkstra()
-        Dim startNode As Point = New Point(1, 1)
+        Dim startNode As Point = mazeEntry
         Dim tempPoint As Point
         Dim queue As Queue(Of Point) = New Queue(Of Point)
+        Dim directionQueue As Queue(Of Integer) = New Queue(Of Integer)
         Dim connections As List(Of Boolean) = New List(Of Boolean)
         Dim weight As Integer = 0
-        ' last move list, if false then we didnt move there
 
+        ' Weight the nodes
         queue.Enqueue(startNode)
         While queue.Count <> 0
-            For i As Integer = 0 To queue.Count
+            For i As Integer = 0 To queue.Count - 1
                 tempPoint = queue.Dequeue()
                 maze(tempPoint.X, tempPoint.Y).wieght = weight
                 connections = checkConnectedCell(tempPoint.X, tempPoint.Y)
+                ' Checking the last direction the cell took
+                If directionQueue.Count <> 0 Then
+                    For k As Integer = 0 To 3
+                        Select Case k
+                            Case 0 ' we moved up
+                                If directionQueue.Peek = 0 Then
+                                    connections(2) = False
+                                End If
+                            Case 1 ' we moved right
+                                If directionQueue.Peek = 1 Then
+                                    connections(3) = False
+                                End If
+                            Case 2 ' we moved down
+                                If directionQueue.Peek = 2 Then
+                                    connections(0) = False
+                                End If
+
+                            Case 3 ' we moved left
+                                If directionQueue.Peek = 3 Then
+                                    connections(1) = False
+                                End If
+                        End Select
+                    Next
+                    directionQueue.Dequeue()
+                End If
 
                 For j As Integer = 0 To 3
                     Select Case j
                         Case 0 ' Top
                             If connections(j) = True Then
                                 queue.Enqueue(New Point(tempPoint.X, tempPoint.Y - 1))
+                                directionQueue.Enqueue(0)
                             End If
                         Case 1 ' Right
                             If connections(j) = True Then
                                 queue.Enqueue(New Point(tempPoint.X + 1, tempPoint.Y))
+                                directionQueue.Enqueue(1)
                             End If
                         Case 2 ' Bottom
                             If connections(j) = True Then
                                 queue.Enqueue(New Point(tempPoint.X, tempPoint.Y + 1))
+                                directionQueue.Enqueue(2)
                             End If
                         Case 3 ' Left
                             If connections(j) = True Then
                                 queue.Enqueue(New Point(tempPoint.X - 1, tempPoint.Y))
+                                directionQueue.Enqueue(3)
                             End If
                     End Select
 
                 Next
-                weight += 1
-            Next
 
+            Next
+            weight += 1
         End While
+
+
     End Sub
 
     Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
@@ -402,8 +441,11 @@
         height = Int(heightTxtBox.Text) - 1
         mazeEntryType = mazeEntryCombo.Text
 
-        'setMazeEntryExit()
+        setMazeEntryExit()
         initializeMazeDraw()
+
+
+
 
         drawControl = "Generate"
         mazeBox.Invalidate()
@@ -413,6 +455,7 @@
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
         drawControl = "Solve"
         mazeBox.Invalidate()
+
     End Sub
 
 
