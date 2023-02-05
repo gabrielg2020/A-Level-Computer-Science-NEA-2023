@@ -430,7 +430,7 @@
     <value>12</value>
   </data>
   <data name="widthTxtBox.Text" xml:space="preserve">
-    <value>5</value>
+    <value>50</value>
   </data>
   <data name="widthTxtBox.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
@@ -460,7 +460,7 @@
     <value>13</value>
   </data>
   <data name="heightTxtBox.Text" xml:space="preserve">
-    <value>5</value>
+    <value>27</value>
   </data>
   <data name="heightTxtBox.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
@@ -853,7 +853,7 @@
     <value>8, 20</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>997, 553</value>
+    <value>999, 553</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Form1</value>

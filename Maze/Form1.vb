@@ -1,11 +1,9 @@
-﻿Public Class Form1
+﻿Imports Maze.Form1
+
+Public Class Form1
     ' Constants
-    Public M As Integer = 30
+    Public M As Integer = 10
     Public maze As Cell(,)
-    ' Pen used to draw objects
-    Public pen As Pen = New Pen(Color.Black, 1)
-    Public brush As SolidBrush = New SolidBrush(Color.Black)
-    Public brush2 As SolidBrush = New SolidBrush(Color.Black)
     ' Maze properties
     Public width As Integer
     Public height As Integer
@@ -66,8 +64,8 @@
         Select Case drawControl
             Case "Generate"
                 If generationCombo.Text = "DFS Backtracker" Then
-                    'randomisedDFS(e)
-                    createAMaze(e)
+                    randomisedDFS(e)
+                    'createAMaze(e)
                     drawMaze(e)
                 End If
             Case "Solve"
@@ -113,8 +111,6 @@
                 mazeExit = New Point(width - 1, height - 1)
         End Select
 
-        mazeEntry = New Point(1, 3)
-        mazeExit = New Point(3, 1)
 
     End Sub
 
@@ -165,37 +161,36 @@
         Next
     End Sub
     Private Sub drawMaze(ByRef e As PaintEventArgs)
-        For type As Integer = 0 To 2
-            For i As Integer = 0 To width
-                For j As Integer = 0 To height
-                    Select Case type
-                        Case 0 ' Drawing base maze
-                            For k As Integer = 0 To 3
-                                If maze(i, j).walls(k) = True Then
-                                    e.Graphics.DrawLine(pen, maze(i, j).wallPos(k, 0), maze(i, j).wallPos(k, 1))
-                                End If
-                            Next
-                        Case 1 ' Drawing maze walls
-                            If maze(i, j).mazeWallBool = True Then
-                                e.Graphics.FillRectangle(brush, maze(i, j).wallPos(0, 0).X, maze(i, j).wallPos(0, 0).Y, M, M)
-                            End If
-                        Case 2 ' Drawing solved
-                            If maze(i, j).mazeSolved = True Then
-                                brush2.Color = solveColour
-                                e.Graphics.FillRectangle(brush2, maze(i, j).wallPos(0, 0).X, maze(i, j).wallPos(0, 0).Y, M, M)
-                            End If
-                    End Select
-                Next
+        For Each cell In maze
+            ' Drawing mazeWalls
+            If cell.mazeWallBool = True And mazeColour <> Color.Empty Then
+                e.Graphics.FillRectangle(New SolidBrush(mazeColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+            ElseIf cell.mazeWallBool = True Then ' If user hasnt selected colour
+                e.Graphics.FillRectangle(New SolidBrush(Color.Black), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+            End If
+            ' Drawing mazeEntry
+            If cell.mazeEntryBool = True Then
+                e.Graphics.FillRectangle(New SolidBrush(Color.Green), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+            End If
+            ' Drawing mazeEntry
+            If cell.mazeExitBool = True Then
+                e.Graphics.FillRectangle(New SolidBrush(Color.Red), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+            End If
+            ' Drawing mazeSolve
+            If cell.mazeSolved = True And solveColour <> Color.Empty Then
+                e.Graphics.FillRectangle(New SolidBrush(solveColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+            ElseIf cell.mazeSolved = True Then
+                e.Graphics.FillRectangle(New SolidBrush(Color.Gray), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+            End If
+            ' Drawing walls between cells
+            For k As Integer = 0 To 3
+                If cell.walls(k) = True And mazeColour <> Color.Empty Then
+                    e.Graphics.DrawLine(New Pen(mazeColour, 2), cell.wallPos(k, 0), cell.wallPos(k, 1))
+                ElseIf cell.walls(k) = True Then ' If user hasnt selected colour
+                    e.Graphics.DrawLine(New Pen(Color.Black, 2), cell.wallPos(k, 0), cell.wallPos(k, 1))
+                End If
             Next
         Next
-        If maze(mazeEntry.X, mazeEntry.Y).mazeEntryBool = True Then ' Draws the maze entry
-            brush2.Color = Color.Green
-            e.Graphics.FillRectangle(brush2, maze(mazeEntry.X, mazeEntry.Y).wallPos(0, 0).X, maze(mazeEntry.X, mazeEntry.Y).wallPos(0, 0).Y, M, M)
-        End If
-        If maze(mazeExit.X, mazeExit.Y).mazeExitBool = True Then ' Draws the maze exit
-            brush2.Color = Color.Red
-            e.Graphics.FillRectangle(brush2, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).X, maze(mazeExit.X, mazeExit.Y).wallPos(0, 0).Y, M, M)
-        End If
     End Sub
     Private Sub breakWall(ByVal side As Integer, ByVal xPos As Integer, ByVal yPos As Integer)
         Select Case side
@@ -441,23 +436,20 @@
         End While
 
         Dim endNode As Point = mazeExit
-        Dim path As List(Of Point) = New List(Of Point)
         While endNode <> startNode
             For Each node In visited
                 If maze(node.X, node.Y).weight = maze(endNode.X, endNode.Y).weight - 1 And checkConnectedCell(endNode.X, endNode.Y).Contains(New Point(node.X, node.Y)) Then
-                    path.Add(node)
+                    maze(node.X, node.Y).mazeSolved = True
                     endNode = node
                     Exit For
                 End If
             Next
         End While
-        path.Remove(startNode)
+        maze(startNode.X, startNode.Y).mazeSolved = False
 
 
 
-        For Each i In path
-            Debug.WriteLine(Str(i.X) + "," + Str(i.Y))
-        Next
+
 
 
     End Sub
@@ -466,13 +458,14 @@
         'Save Maze Properties inputted by the user
         width = Int(widthTxtBox.Text) - 1
         height = Int(heightTxtBox.Text) - 1
+
         mazeEntryType = mazeEntryCombo.Text
 
         setMazeEntryExit()
         initializeMazeDraw()
 
 
-
+        Debug.WriteLine(mazeColour.ToString)
 
         drawControl = "Generate"
         mazeBox.Invalidate()
@@ -501,13 +494,11 @@
 
     Private Sub mazeColourBtn_Click(sender As Object, e As EventArgs) Handles mazeColourBtn.Click
         mazeColour = selectColour() ' Selects maze colour 
-        pen.Color = mazeColour
-        brush.Color = mazeColour
         mazeColourBtn.Text = mazeColour.ToString
     End Sub
 
     Private Sub solveColourBtn_Click(sender As Object, e As EventArgs) Handles solveColourBtn.Click
-        Dim solveColour As Color = selectColour() ' Selects solve colour 
+        solveColour = selectColour() ' Selects solve colour 
         solveColourBtn.Text = solveColour.ToString
     End Sub
 
