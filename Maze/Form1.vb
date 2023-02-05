@@ -27,9 +27,12 @@
         Public mazeWallBool As Boolean = False
         Public mazeEntryBool As Boolean = False
         Public mazeExitBool As Boolean = False
+        Public mazeSolved As Boolean = False
 
-        Public wieght As Integer
+
+        Public weight As Integer = 0
         Public visited As Boolean = False
+
 
         Public Sub New()
             For i As Integer = 0 To 3
@@ -63,19 +66,14 @@
         Select Case drawControl
             Case "Generate"
                 If generationCombo.Text = "DFS Backtracker" Then
-                    randomisedDFS(e)
+                    'randomisedDFS(e)
+                    createAMaze(e)
                     drawMaze(e)
                 End If
             Case "Solve"
                 If solveCombo.Text = "Dijkstra's Algorithm" Then
                     dijkstra()
-                    For i As Integer = 0 To width
-                        For j As Integer = 0 To height
-                            If maze(i, j).mazeWallBool = False Then
-                                Debug.WriteLine(maze(i, j).wieght)
-                            End If
-                        Next
-                    Next
+                    drawMaze(e)
                 End If
         End Select
     End Sub
@@ -114,6 +112,9 @@
                 mazeEntry = New Point(1, 1)
                 mazeExit = New Point(width - 1, height - 1)
         End Select
+
+        mazeEntry = New Point(1, 3)
+        mazeExit = New Point(3, 1)
 
     End Sub
 
@@ -164,7 +165,7 @@
         Next
     End Sub
     Private Sub drawMaze(ByRef e As PaintEventArgs)
-        For type As Integer = 0 To 1
+        For type As Integer = 0 To 2
             For i As Integer = 0 To width
                 For j As Integer = 0 To height
                     Select Case type
@@ -177,6 +178,11 @@
                         Case 1 ' Drawing maze walls
                             If maze(i, j).mazeWallBool = True Then
                                 e.Graphics.FillRectangle(brush, maze(i, j).wallPos(0, 0).X, maze(i, j).wallPos(0, 0).Y, M, M)
+                            End If
+                        Case 2 ' Drawing solved
+                            If maze(i, j).mazeSolved = True Then
+                                brush2.Color = solveColour
+                                e.Graphics.FillRectangle(brush2, maze(i, j).wallPos(0, 0).X, maze(i, j).wallPos(0, 0).Y, M, M)
                             End If
                     End Select
                 Next
@@ -328,109 +334,130 @@
 
     End Sub
     Private Function checkConnectedCell(x As Integer, y As Integer) ' Checks connection between one cell and its: Top, Right, Bottom, Left neigbour
-        Dim connection As List(Of Boolean) = New List(Of Boolean)
+        Dim connection As List(Of Point) = New List(Of Point)
         For i As Integer = 0 To 3
             Select Case i
                 ' Checking [_] connection
                 Case 0 ' Top
                     If maze(x, y).walls(0) = False And maze(x, y - 1).walls(2) = False And maze(x, y - 1).mazeWallBool = False Then
-                        connection.Add(True)
-                    Else
-                        connection.Add(False)
+                        connection.Add(New Point(x, y - 1))
                     End If
                 Case 1 ' Right
                     If maze(x, y).walls(1) = False And maze(x + 1, y).walls(3) = False And maze(x + 1, y).mazeWallBool = False Then
-                        connection.Add(True)
-                    Else
-                        connection.Add(False)
+                        connection.Add(New Point(x + 1, y))
                     End If
                 Case 2 ' Bottom
                     If maze(x, y).walls(2) = False And maze(x, y + 1).walls(0) = False And maze(x, y + 1).mazeWallBool = False Then
-                        connection.Add(True)
-                    Else
-                        connection.Add(False)
+                        connection.Add(New Point(x, y + 1))
                     End If
                 Case 3 ' Left
                     If maze(x, y).walls(3) = False And maze(x - 1, y).walls(1) = False And maze(x - 1, y).mazeWallBool = False Then
-                        connection.Add(True)
-                    Else
-                        connection.Add(False)
+                        connection.Add(New Point(x - 1, y))
                     End If
             End Select
         Next
         Return connection
     End Function
+    Private Sub createAMaze(ByRef e As PaintEventArgs)
+
+        maze(1, 1).walls(0) = True
+        maze(1, 1).walls(1) = False
+        maze(1, 1).walls(2) = False
+        maze(1, 1).walls(3) = True
+
+        maze(1, 2).walls(0) = False
+        maze(1, 2).walls(1) = True
+        maze(1, 2).walls(2) = False
+        maze(1, 2).walls(3) = True
+
+        maze(1, 3).walls(0) = False
+        maze(1, 3).walls(1) = False
+        maze(1, 3).walls(2) = True
+        maze(1, 3).walls(3) = True
+
+        maze(2, 1).walls(0) = True
+        maze(2, 1).walls(1) = True
+        maze(2, 1).walls(2) = False
+        maze(2, 1).walls(3) = False
+
+
+        maze(2, 2).walls(0) = False
+        maze(2, 2).walls(1) = False
+        maze(2, 2).walls(2) = True
+        maze(2, 2).walls(3) = True
+
+        maze(2, 3).walls(0) = True
+        maze(2, 3).walls(1) = False
+        maze(2, 3).walls(2) = True
+        maze(2, 3).walls(3) = False
+
+
+
+        maze(3, 1).walls(0) = True
+        maze(3, 1).walls(1) = True
+        maze(3, 1).walls(2) = False
+        maze(3, 1).walls(3) = True
+
+        maze(3, 2).walls(0) = False
+        maze(3, 2).walls(1) = True
+        maze(3, 2).walls(2) = False
+        maze(3, 2).walls(3) = False
+
+        maze(3, 3).walls(0) = False
+        maze(3, 3).walls(1) = True
+        maze(3, 3).walls(2) = True
+        maze(3, 3).walls(3) = False
+
+
+    End Sub
 
     Private Sub dijkstra()
         Dim startNode As Point = mazeEntry
-        Dim tempPoint As Point
+        Dim tempNode As Point
         Dim queue As Queue(Of Point) = New Queue(Of Point)
-        Dim directionQueue As Queue(Of Integer) = New Queue(Of Integer)
-        Dim connections As List(Of Boolean) = New List(Of Boolean)
+        Dim visited As List(Of Point) = New List(Of Point)
         Dim weight As Integer = 0
 
         ' Weight the nodes
-        queue.Enqueue(startNode)
+        maze(startNode.X, startNode.Y).weight = 0
+        visited.Add(New Point(startNode.X, startNode.Y))
+        weight = 1
+        For Each point In checkConnectedCell(startNode.X, startNode.Y)
+            queue.Enqueue(point)
+        Next
+
         While queue.Count <> 0
-            For i As Integer = 0 To queue.Count - 1
-                tempPoint = queue.Dequeue()
-                maze(tempPoint.X, tempPoint.Y).wieght = weight
-                connections = checkConnectedCell(tempPoint.X, tempPoint.Y)
-                ' Checking the last direction the cell took
-                If directionQueue.Count <> 0 Then
-                    For k As Integer = 0 To 3
-                        Select Case k
-                            Case 0 ' we moved up
-                                If directionQueue.Peek = 0 Then
-                                    connections(2) = False
-                                End If
-                            Case 1 ' we moved right
-                                If directionQueue.Peek = 1 Then
-                                    connections(3) = False
-                                End If
-                            Case 2 ' we moved down
-                                If directionQueue.Peek = 2 Then
-                                    connections(0) = False
-                                End If
-
-                            Case 3 ' we moved left
-                                If directionQueue.Peek = 3 Then
-                                    connections(1) = False
-                                End If
-                        End Select
-                    Next
-                    directionQueue.Dequeue()
-                End If
-
-                For j As Integer = 0 To 3
-                    Select Case j
-                        Case 0 ' Top
-                            If connections(j) = True Then
-                                queue.Enqueue(New Point(tempPoint.X, tempPoint.Y - 1))
-                                directionQueue.Enqueue(0)
-                            End If
-                        Case 1 ' Right
-                            If connections(j) = True Then
-                                queue.Enqueue(New Point(tempPoint.X + 1, tempPoint.Y))
-                                directionQueue.Enqueue(1)
-                            End If
-                        Case 2 ' Bottom
-                            If connections(j) = True Then
-                                queue.Enqueue(New Point(tempPoint.X, tempPoint.Y + 1))
-                                directionQueue.Enqueue(2)
-                            End If
-                        Case 3 ' Left
-                            If connections(j) = True Then
-                                queue.Enqueue(New Point(tempPoint.X - 1, tempPoint.Y))
-                                directionQueue.Enqueue(3)
-                            End If
-                    End Select
-
+            For i = 0 To queue.Count - 1
+                tempNode = queue.Dequeue()
+                maze(tempNode.X, tempNode.Y).weight = weight
+                visited.Add(New Point(tempNode.X, tempNode.Y))
+                For Each point In checkConnectedCell(tempNode.X, tempNode.Y)
+                    If visited.Contains(point) = False And queue.Contains(point) = False Then
+                        queue.Enqueue(point)
+                    End If
                 Next
-
             Next
             weight += 1
         End While
+
+        Dim endNode As Point = mazeExit
+        Dim path As List(Of Point) = New List(Of Point)
+        While endNode <> startNode
+            For Each node In visited
+                If maze(node.X, node.Y).weight = maze(endNode.X, endNode.Y).weight - 1 And checkConnectedCell(endNode.X, endNode.Y).Contains(New Point(node.X, node.Y)) Then
+                    path.Add(node)
+                    endNode = node
+                    Exit For
+                End If
+            Next
+        End While
+        path.Remove(startNode)
+
+
+
+        For Each i In path
+            Debug.WriteLine(Str(i.X) + "," + Str(i.Y))
+        Next
 
 
     End Sub
