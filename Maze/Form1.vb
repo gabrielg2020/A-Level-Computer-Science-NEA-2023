@@ -20,6 +20,8 @@ Public Class Form1
     Public solveAlgorithm As String
     ' Controls when the from draws
     Dim drawControl As String = ""
+    Public mazeImage As Bitmap
+    Public mazeImgaeGraphics As Graphics
 
     Public Class Cell
         ' Postion Properties
@@ -106,6 +108,8 @@ Public Class Form1
 
         ' Initialize each cell with correct: Type and Wall Position
         maze = New Cell(width, height) {}
+        mazeImage = New Bitmap((width * M) + M, (height * M) + M)
+        mazeImgaeGraphics = Graphics.FromImage(mazeImage)
         For i As Integer = 0 To width
             For j As Integer = 0 To height
                 maze(i, j) = New Cell
@@ -153,32 +157,40 @@ Public Class Form1
 
     Private Sub drawMaze(ByRef e As PaintEventArgs)
         For Each cell In maze
+            mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.White), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             ' Drawing mazeWalls
             If cell.mazeWallBool = True And mazeColour <> Color.Empty Then
-                e.Graphics.FillRectangle(New SolidBrush(mazeColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                'e.Graphics.FillRectangle(New SolidBrush(mazeColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             ElseIf cell.mazeWallBool = True Then ' If user hasnt selected colour
-                e.Graphics.FillRectangle(New SolidBrush(Color.Black), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                'e.Graphics.FillRectangle(New SolidBrush(Color.Black), cell.wallPos(0, 0).X, cell.wallPos(0, 0).Y, M, M)
+                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Black), cell.wallPos(0, 0).X, cell.wallPos(0, 0).Y, M, M)
             End If
             ' Drawing mazeEntry
             If cell.mazeEntryBool = True Then
-                e.Graphics.FillRectangle(New SolidBrush(Color.Green), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                'e.Graphics.FillRectangle(New SolidBrush(Color.Green), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Green), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             End If
             ' Drawing mazeEntry
             If cell.mazeExitBool = True Then
-                e.Graphics.FillRectangle(New SolidBrush(Color.Red), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                'e.Graphics.FillRectangle(New SolidBrush(Color.Red), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Red), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             End If
             ' Drawing mazeSolve
             If cell.mazeSolved = True And solveColour <> Color.Empty Then
-                e.Graphics.FillRectangle(New SolidBrush(solveColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                'e.Graphics.FillRectangle(New SolidBrush(solveColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                mazeImgaeGraphics.FillRectangle(New SolidBrush(solveColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             ElseIf cell.mazeSolved = True Then
-                e.Graphics.FillRectangle(New SolidBrush(Color.Gray), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                'e.Graphics.FillRectangle(New SolidBrush(Color.Gray), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Gray), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             End If
             ' Drawing walls between cells
             For k As Integer = 0 To 3
                 If cell.walls(k) = True And mazeColour <> Color.Empty Then
-                    e.Graphics.DrawLine(New Pen(mazeColour, 2), cell.wallPos(k, 0), cell.wallPos(k, 1))
+                    'e.Graphics.DrawLine(New Pen(mazeColour, 2), cell.wallPos(k, 0), cell.wallPos(k, 1))
+                    mazeImgaeGraphics.DrawLine(New Pen(mazeColour, 2), cell.wallPos(k, 0), cell.wallPos(k, 1))
                 ElseIf cell.walls(k) = True Then ' If user hasnt selected colour
-                    e.Graphics.DrawLine(New Pen(Color.Black, 2), cell.wallPos(k, 0), cell.wallPos(k, 1))
+                    'e.Graphics.DrawLine(New Pen(Color.Black, 2), cell.wallPos(k, 0), cell.wallPos(k, 1))
+                    mazeImgaeGraphics.DrawLine(New Pen(Color.Black, 2), cell.wallPos(k, 0), cell.wallPos(k, 1))
                 End If
             Next
         Next
@@ -389,14 +401,9 @@ Public Class Form1
             Next
         End While
         maze(startNode.X, startNode.Y).mazeSolved = False
-
-
-
-
-
-
     End Sub
 
+    ' USER INPUT START
     Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
         ' Saves Maze Properties inputted by the user
         width = Int(widthTxtBox.Text) - 1
@@ -404,7 +411,6 @@ Public Class Form1
         ' Combo Box Inputs
         mazeEntryType = mazeEntryCombo.Text
         generationAlgorithm = generationCombo.Text
-        solveAlgorithm = solveCombo.Text
         ' Colour Input
         mazeBox.BackColor = bgColour ' Sets background = background colour
 
@@ -414,16 +420,16 @@ Public Class Form1
     End Sub
 
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
+        solveAlgorithm = solveCombo.Text
         drawControl = "Solve"
         mazeBox.Invalidate()
-
     End Sub
 
-    ' USER INPUT START
     Private Sub imageInputBtn_Click(sender As Object, e As EventArgs) Handles imageInputBtn.Click
         ' Opens file explorer
-        Dim image As DialogResult = openFileDialog1.ShowDialog()
+
         ' ||Check if image is: type == .JPEG, reselution =< 500 X 268||
+
     End Sub
     ' Setting Colour Customisation
     Function selectColour() As Color ' Opens a colour picker and returns the selected colour
@@ -444,6 +450,16 @@ Public Class Form1
     Private Sub solveColourBtn_Click(sender As Object, e As EventArgs) Handles solveColourBtn.Click
         solveColour = selectColour() ' Selects solve colour 
         solveColourBtn.Text = solveColour.ToString
+    End Sub
+
+    Private Sub downloadBtn_Click(sender As Object, e As EventArgs) Handles downloadBtn.Click
+        mazeBox.Image = mazeImage
+
+        Dim openFile As New SaveFileDialog
+        openFile.FileName = Nothing
+        openFile.Filter = "Bitmap File's |*.bmp"
+        openFile.ShowDialog()
+        mazeImage.Save(openFile.FileName)
     End Sub
     ' USER INPUT END
 End Class

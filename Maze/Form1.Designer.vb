@@ -51,6 +51,7 @@ Partial Class Form1
         Me.mazeColourBtn = New System.Windows.Forms.Button()
         Me.bgColourBtn = New System.Windows.Forms.Button()
         Me.mazeBox = New System.Windows.Forms.PictureBox()
+        Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -322,4 +323,5 @@ Partial Class Form1
     Friend WithEvents mazeColourBtn As Button
     Friend WithEvents bgColourBtn As Button
     Friend WithEvents mazeBox As PictureBox
+    Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
 End Class
