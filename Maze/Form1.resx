@@ -66,10 +66,10 @@
     <value>Segoe UI, 36pt</value>
   </data>
   <data name="Title.Location" type="System.Drawing.Point, System.Drawing">
-    <value>269, 9</value>
+    <value>389, 9</value>
   </data>
   <data name="Title.Size" type="System.Drawing.Size, System.Drawing">
-    <value>487, 81</value>
+    <value>389, 65</value>
   </data>
   <data name="Title.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -93,13 +93,13 @@
     <value>True</value>
   </data>
   <data name="Label1.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <data name="Label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 122</value>
+    <value>36, 95</value>
   </data>
   <data name="Label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>117, 28</value>
+    <value>143, 32</value>
   </data>
   <data name="Label1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -123,17 +123,17 @@
     <value>True</value>
   </data>
   <data name="Label2.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 162</value>
+    <value>36, 141</value>
   </data>
   <data name="Label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 28</value>
+    <value>78, 32</value>
   </data>
   <data name="Label2.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -157,16 +157,16 @@
     <value>True</value>
   </data>
   <data name="Label3.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <data name="Label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 202</value>
+    <value>36, 186</value>
   </data>
   <data name="Label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 28</value>
+    <value>86, 32</value>
   </data>
   <data name="Label3.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -190,16 +190,16 @@
     <value>True</value>
   </data>
   <data name="Label4.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <data name="Label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 242</value>
+    <value>36, 227</value>
   </data>
   <data name="Label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 28</value>
+    <value>245, 32</value>
   </data>
   <data name="Label4.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -223,16 +223,16 @@
     <value>True</value>
   </data>
   <data name="Label5.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <data name="Label5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 282</value>
+    <value>36, 275</value>
   </data>
   <data name="Label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 28</value>
+    <value>206, 32</value>
   </data>
   <data name="Label5.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -256,16 +256,16 @@
     <value>True</value>
   </data>
   <data name="Label6.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <data name="Label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 322</value>
+    <value>36, 324</value>
   </data>
   <data name="Label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 28</value>
+    <value>222, 32</value>
   </data>
   <data name="Label6.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -289,16 +289,16 @@
     <value>True</value>
   </data>
   <data name="Label7.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <data name="Label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 362</value>
+    <value>36, 368</value>
   </data>
   <data name="Label7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>109, 28</value>
+    <value>133, 32</value>
   </data>
   <data name="Label7.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -322,16 +322,16 @@
     <value>True</value>
   </data>
   <data name="Label8.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <data name="Label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 402</value>
+    <value>36, 417</value>
   </data>
   <data name="Label8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 28</value>
+    <value>219, 32</value>
   </data>
   <data name="Label8.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -355,16 +355,16 @@
     <value>True</value>
   </data>
   <data name="Label9.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <data name="Label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 442</value>
+    <value>36, 463</value>
   </data>
   <data name="Label9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 28</value>
+    <value>150, 32</value>
   </data>
   <data name="Label9.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -388,16 +388,16 @@
     <value>True</value>
   </data>
   <data name="Label10.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 12pt</value>
+    <value>Segoe UI, 18pt</value>
   </data>
   <data name="Label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 482</value>
+    <value>36, 507</value>
   </data>
   <data name="Label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 28</value>
+    <value>150, 32</value>
   </data>
   <data name="Label10.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -417,20 +417,30 @@
   <data name="&gt;&gt;Label10.ZOrder" xml:space="preserve">
     <value>15</value>
   </data>
+  <data name="widthTxtBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 18pt</value>
+  </data>
   <data name="widthTxtBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 163</value>
+    <value>287, 136</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="widthTxtBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="widthTxtBox.MaxLength" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
+  <data name="widthTxtBox.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="widthTxtBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 27</value>
+    <value>176, 41</value>
   </data>
   <data name="widthTxtBox.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
   </data>
   <data name="widthTxtBox.Text" xml:space="preserve">
-    <value>50</value>
+    <value>35</value>
   </data>
   <data name="widthTxtBox.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
@@ -447,20 +457,29 @@
   <data name="&gt;&gt;widthTxtBox.ZOrder" xml:space="preserve">
     <value>14</value>
   </data>
+  <data name="heightTxtBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 18pt</value>
+  </data>
   <data name="heightTxtBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 203</value>
+    <value>287, 181</value>
+  </data>
+  <data name="heightTxtBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="heightTxtBox.MaxLength" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
+  <data name="heightTxtBox.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="heightTxtBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 27</value>
+    <value>176, 41</value>
   </data>
   <data name="heightTxtBox.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
   </data>
   <data name="heightTxtBox.Text" xml:space="preserve">
-    <value>27</value>
+    <value>23</value>
   </data>
   <data name="heightTxtBox.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
@@ -477,14 +496,23 @@
   <data name="&gt;&gt;heightTxtBox.ZOrder" xml:space="preserve">
     <value>13</value>
   </data>
+  <data name="deadEndRemoverTxtBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 18pt</value>
+  </data>
   <data name="deadEndRemoverTxtBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 322</value>
+    <value>287, 319</value>
+  </data>
+  <data name="deadEndRemoverTxtBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="deadEndRemoverTxtBox.MaxLength" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
+  <data name="deadEndRemoverTxtBox.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="deadEndRemoverTxtBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 27</value>
+    <value>176, 41</value>
   </data>
   <data name="deadEndRemoverTxtBox.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
@@ -517,10 +545,13 @@
     <value>NoControl</value>
   </data>
   <data name="generateBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>466, 405</value>
+    <value>469, 564</value>
+  </data>
+  <data name="generateBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="generateBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>240, 29</value>
+    <value>345, 65</value>
   </data>
   <data name="generateBtn.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
@@ -550,10 +581,13 @@
     <value>NoControl</value>
   </data>
   <data name="solveBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>726, 405</value>
+    <value>824, 564</value>
+  </data>
+  <data name="solveBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="solveBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>240, 29</value>
+    <value>345, 65</value>
   </data>
   <data name="solveBtn.TabIndex" type="System.Int32, mscorlib">
     <value>23</value>
@@ -580,10 +614,13 @@
     <value>NoControl</value>
   </data>
   <data name="downloadBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>466, 445</value>
+    <value>469, 633</value>
+  </data>
+  <data name="downloadBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="downloadBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>500, 29</value>
+    <value>700, 41</value>
   </data>
   <data name="downloadBtn.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
@@ -610,10 +647,13 @@
     <value>NoControl</value>
   </data>
   <data name="viewStatsBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>466, 485</value>
+    <value>469, 678</value>
+  </data>
+  <data name="viewStatsBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="viewStatsBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>500, 29</value>
+    <value>700, 41</value>
   </data>
   <data name="viewStatsBtn.TabIndex" type="System.Int32, mscorlib">
     <value>25</value>
@@ -633,11 +673,29 @@
   <data name="&gt;&gt;viewStatsBtn.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
+  <data name="mazeEntryCombo.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="mazeEntryCombo.Items" xml:space="preserve">
+    <value>Random</value>
+  </data>
+  <data name="mazeEntryCombo.Items1" xml:space="preserve">
+    <value>Top - Bottom</value>
+  </data>
+  <data name="mazeEntryCombo.Items2" xml:space="preserve">
+    <value>Right - Left</value>
+  </data>
+  <data name="mazeEntryCombo.Items3" xml:space="preserve">
+    <value>Diagonal</value>
+  </data>
   <data name="mazeEntryCombo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 362</value>
+    <value>287, 374</value>
+  </data>
+  <data name="mazeEntryCombo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="mazeEntryCombo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 28</value>
+    <value>176, 23</value>
   </data>
   <data name="mazeEntryCombo.TabIndex" type="System.Int32, mscorlib">
     <value>26</value>
@@ -654,17 +712,29 @@
   <data name="&gt;&gt;mazeEntryCombo.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <metadata name="generationCombo.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
+  <data name="generationCombo.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="generationCombo.Items" xml:space="preserve">
+    <value>DFS Backtracker</value>
+  </data>
+  <data name="generationCombo.Items1" xml:space="preserve">
+    <value>Wave Function Collapse</value>
+  </data>
+  <data name="generationCombo.Items2" xml:space="preserve">
+    <value>Randomised Prims</value>
+  </data>
   <data name="generationCombo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 242</value>
+    <value>287, 235</value>
+  </data>
+  <data name="generationCombo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="generationCombo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 28</value>
+    <value>176, 23</value>
   </data>
   <data name="generationCombo.TabIndex" type="System.Int32, mscorlib">
-    <value>27</value>
+    <value>1</value>
   </data>
   <data name="&gt;&gt;generationCombo.Name" xml:space="preserve">
     <value>generationCombo</value>
@@ -678,14 +748,23 @@
   <data name="&gt;&gt;generationCombo.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
-  <metadata name="solveCombo.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
+  <data name="solveCombo.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="solveCombo.Items" xml:space="preserve">
+    <value>Dijkstra's Algorithm</value>
+  </data>
+  <data name="solveCombo.Items1" xml:space="preserve">
+    <value>Breath Frist Search</value>
+  </data>
   <data name="solveCombo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 282</value>
+    <value>287, 280</value>
+  </data>
+  <data name="solveCombo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="solveCombo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 28</value>
+    <value>176, 23</value>
   </data>
   <data name="solveCombo.TabIndex" type="System.Int32, mscorlib">
     <value>28</value>
@@ -705,11 +784,17 @@
   <data name="imageInputBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
+  <data name="imageInputBtn.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 18pt</value>
+  </data>
   <data name="imageInputBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>256, 121</value>
+    <value>287, 91</value>
+  </data>
+  <data name="imageInputBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="imageInputBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 29</value>
+    <value>176, 41</value>
   </data>
   <data name="imageInputBtn.TabIndex" type="System.Int32, mscorlib">
     <value>29</value>
@@ -738,14 +823,20 @@
   <data name="solveColourBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
+  <data name="solveColourBtn.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 18pt</value>
+  </data>
   <data name="solveColourBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="solveColourBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 481</value>
+    <value>287, 501</value>
+  </data>
+  <data name="solveColourBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="solveColourBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 29</value>
+    <value>176, 41</value>
   </data>
   <data name="solveColourBtn.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
@@ -768,14 +859,20 @@
   <data name="mazeColourBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
+  <data name="mazeColourBtn.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 18pt</value>
+  </data>
   <data name="mazeColourBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="mazeColourBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 441</value>
+    <value>287, 456</value>
+  </data>
+  <data name="mazeColourBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="mazeColourBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 29</value>
+    <value>176, 41</value>
   </data>
   <data name="mazeColourBtn.TabIndex" type="System.Int32, mscorlib">
     <value>31</value>
@@ -798,14 +895,20 @@
   <data name="bgColourBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
+  <data name="bgColourBtn.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 18pt</value>
+  </data>
   <data name="bgColourBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="bgColourBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>258, 401</value>
+    <value>287, 411</value>
+  </data>
+  <data name="bgColourBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="bgColourBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 29</value>
+    <value>176, 41</value>
   </data>
   <data name="bgColourBtn.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>
@@ -826,10 +929,13 @@
     <value>1</value>
   </data>
   <data name="mazeBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>466, 121</value>
+    <value>469, 91</value>
+  </data>
+  <data name="mazeBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="mazeBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>500, 270</value>
+    <value>700, 470</value>
   </data>
   <data name="mazeBox.TabIndex" type="System.Int32, mscorlib">
     <value>34</value>
@@ -850,10 +956,13 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 20</value>
+    <value>7, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>999, 553</value>
+    <value>1184, 761</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Form1</value>

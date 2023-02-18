@@ -133,20 +133,20 @@ Partial Class Form1
         '
         'widthTxtBox
         '
-        Me.widthTxtBox.ForeColor = System.Drawing.Color.DimGray
         resources.ApplyResources(Me.widthTxtBox, "widthTxtBox")
+        Me.widthTxtBox.ForeColor = System.Drawing.Color.DimGray
         Me.widthTxtBox.Name = "widthTxtBox"
         '
         'heightTxtBox
         '
-        Me.heightTxtBox.ForeColor = System.Drawing.Color.DimGray
         resources.ApplyResources(Me.heightTxtBox, "heightTxtBox")
+        Me.heightTxtBox.ForeColor = System.Drawing.Color.DimGray
         Me.heightTxtBox.Name = "heightTxtBox"
         '
         'deadEndRemoverTxtBox
         '
-        Me.deadEndRemoverTxtBox.ForeColor = System.Drawing.Color.DimGray
         resources.ApplyResources(Me.deadEndRemoverTxtBox, "deadEndRemoverTxtBox")
+        Me.deadEndRemoverTxtBox.ForeColor = System.Drawing.Color.DimGray
         Me.deadEndRemoverTxtBox.Name = "deadEndRemoverTxtBox"
         '
         'generateBtn
@@ -181,27 +181,30 @@ Partial Class Form1
         'mazeEntryCombo
         '
         Me.mazeEntryCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        resources.ApplyResources(Me.mazeEntryCombo, "mazeEntryCombo")
         Me.mazeEntryCombo.ForeColor = System.Drawing.Color.DimGray
         Me.mazeEntryCombo.FormattingEnabled = True
-        resources.ApplyResources(Me.mazeEntryCombo, "mazeEntryCombo")
+        Me.mazeEntryCombo.Items.AddRange(New Object() {resources.GetString("mazeEntryCombo.Items"), resources.GetString("mazeEntryCombo.Items1"), resources.GetString("mazeEntryCombo.Items2"), resources.GetString("mazeEntryCombo.Items3")})
         Me.mazeEntryCombo.Name = "mazeEntryCombo"
         '
         'generationCombo
         '
         Me.generationCombo.Cursor = System.Windows.Forms.Cursors.Hand
         Me.generationCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        resources.ApplyResources(Me.generationCombo, "generationCombo")
         Me.generationCombo.ForeColor = System.Drawing.Color.DimGray
         Me.generationCombo.FormattingEnabled = True
-        resources.ApplyResources(Me.generationCombo, "generationCombo")
+        Me.generationCombo.Items.AddRange(New Object() {resources.GetString("generationCombo.Items"), resources.GetString("generationCombo.Items1"), resources.GetString("generationCombo.Items2")})
         Me.generationCombo.Name = "generationCombo"
         '
         'solveCombo
         '
         Me.solveCombo.Cursor = System.Windows.Forms.Cursors.Hand
         Me.solveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        resources.ApplyResources(Me.solveCombo, "solveCombo")
         Me.solveCombo.ForeColor = System.Drawing.Color.DimGray
         Me.solveCombo.FormattingEnabled = True
-        resources.ApplyResources(Me.solveCombo, "solveCombo")
+        Me.solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1")})
         Me.solveCombo.Name = "solveCombo"
         '
         'imageInputBtn
@@ -255,7 +258,7 @@ Partial Class Form1
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackgroundImage = Global.Maze.My.Resources.Resources.backgroubd
+        Me.BackgroundImage = Global.Maze.My.Resources.Resources.Background
         Me.Controls.Add(Me.mazeBox)
         Me.Controls.Add(Me.bgColourBtn)
         Me.Controls.Add(Me.mazeColourBtn)
