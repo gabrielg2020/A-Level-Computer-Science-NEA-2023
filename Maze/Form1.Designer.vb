@@ -135,19 +135,19 @@ Partial Class Form1
         'widthTxtBox
         '
         resources.ApplyResources(Me.widthTxtBox, "widthTxtBox")
-        Me.widthTxtBox.ForeColor = System.Drawing.Color.DimGray
+        Me.widthTxtBox.ForeColor = System.Drawing.Color.Black
         Me.widthTxtBox.Name = "widthTxtBox"
         '
         'heightTxtBox
         '
         resources.ApplyResources(Me.heightTxtBox, "heightTxtBox")
-        Me.heightTxtBox.ForeColor = System.Drawing.Color.DimGray
+        Me.heightTxtBox.ForeColor = System.Drawing.Color.Black
         Me.heightTxtBox.Name = "heightTxtBox"
         '
         'deadEndRemoverTxtBox
         '
         resources.ApplyResources(Me.deadEndRemoverTxtBox, "deadEndRemoverTxtBox")
-        Me.deadEndRemoverTxtBox.ForeColor = System.Drawing.Color.DimGray
+        Me.deadEndRemoverTxtBox.ForeColor = System.Drawing.Color.Black
         Me.deadEndRemoverTxtBox.Name = "deadEndRemoverTxtBox"
         '
         'generateBtn
@@ -183,17 +183,17 @@ Partial Class Form1
         '
         Me.mazeEntryCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         resources.ApplyResources(Me.mazeEntryCombo, "mazeEntryCombo")
-        Me.mazeEntryCombo.ForeColor = System.Drawing.Color.DimGray
+        Me.mazeEntryCombo.ForeColor = System.Drawing.Color.Black
         Me.mazeEntryCombo.FormattingEnabled = True
         Me.mazeEntryCombo.Items.AddRange(New Object() {resources.GetString("mazeEntryCombo.Items"), resources.GetString("mazeEntryCombo.Items1"), resources.GetString("mazeEntryCombo.Items2"), resources.GetString("mazeEntryCombo.Items3")})
         Me.mazeEntryCombo.Name = "mazeEntryCombo"
         '
         'generationCombo
         '
+        Me.generationCombo.BackColor = System.Drawing.SystemColors.Window
         Me.generationCombo.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.generationCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         resources.ApplyResources(Me.generationCombo, "generationCombo")
-        Me.generationCombo.ForeColor = System.Drawing.Color.DimGray
+        Me.generationCombo.ForeColor = System.Drawing.Color.Black
         Me.generationCombo.FormattingEnabled = True
         Me.generationCombo.Items.AddRange(New Object() {resources.GetString("generationCombo.Items"), resources.GetString("generationCombo.Items1"), resources.GetString("generationCombo.Items2")})
         Me.generationCombo.Name = "generationCombo"
@@ -203,7 +203,7 @@ Partial Class Form1
         Me.solveCombo.Cursor = System.Windows.Forms.Cursors.Hand
         Me.solveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         resources.ApplyResources(Me.solveCombo, "solveCombo")
-        Me.solveCombo.ForeColor = System.Drawing.Color.DimGray
+        Me.solveCombo.ForeColor = System.Drawing.Color.Black
         Me.solveCombo.FormattingEnabled = True
         Me.solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1")})
         Me.solveCombo.Name = "solveCombo"
@@ -226,7 +226,7 @@ Partial Class Form1
         Me.solveColourBtn.BackColor = System.Drawing.SystemColors.Window
         Me.solveColourBtn.Cursor = System.Windows.Forms.Cursors.Hand
         resources.ApplyResources(Me.solveColourBtn, "solveColourBtn")
-        Me.solveColourBtn.ForeColor = System.Drawing.Color.DimGray
+        Me.solveColourBtn.ForeColor = System.Drawing.Color.Black
         Me.solveColourBtn.Name = "solveColourBtn"
         Me.solveColourBtn.UseVisualStyleBackColor = False
         '
@@ -235,7 +235,7 @@ Partial Class Form1
         Me.mazeColourBtn.BackColor = System.Drawing.SystemColors.Window
         Me.mazeColourBtn.Cursor = System.Windows.Forms.Cursors.Hand
         resources.ApplyResources(Me.mazeColourBtn, "mazeColourBtn")
-        Me.mazeColourBtn.ForeColor = System.Drawing.Color.DimGray
+        Me.mazeColourBtn.ForeColor = System.Drawing.Color.Black
         Me.mazeColourBtn.Name = "mazeColourBtn"
         Me.mazeColourBtn.UseVisualStyleBackColor = False
         '
@@ -244,7 +244,7 @@ Partial Class Form1
         Me.bgColourBtn.BackColor = System.Drawing.SystemColors.Window
         Me.bgColourBtn.Cursor = System.Windows.Forms.Cursors.Hand
         resources.ApplyResources(Me.bgColourBtn, "bgColourBtn")
-        Me.bgColourBtn.ForeColor = System.Drawing.Color.DimGray
+        Me.bgColourBtn.ForeColor = System.Drawing.Color.Black
         Me.bgColourBtn.Name = "bgColourBtn"
         Me.bgColourBtn.UseVisualStyleBackColor = False
         '
