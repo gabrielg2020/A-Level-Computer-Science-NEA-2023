@@ -393,6 +393,7 @@ Public Class Form1
             weight += 1
         End While
         'Animation
+        animationLock(True)
         Dim c As Integer = 0
         While frame <> nodeList.Count()
             mazeBox.Image = mazeImage
@@ -437,6 +438,7 @@ Public Class Form1
         mazeBox.Image = mazeImage
         nodeList.Clear()
         frame = 0
+        animationLock(False)
     End Sub
 
     Private Sub animationLock(Lock As Boolean) ' Locks all inputs to prevent backlogging and crashes
