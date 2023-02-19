@@ -440,7 +440,7 @@
     <value>12</value>
   </data>
   <data name="widthTxtBox.Text" xml:space="preserve">
-    <value>33</value>
+    <value>233</value>
   </data>
   <data name="widthTxtBox.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
@@ -479,7 +479,7 @@
     <value>13</value>
   </data>
   <data name="heightTxtBox.Text" xml:space="preserve">
-    <value>22</value>
+    <value>150</value>
   </data>
   <data name="heightTxtBox.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>

@@ -4,7 +4,7 @@ Imports System.Text.Json
 Imports System.Threading
 Public Class Form1
     ' Constants
-    Const M As Integer = 21
+    Const M As Integer = 3
     Public maze As Cell(,)
     ' Maze properties
     Public width As Integer
@@ -144,7 +144,7 @@ Public Class Form1
         Next
     End Sub
 
-    Private Sub drawMaze(solve As Boolean)
+    Private Sub drawMaze(solve As Boolean) ' If False is passed through then the background cells will be drawn
         For Each cell In maze
             If solve = False Then
                 ' The Background
@@ -274,7 +274,6 @@ Public Class Form1
 
     Private Sub randomisedDFS()
         Randomize()
-
         ' Backtracking Stack
         Dim stack As Stack(Of Point) = New Stack(Of Point)
         ' Store Current Node
@@ -315,7 +314,7 @@ Public Class Form1
                 End Select
             End If
         End While
-        ' Animation
+        ' Animation :: Displays the stack header to show which cell is being checked
         drawMaze(False)
         animationLock(True)
         While frame <> directionList.Count
@@ -333,7 +332,6 @@ Public Class Form1
         drawMaze(False)
         mazeBox.Image = mazeImage
         animationLock(False)
-
     End Sub
 
     Private Function checkConnectedCell(x As Integer, y As Integer) ' Checks connection between one cell and its: Top, Right, Bottom, Left neigbour
@@ -364,26 +362,32 @@ Public Class Form1
 
     Private Sub dijkstra()
         Dim startNode As Point = mazeEntry
+        Dim endNode As Point = mazeExit
         Dim tempNode As Point
+        ' Queue used to store the next cell to be checked
         Dim queue As Queue(Of Point) = New Queue(Of Point)
         Dim visited As List(Of Point) = New List(Of Point)
         Dim weight As Integer = 0
 
         ' Weight the nodes
         maze(startNode.X, startNode.Y).weight = 0
-        visited.Add(New Point(startNode.X, startNode.Y))
+        visited.Add(startNode)
         weight = 1
         For Each point In checkConnectedCell(startNode.X, startNode.Y)
             queue.Enqueue(point)
         Next
 
-        While queue.Count <> 0
+        While queue.Count <> 0 ' Will loop until the queue is empty
             For i = 0 To queue.Count - 1
                 tempNode = queue.Dequeue()
-                visited.Add(New Point(tempNode.X, tempNode.Y))
+                visited.Add(tempNode)
                 maze(tempNode.X, tempNode.Y).weight = weight
                 weightList.Add(weight)
                 nodeList.Add(tempNode)
+                If tempNode = endNode Then
+                    Exit While
+                End If
+                ' Adds connected nodes to the queue
                 For Each point In checkConnectedCell(tempNode.X, tempNode.Y)
                     If visited.Contains(point) = False And queue.Contains(point) = False Then
                         queue.Enqueue(point)
@@ -392,12 +396,12 @@ Public Class Form1
             Next
             weight += 1
         End While
-        'Animation
+        ' Animation :: Shows the branches that are being weighted
         animationLock(True)
         Dim c As Integer = 0
         While frame <> nodeList.Count()
             mazeBox.Image = mazeImage
-            If weightList(frame) < 255 Then
+            If weightList(frame) < 255 Then ' The colour will get darker depending on how far the branch you are
                 mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.FromArgb(0 + weightList(frame), 0, 255 - weightList(frame))), nodeList(frame).X * M, nodeList(frame).Y * M, M, M)
             Else
                 mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.FromArgb(255, 0, 255)), nodeList(frame).X * M, nodeList(frame).Y * M, M, M)
@@ -411,12 +415,11 @@ Public Class Form1
         weightList.Clear()
         frame = 0
 
-        visited.Add(mazeExit)
-        Dim endNode As Point = mazeExit
+        ' Finds the shortest path from the start node
+        visited.Reverse()
         While endNode <> startNode
             For Each node In visited
-                If maze(node.X, node.Y).weight = maze(endNode.X, endNode.Y).weight - 1 And checkConnectedCell(endNode.X, endNode.Y).Contains(New Point(node.X, node.Y)) Then
-                    'maze(node.X, node.Y).mazeSolved = True
+                If maze(node.X, node.Y).weight < maze(endNode.X, endNode.Y).weight And checkConnectedCell(endNode.X, endNode.Y).Contains(node) Then
                     nodeList.Add(node)
                     endNode = node
                     Exit For
@@ -424,8 +427,10 @@ Public Class Form1
             Next
         End While
         nodeList.Reverse()
+        ' Removes the start node to be overdrawn
         nodeList.Remove(startNode)
         maze(startNode.X, startNode.Y).mazeSolved = False
+        ' Animation :: Shows the shortest path being created
         While frame <> nodeList.Count()
             mazeBox.Image = mazeImage
             maze(nodeList(frame).X, nodeList(frame).Y).mazeSolved = True
@@ -524,13 +529,25 @@ Public Class Form1
 
         initializeMazeDraw()
         If generationAlgorithm = "DFS Backtracker" Then
+            mazeBox.Image = mazeImage
             randomisedDFS()
         End If
+
     End Sub
 
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
         solveAlgorithm = solveCombo.Text
-        dijkstra()
+        ' Reset all cells that have .mazeSolved = True
+        For Each cell In maze
+            If cell.mazeSolved = True Then
+                cell.mazeSolved = False
+            End If
+        Next
+        drawMaze(False) ' Clear the previously drawn path
+
+        If solveAlgorithm = "Dijkstra's Algorithm" Then
+            dijkstra()
+        End If
     End Sub
 
     ' Setting Colour Customisation
