@@ -52,6 +52,8 @@ Partial Class Form1
         Me.bgColourBtn = New System.Windows.Forms.Button()
         Me.mazeBox = New System.Windows.Forms.PictureBox()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
+        Me.quickAnimationBtn = New System.Windows.Forms.CheckBox()
+        Me.fps = New System.Windows.Forms.Label()
         CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -255,11 +257,30 @@ Partial Class Form1
         Me.mazeBox.Name = "mazeBox"
         Me.mazeBox.TabStop = False
         '
+        'quickAnimationBtn
+        '
+        resources.ApplyResources(Me.quickAnimationBtn, "quickAnimationBtn")
+        Me.quickAnimationBtn.BackColor = System.Drawing.Color.Transparent
+        Me.quickAnimationBtn.Checked = True
+        Me.quickAnimationBtn.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.quickAnimationBtn.ForeColor = System.Drawing.Color.White
+        Me.quickAnimationBtn.Name = "quickAnimationBtn"
+        Me.quickAnimationBtn.UseVisualStyleBackColor = False
+        '
+        'fps
+        '
+        resources.ApplyResources(Me.fps, "fps")
+        Me.fps.BackColor = System.Drawing.Color.Transparent
+        Me.fps.ForeColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.fps.Name = "fps"
+        '
         'Form1
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImage = Global.Maze.My.Resources.Resources.Background
+        Me.Controls.Add(Me.fps)
+        Me.Controls.Add(Me.quickAnimationBtn)
         Me.Controls.Add(Me.mazeBox)
         Me.Controls.Add(Me.bgColourBtn)
         Me.Controls.Add(Me.mazeColourBtn)
@@ -324,4 +345,6 @@ Partial Class Form1
     Friend WithEvents bgColourBtn As Button
     Friend WithEvents mazeBox As PictureBox
     Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
+    Friend WithEvents quickAnimationBtn As CheckBox
+    Friend WithEvents fps As Label
 End Class
