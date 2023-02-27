@@ -53,6 +53,7 @@ Partial Class Form1
         Me.mazeBox = New System.Windows.Forms.PictureBox()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.quickAnimationBtn = New System.Windows.Forms.CheckBox()
+        Me.deadEndRemoverBtn = New System.Windows.Forms.Button()
         CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -266,11 +267,20 @@ Partial Class Form1
         Me.quickAnimationBtn.Name = "quickAnimationBtn"
         Me.quickAnimationBtn.UseVisualStyleBackColor = False
         '
+        'deadEndRemoverBtn
+        '
+        Me.deadEndRemoverBtn.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
+        resources.ApplyResources(Me.deadEndRemoverBtn, "deadEndRemoverBtn")
+        Me.deadEndRemoverBtn.ForeColor = System.Drawing.Color.Black
+        Me.deadEndRemoverBtn.Name = "deadEndRemoverBtn"
+        Me.deadEndRemoverBtn.UseVisualStyleBackColor = False
+        '
         'Form1
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImage = Global.Maze.My.Resources.Resources.Background
+        Me.Controls.Add(Me.deadEndRemoverBtn)
         Me.Controls.Add(Me.quickAnimationBtn)
         Me.Controls.Add(Me.mazeBox)
         Me.Controls.Add(Me.bgColourBtn)
@@ -337,4 +347,5 @@ Partial Class Form1
     Friend WithEvents mazeBox As PictureBox
     Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
     Friend WithEvents quickAnimationBtn As CheckBox
+    Friend WithEvents deadEndRemoverBtn As Button
 End Class

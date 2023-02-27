@@ -2,7 +2,7 @@
 Public Class Form1
     ' Drawing Constants
     Const PEN_SIZE As Integer = 2
-    Const M As Integer = 50
+    Const M As Integer = 5
     ' Maze properties
     Public maze As Cell(,)
     Public width As Integer
@@ -11,6 +11,7 @@ Public Class Form1
     Public mazeEntryType As String
     Public mazeEntry As Point
     Public mazeExit As Point
+    Public deadEndPos As List(Of Point) = New List(Of Point)
     ' Maze Colour Customisation
     Public bgColour As Color
     Public mazeColour As Color
@@ -56,6 +57,19 @@ Public Class Form1
                 ElseIf walls(wall) = True Then ' If user hasnt selected colour
                     Form1.mazeImageGraphics.DrawLine(New Pen(Form1.mazeColour, PEN_SIZE), wallPos(wall, 0), wallPos(wall, 1))
                     Form1.mazeImageGraphics.DrawLine(New Pen(Form1.mazeColour, PEN_SIZE), wallPos(wall, 0), wallPos(wall, 1))
+                End If
+            Next
+        End Sub
+
+        Public Sub deadEndFinder()
+            Dim wallCount As Integer = 0
+            ' Checks each wall
+            For Each wall In walls
+                If wall = True And mazeWallBool = False Then
+                    wallCount += 1
+                End If
+                If wallCount = 3 Then
+                    Form1.deadEndPos.Add(New Point(x, y))
                 End If
             Next
         End Sub
@@ -480,7 +494,45 @@ Public Class Form1
         ' Disables animation lock
         animationLock(False)
     End Sub
+    Private Sub deadEndRemover()
+        Dim numToBeRemoved As Integer
+        Dim direction As Integer
+        Dim positionPicked As Integer
+        Dim initalDeadEnds As Integer
+        ' Finds all the dead ends
+        For Each cell In maze
+            cell.deadEndFinder()
+        Next
+        ' Calculate the amount of dead end to remove
+        numToBeRemoved = Math.Round(deadEndPos.Count() * deadEndPercent)
 
+        While numToBeRemoved <> 0
+            ' Randomly pick a deadend and direction
+            positionPicked = Int(deadEndPos.Count() * Rnd())
+            direction = Int(4 * Rnd())
+            ' Makes sure that it doesn't break into a maze wall
+            While maze(deadEndPos(positionPicked).X, deadEndPos(positionPicked).Y).breakWall(direction) = Nothing
+                direction = Int(4 * Rnd())
+            End While
+
+            ' Break the deadend
+            maze(deadEndPos(positionPicked).X, deadEndPos(positionPicked).Y).breakWall(direction)
+            initalDeadEnds = deadEndPos.Count()
+            ' Find the new amount of deadends
+            deadEndPos.Clear()
+            For Each cell In maze
+                cell.deadEndFinder()
+            Next
+            ' The amount needed to be removed is the amount of dead ends it had initally - the amount of dead ends it has now
+            ' This is useful as removing 1 wall can remove 2 deadends
+            numToBeRemoved -= initalDeadEnds - deadEndPos.Count()
+            ' If we have ran out of dead ends to remove
+            If deadEndPos.Count = 0 Then
+                Exit While
+            End If
+        End While
+        deadEndPos.Clear()
+    End Sub
     ' USER INPUT START
     Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
         ' Saves Maze Properties inputted by the user
@@ -488,6 +540,7 @@ Public Class Form1
         height = Int(heightTxtBox.Text) - 1
         mazeEntryType = mazeEntryCombo.Text
         generationAlgorithm = generationCombo.Text
+        deadEndPercent = deadEndRemoverTxtBox.Text
         ' Intializes the maze
         initializeMaze()
 
@@ -511,6 +564,15 @@ Public Class Form1
         If solveAlgorithm = "Dijkstra's Algorithm" Then
             dijkstra()
         End If
+        ' Upadtes Maze box
+        drawMaze()
+        mazeBox.Image = mazeImage
+    End Sub
+    Private Sub deadEndRemoverBtn_Click(sender As Object, e As EventArgs) Handles deadEndRemoverBtn.Click
+        ' Saves the inputted percentage
+        deadEndPercent = deadEndRemoverTxtBox.Text
+        ' Removes dead ends
+        deadEndRemover()
         ' Upadtes Maze box
         drawMaze()
         mazeBox.Image = mazeImage
@@ -550,10 +612,5 @@ Public Class Form1
             End Try
         End If
     End Sub
-
-    Private Sub Label11_Click(sender As Object, e As EventArgs) 
-
-    End Sub
-
     ' USER INPUT END
 End Class
