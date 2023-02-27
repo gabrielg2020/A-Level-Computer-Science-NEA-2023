@@ -1,9 +1,10 @@
 ﻿Imports System.Threading
 Public Class Form1
-    ' Constants
-    Const M As Integer = 10
-    Public maze As Cell(,)
+    ' Drawing Constants
+    Const PEN_SIZE As Integer = 2
+    Const M As Integer = 50
     ' Maze properties
+    Public maze As Cell(,)
     Public width As Integer
     Public height As Integer
     Public deadEndPercent As Double
@@ -19,19 +20,7 @@ Public Class Form1
     Public solveAlgorithm As String
     ' Controls when the from draws
     Public mazeImage As Bitmap
-    Public mazeImgaeGraphics As Graphics
-    ' Animations
-    Public frame As Integer = 0
-    Public directionList As List(Of Integer) = New List(Of Integer)
-    Public nodeList As List(Of Point) = New List(Of Point)
-    Public weightList As List(Of Integer) = New List(Of Integer)
-    ' Gradient 
-    Dim lerpList As List(Of Integer) = New List(Of Integer)
-    Dim t As Double = 0.01
-    Dim c1 As List(Of Integer) = New List(Of Integer)
-    Dim c2 As List(Of Integer) = New List(Of Integer)
-    Dim c3 As List(Of Integer) = New List(Of Integer)
-    Dim c4 As List(Of Integer) = New List(Of Integer)
+    Public mazeImageGraphics As Graphics
 
     Public Class Cell
         ' Postion Properties
@@ -49,6 +38,7 @@ Public Class Form1
         ' Generate/Solve Properties
         Public weight As Integer = 0
         Public visited As Boolean = False
+        Public connectedCell As List(Of Point) = New List(Of Point)
 
         ' Sets all cells with all walls 
         Public Sub New()
@@ -56,35 +46,111 @@ Public Class Form1
                 walls.Add(True)
             Next
         End Sub
-    End Class
 
+        ' Method to draw walls
+        Public Sub drawWalls()
+            For wall As Integer = 0 To 3
+                If walls(wall) = True And Form1.mazeColour = Color.Empty Then
+                    Form1.mazeImageGraphics.DrawLine(New Pen(Color.Black, PEN_SIZE), wallPos(wall, 0), wallPos(wall, 1))
+                    Form1.mazeImageGraphics.DrawLine(New Pen(Color.Black, PEN_SIZE), wallPos(wall, 0), wallPos(wall, 1))
+                ElseIf walls(wall) = True Then ' If user hasnt selected colour
+                    Form1.mazeImageGraphics.DrawLine(New Pen(Form1.mazeColour, PEN_SIZE), wallPos(wall, 0), wallPos(wall, 1))
+                    Form1.mazeImageGraphics.DrawLine(New Pen(Form1.mazeColour, PEN_SIZE), wallPos(wall, 0), wallPos(wall, 1))
+                End If
+            Next
+        End Sub
+
+        ' Method to break wall
+        Public Function breakWall(ByVal d As Integer)
+            ' Makes sure the cell isn't a maze wall
+            If mazeWallBool = True Then
+                Return Nothing
+                Exit Function
+            End If
+            ' Breaks wall depending on the d (direction)
+            Select Case d
+                ' The wall selected must be broken but also the neighbours wall
+                Case 0 ' Breaking the top wall
+                    If Form1.maze(x, y - 1).mazeWallBool = True Then
+                        Return Nothing
+                        Exit Function
+                    End If
+                    walls(d) = False
+                    Form1.maze(x, y - 1).walls(d + 2) = False
+                    connectedCell.Add(New Point(x, y - 1))
+                    Form1.maze(x, y - 1).connectedCell.Add(New Point(x, y))
+                Case 1 ' Breaking the right wall
+                    If Form1.maze(x + 1, y).mazeWallBool = True Then
+                        Return Nothing
+                        Exit Function
+                    End If
+                    walls(d) = False
+                    Form1.maze(x + 1, y).walls(d + 2) = False
+                    connectedCell.Add(New Point(x + 1, y))
+                    Form1.maze(x + 1, y).connectedCell.Add(New Point(x, y))
+                Case 2 ' Breaking the bottom wall
+                    If Form1.maze(x, y + 1).mazeWallBool = True Then
+                        Return Nothing
+                        Exit Function
+                    End If
+                    walls(d) = False
+                    Form1.maze(x, y + 1).walls(d - 2) = False
+                    connectedCell.Add(New Point(x, y + 1))
+                    Form1.maze(x, y + 1).connectedCell.Add(New Point(x, y))
+                Case 3 ' Breaking the left wall
+                    If Form1.maze(x - 1, y).mazeWallBool = True Then
+                        Return Nothing
+                        Exit Function
+                    End If
+                    walls(d) = False
+                    Form1.maze(x - 1, y).walls(d - 2) = False
+                    connectedCell.Add(New Point(x - 1, y))
+                    Form1.maze(x - 1, y).connectedCell.Add(New Point(x, y))
+            End Select
+            Return connectedCell(connectedCell.Count() - 1)
+        End Function
+
+        ' Method to check unvisted neighbours
+        Public Function checkUnvistedNeighbours()
+            Dim neighbours As List(Of Point) = New List(Of Point)
+
+            If mazeWallBool = True Then
+                Return Nothing
+                Exit Function
+            End If
+
+            If Form1.maze(x, y - 1).visited = False Then
+                neighbours.Add(New Point(x, y - 1))
+            Else
+                neighbours.Add(Nothing)
+            End If
+
+            If Form1.maze(x + 1, y).visited = False Then
+                neighbours.Add(New Point(x + 1, y))
+            Else
+                neighbours.Add(Nothing)
+            End If
+
+            If Form1.maze(x, y + 1).visited = False Then
+                neighbours.Add(New Point(x, y + 1))
+            Else
+                neighbours.Add(Nothing)
+            End If
+
+            If Form1.maze(x - 1, y).visited = False Then
+                neighbours.Add(New Point(x - 1, y))
+            Else
+                neighbours.Add(Nothing)
+            End If
+            Return neighbours
+        End Function
+    End Class
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         generationCombo.SelectedIndex = 0 ' Makes index 0 default displayed on the combo list(so currently shows "DFS Backtracker" initially
         solveCombo.SelectedIndex = 0 ' Default displays (Dijkstra's Algortimn)
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Random"
     End Sub
-
-    Private Sub initializeMazeDraw()
-        ' Setting up Gradient
-        For i As Integer = 1 To 3
-            lerpList.Add(0)
-        Next
-        ' First colour
-        c1.Add(0)
-        c1.Add(0)
-        c1.Add(255)
-        ' Second colour
-        c2.Add(255)
-        c2.Add(0)
-        c2.Add(0)
-        ' Third colour
-        c3.Add(255)
-        c3.Add(255)
-        c3.Add(0)
-        ' Forth colour
-        c4.Add(0)
-        c4.Add(255)
-        c4.Add(255)
+    Private Sub initializeMaze()
         ' Setting Maze Entry and Exit
         Select Case mazeEntryType
             Case "Random"
@@ -122,456 +188,86 @@ Public Class Form1
 
         ' Initialize each cell with correct: Type and Wall Position
         maze = New Cell(width, height) {}
-        mazeImage = New Bitmap((width * M) + M, (height * M) + M)
-        mazeImgaeGraphics = Graphics.FromImage(mazeImage)
+        mazeImage = New Bitmap(((width + 1) * M) + M, ((height + 1) * M) + M)
+        mazeImageGraphics = Graphics.FromImage(mazeImage)
         For i As Integer = 0 To width
             For j As Integer = 0 To height
+                ' Giving each cell their index
                 maze(i, j) = New Cell
-                maze(i, j).x = i * M
-                maze(i, j).y = j * M
+                maze(i, j).x = i
+                maze(i, j).y = j
 
-
+                ' Setting the entry cell with the mazeEntryBool
                 If i = mazeEntry.X And j = mazeEntry.Y Then
                     maze(i, j).mazeEntryBool = True
-                    'maze(i, j).visited = True
-                ElseIf i = mazeExit.X And j = mazeExit.Y Then
+                End If
+
+                ' Setting the exit cell with the mazeExitBool
+                If i = mazeExit.X And j = mazeExit.Y Then
                     maze(i, j).mazeExitBool = True
-                    'maze(i, j).visited = True
-                ElseIf i = 0 Or j = 0 Or i = width Or j = height Then
+                End If
+
+                ' Setting the maze wall cells with the mazeWallBool
+                If i = 0 Or j = 0 Or i = width Or j = height Then
                     maze(i, j).mazeWallBool = True
                     maze(i, j).visited = True
                 End If
-                For k As Integer = 0 To 3
-                    Select Case k
-                        Case 0 ' Top line
-                            ' Start Point
-                            maze(i, j).wallPos(k, 0) = New Point(maze(i, j).x, maze(i, j).y)
-                            ' End Point
-                            maze(i, j).wallPos(k, 1) = New Point(maze(i, j).x + M, maze(i, j).y)
-                        Case 1 ' Rigth line
-                            ' Start Point
-                            maze(i, j).wallPos(k, 0) = New Point(maze(i, j).x + M, maze(i, j).y)
-                            ' End Point
-                            maze(i, j).wallPos(k, 1) = New Point(maze(i, j).x + M, maze(i, j).y + M)
-                        Case 2 ' Left Line
-                            ' Start Point
-                            maze(i, j).wallPos(k, 0) = New Point(maze(i, j).x, maze(i, j).y + M)
-                            ' End Point
-                            maze(i, j).wallPos(k, 1) = New Point(maze(i, j).x + M, maze(i, j).y + M)
-                        Case 3 ' Bottom Line
-                            ' Start Point
-                            maze(i, j).wallPos(k, 0) = New Point(maze(i, j).x, maze(i, j).y)
-                            ' End Point
-                            maze(i, j).wallPos(k, 1) = New Point(maze(i, j).x, maze(i, j).y + M)
-                    End Select
+
+                ' Giving each cell wall a start(0), end(1) and position on the screen
+                Dim posi As Integer = i * M
+                Dim posj As Integer = j * M
+                For Each wall In maze(i, j).walls
+                    ' Top Wall
+                    maze(i, j).wallPos(0, 0) = New Point(posi, posj)
+                    maze(i, j).wallPos(0, 1) = New Point(posi + M, posj)
+                    ' Right Wall
+                    maze(i, j).wallPos(1, 0) = New Point(posi + M, posj)
+                    maze(i, j).wallPos(1, 1) = New Point(posi + M, posj + M)
+                    ' Bottom Wall
+                    maze(i, j).wallPos(2, 0) = New Point(posi, posj + M)
+                    maze(i, j).wallPos(2, 1) = New Point(posi + M, posj + M)
+                    ' Left Wall
+                    maze(i, j).wallPos(3, 0) = New Point(posi, posj)
+                    maze(i, j).wallPos(3, 1) = New Point(posi, posj + M)
                 Next
             Next
         Next
     End Sub
-
-    Private Sub drawMaze(solve As Boolean) ' If False is passed through then the background cells will be drawn
+    Private Sub drawMaze() ' If False is passed through then the background cells will be drawn
         For Each cell In maze
-            If solve = False Then
-                ' The Background
-                If bgColour <> Color.Empty Then
-                    mazeImgaeGraphics.FillRectangle(New SolidBrush(bgColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-                Else
-                    mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.White), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-                End If
+            ' Drawing the background
+            If bgColour <> Color.Empty Then
+                mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+            Else ' If user hasnt selected colour
+                mazeImageGraphics.FillRectangle(New SolidBrush(Color.White), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             End If
+
             ' Drawing mazeWalls
             If cell.mazeWallBool = True And mazeColour <> Color.Empty Then
-                mazeImgaeGraphics.FillRectangle(New SolidBrush(mazeColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                mazeImageGraphics.FillRectangle(New SolidBrush(mazeColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             ElseIf cell.mazeWallBool = True Then ' If user hasnt selected colour
-                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Black), cell.wallPos(0, 0).X, cell.wallPos(0, 0).Y, M, M)
+                mazeImageGraphics.FillRectangle(New SolidBrush(Color.Black), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             End If
-            ' Drawing mazeEntry
+
+            ' Drawing the mazeEntry
             If cell.mazeEntryBool = True Then
-                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Green), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                mazeImageGraphics.FillRectangle(New SolidBrush(Color.Green), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             End If
-            ' Drawing mazeEntry
+
+            ' Drawing mazeExit
             If cell.mazeExitBool = True Then
-                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Red), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                mazeImageGraphics.FillRectangle(New SolidBrush(Color.Red), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             End If
-            ' Drawing mazeSolve
-            If cell.mazeSolved = True And solveColour <> Color.Empty Then
-                mazeImgaeGraphics.FillRectangle(New SolidBrush(solveColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-            ElseIf cell.mazeSolved = True Then
-                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Gray), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+
+            ' Drawing the solved path
+            If cell.mazeSolved = True Then
+                mazeImageGraphics.FillRectangle(New SolidBrush(Color.Gray), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
             End If
-            If cell.deadEnd = True Then
-                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Purple), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-            End If
-            ' Drawing walls between cells
-            For k As Integer = 0 To 3
-                If cell.walls(k) = True And mazeColour <> Color.Empty Then
-                    mazeImgaeGraphics.DrawLine(New Pen(mazeColour, 3), cell.wallPos(k, 0), cell.wallPos(k, 1))
-                ElseIf cell.walls(k) = True Then ' If user hasnt selected colour
-                    mazeImgaeGraphics.DrawLine(New Pen(Color.Black, 3), cell.wallPos(k, 0), cell.wallPos(k, 1))
-                End If
-            Next
 
+            ' Drawing the walls
+            cell.drawWalls()
         Next
     End Sub
-
-    Private Sub breakWall(ByVal side As Integer, ByVal x As Integer, ByVal y As Integer)
-        Select Case side
-            Case 0 ' Take away top wall
-                maze(x, y).walls(0) = False
-                Try
-                    maze(x, y - 1).walls(2) = False
-                Catch ex As Exception
-                    ' Do nothing as this must be a maze wall
-                End Try
-
-            Case 1 ' Take away right wall
-                maze(x, y).walls(1) = False
-                Try
-                    maze(x + 1, y).walls(3) = False
-                Catch ex As Exception
-                    ' Do nothing as this must be a maze wall
-                End Try
-
-            Case 2 ' Take away bottom wall
-                maze(x, y).walls(2) = False
-                Try
-                    maze(x, y + 1).walls(0) = False
-                Catch ex As Exception
-                    ' Do nothing as this must be a maze wall
-                End Try
-
-            Case 3 ' Take away left wall
-                maze(x, y).walls(3) = False
-                Try
-                    maze(x - 1, y).walls(1) = False
-                Catch ex As Exception
-                    ' Do nothing as this must be a maze wall
-                End Try
-        End Select
-    End Sub
-
-    Private Function checkUnvisitedNeighbours(x As Integer, y As Integer)
-        ' If a cell has a open neighbour => output = True
-        Dim neighbours As List(Of Boolean) = New List(Of Boolean)
-        For pos As Integer = 0 To 3
-            Select Case pos
-                Case 0 ' Checking above the cell
-                    Try
-                        If maze(x, y - 1).visited = True Then
-                            neighbours.Add(False)
-                        Else
-                            neighbours.Add(True)
-                        End If
-                    Catch ex As Exception
-                        neighbours.Add(False)
-                    End Try
-                Case 1 ' Checking right of the cell
-                    Try
-                        If maze(x + 1, y).visited = True Then
-                            neighbours.Add(False)
-                        Else
-                            neighbours.Add(True)
-                        End If
-                    Catch ex As Exception
-                        neighbours.Add(False)
-                    End Try
-                Case 2 ' Checking below the cell
-                    Try
-                        If maze(x, y + 1).visited = True Then
-                            neighbours.Add(False)
-                        Else
-                            neighbours.Add(True)
-                        End If
-                    Catch ex As Exception
-                        neighbours.Add(False)
-                    End Try
-                Case 3 ' Checking left of the cell
-                    Try
-                        If maze(x - 1, y).visited = True Then
-                            neighbours.Add(False)
-                        Else
-                            neighbours.Add(True)
-                        End If
-                    Catch ex As Exception
-                        neighbours.Add(False)
-                    End Try
-            End Select
-        Next
-        Return neighbours
-    End Function
-
-    Private Function checkConnectedCell(x As Integer, y As Integer) ' Checks connection between one cell and its: Top, Right, Bottom, Left neigbour
-        Dim connection As List(Of Point) = New List(Of Point)
-        For i As Integer = 0 To 3
-            Select Case i
-                ' Checking [_] connection
-                Case 0 ' Top
-                    If maze(x, y).walls(0) = False And maze(x, y - 1).walls(2) = False And maze(x, y - 1).mazeWallBool = False Then
-                        connection.Add(New Point(x, y - 1))
-                    End If
-                Case 1 ' Right
-                    If maze(x, y).walls(1) = False And maze(x + 1, y).walls(3) = False And maze(x + 1, y).mazeWallBool = False Then
-                        connection.Add(New Point(x + 1, y))
-                    End If
-                Case 2 ' Bottom
-                    If maze(x, y).walls(2) = False And maze(x, y + 1).walls(0) = False And maze(x, y + 1).mazeWallBool = False Then
-                        connection.Add(New Point(x, y + 1))
-                    End If
-                Case 3 ' Left
-                    If maze(x, y).walls(3) = False And maze(x - 1, y).walls(1) = False And maze(x - 1, y).mazeWallBool = False Then
-                        connection.Add(New Point(x - 1, y))
-                    End If
-            End Select
-        Next
-        Return connection
-    End Function
-
-    Private Function Lerp(ByVal c1 As List(Of Integer), ByVal c2 As List(Of Integer), ByVal t As Double)
-        lerpList(0) = (c1(0) + ((c2(0) - c1(0)) * t))
-        lerpList(1) = (c1(1) + ((c2(1) - c1(1)) * t))
-        lerpList(2) = (c1(2) + ((c2(2) - c1(2)) * t))
-        Return lerpList
-    End Function
-
-    Private Sub deadEndRemover()
-        Dim deadEndCount As Integer = 0
-        Dim deadEndPos As List(Of Point) = New List(Of Point)
-        ' Count dead ends
-        For Each cell In maze
-            Dim wallCounter As Integer = 0
-            For Each wall In cell.walls
-                If wall = True And cell.mazeWallBool = False Then
-                    wallCounter += 1
-                End If
-                If wallCounter = 3 And cell.deadEnd = False Then
-                    cell.deadEnd = True
-                    deadEndPos.Add(New Point(cell.x / M, cell.y / M))
-                    deadEndCount += 1
-                End If
-            Next
-        Next
-        ' Calculate corrent amount of dead ends to remove
-
-
-
-        drawMaze(False)
-        mazeBox.Image = mazeImage
-    End Sub
-
-    Private Sub randomisedDFS()
-        Randomize()
-        ' Backtracking Stack
-        Dim stack As Stack(Of Point) = New Stack(Of Point)
-        ' Store Current Node
-        Dim node As Point = New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1)
-        stack.Push(node)
-        ' List used to check the neigbours of a cell
-        Dim neigbours As List(Of Boolean) = New List(Of Boolean)
-        Dim direction As Integer
-
-        ' Checking Quick Animations
-        If quickAnimationBtn.Checked = False Then ' The want the animation to play
-            ' Will loop until the stack is empty 
-            While stack.Count <> 0
-                neigbours = checkUnvisitedNeighbours(node.X, node.Y)
-                direction = Int(4 * Rnd())
-                If neigbours(0) = False And neigbours(1) = False And neigbours(2) = False And neigbours(3) = False Then ' There are no open neighbours
-                    maze(node.X, node.Y).visited = True
-                    node = stack.Pop()
-                Else ' There is an open neighbour
-                    While neigbours(direction) = False ' Makes sure it moves into an open neighbour
-                        direction = Int(4 * Rnd())
-                    End While
-                    If stack.Peek <> node Then ' Makes sure the first node searched doesnt get inputted twice
-                        stack.Push(node)
-                    End If
-                    maze(node.X, node.Y).visited = True
-                    'breakWall(direction, node.X, node.Y)
-                    directionList.Add(direction)
-                    nodeList.Add(node)
-                    ' Changes the value of node depending on what direction
-                    Select Case direction
-                        Case 0 ' Moved to the cell above
-                            node = New Point(node.X, node.Y - 1)
-                        Case 1 ' Moved to the cell on the right
-                            node = New Point(node.X + 1, node.Y)
-                        Case 2 ' Moved to the cell below
-                            node = New Point(node.X, node.Y + 1)
-                        Case 3 ' Moved to the cell on the left
-                            node = New Point(node.X - 1, node.Y)
-                    End Select
-                End If
-            End While
-            ' Animation :: Displays the stack header to show which cell is being checked
-            drawMaze(False)
-            animationLock(True)
-            While frame <> directionList.Count
-                mazeBox.Image = mazeImage
-                breakWall(directionList(frame), nodeList(frame).X, nodeList(frame).Y)
-                drawMaze(False)
-                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.Yellow), nodeList(frame).X * M, nodeList(frame).Y * M, M, M)
-                mazeBox.Update()
-                Thread.Sleep(M)
-                frame += 1
-            End While
-        Else ' They don't want the animation to play
-            ' Will loop until the stack is empty 
-            While stack.Count <> 0
-                neigbours = checkUnvisitedNeighbours(node.X, node.Y)
-                direction = Int(4 * Rnd())
-                If neigbours(0) = False And neigbours(1) = False And neigbours(2) = False And neigbours(3) = False Then ' There are no open neighbours
-                    maze(node.X, node.Y).visited = True
-                    node = stack.Pop()
-                Else ' There is an open neighbour
-                    While neigbours(direction) = False ' Makes sure it moves into an open neighbour
-                        direction = Int(4 * Rnd())
-                    End While
-                    If stack.Peek <> node Then ' Makes sure the first node searched doesnt get inputted twice
-                        stack.Push(node)
-                    End If
-                    maze(node.X, node.Y).visited = True
-                    breakWall(direction, node.X, node.Y)
-                    directionList.Add(direction)
-                    nodeList.Add(node)
-                    ' Changes the value of node depending on what direction
-                    Select Case direction
-                        Case 0 ' Moved to the cell above
-                            node = New Point(node.X, node.Y - 1)
-                        Case 1 ' Moved to the cell on the right
-                            node = New Point(node.X + 1, node.Y)
-                        Case 2 ' Moved to the cell below
-                            node = New Point(node.X, node.Y + 1)
-                        Case 3 ' Moved to the cell on the left
-                            node = New Point(node.X - 1, node.Y)
-                    End Select
-                End If
-            End While
-        End If
-        ' Resets the variables used to animate and removes animation lock
-        frame = 0
-        directionList.Clear()
-        nodeList.Clear()
-        drawMaze(False)
-        mazeBox.Image = mazeImage
-        animationLock(False)
-    End Sub
-
-    Private Sub dijkstra()
-        Dim startNode As Point = mazeEntry
-        Dim endNode As Point = mazeExit
-        Dim tempNode As Point
-        ' Queue used to store the next cell to be checked
-        Dim queue As Queue(Of Point) = New Queue(Of Point)
-        Dim visited As List(Of Point) = New List(Of Point)
-        Dim weight As Integer = 0
-
-        ' Weight the nodes
-        maze(startNode.X, startNode.Y).weight = 0
-        visited.Add(startNode)
-        weight = 1
-        For Each point In checkConnectedCell(startNode.X, startNode.Y)
-            queue.Enqueue(point)
-        Next
-        While queue.Count <> 0 ' Will loop until the queue is empty
-            For i = 0 To queue.Count - 1
-                tempNode = queue.Dequeue()
-                visited.Add(tempNode)
-                maze(tempNode.X, tempNode.Y).weight = weight
-                weightList.Add(weight)
-                nodeList.Add(tempNode)
-                If tempNode = endNode Then
-                    Exit While
-                End If
-                ' Adds connected nodes to the queue
-                For Each point In checkConnectedCell(tempNode.X, tempNode.Y)
-                    If visited.Contains(point) = False And queue.Contains(point) = False Then
-                        queue.Enqueue(point)
-                    End If
-                Next
-            Next
-            weight += 1
-        End While
-        ' Checking Quick Animations
-        If quickAnimationBtn.Checked = False Then ' The want the animation to play
-
-            ' Animation :: Shows the branches that are being weighted
-            animationLock(True)
-            lerpList = Lerp(c1, c1, t)
-            While frame <> nodeList.Count()
-
-                mazeBox.Image = mazeImage
-
-                mazeImgaeGraphics.FillRectangle(New SolidBrush(Color.FromArgb(lerpList(0), lerpList(1), lerpList(2))), nodeList(frame).X * M, nodeList(frame).Y * M, M, M)
-                If frame < 200 Then
-                    lerpList = Lerp(lerpList, c2, t)
-                ElseIf frame > 200 And frame < 400 Then
-                    lerpList = Lerp(lerpList, c3, t)
-                ElseIf frame > 400 And frame < 600 Then
-                    lerpList = Lerp(lerpList, c4, t)
-                ElseIf frame > 600 And frame < 800 Then
-                    lerpList = Lerp(lerpList, c2, t)
-                ElseIf frame > 800 And frame < 1000 Then
-                    lerpList = Lerp(lerpList, c3, t)
-                ElseIf frame > 1000 And frame < 1200 Then
-                    lerpList = Lerp(lerpList, c4, t)
-                End If
-                fps.Text = frame
-                fps.Update()
-                drawMaze(True)
-                mazeBox.Update()
-                Thread.Sleep(M)
-                frame += 1
-            End While
-            ' Resets the variables used to animate and removes animation lock
-            nodeList.Clear()
-            weightList.Clear()
-            frame = 0
-            animationLock(False)
-            ' Finds the shortest path from the start node
-            While endNode <> startNode
-                For Each node In visited
-                    If maze(node.X, node.Y).weight < maze(endNode.X, endNode.Y).weight And checkConnectedCell(endNode.X, endNode.Y).Contains(node) Then
-                        nodeList.Add(node)
-                        endNode = node
-                        Exit For
-                    End If
-                Next
-            End While
-            nodeList.Reverse()
-            ' Removes the start node to be overdrawn
-            nodeList.Remove(startNode)
-            maze(startNode.X, startNode.Y).mazeSolved = False
-            ' Animation :: Shows the shortest path being created
-            While frame <> nodeList.Count()
-                mazeBox.Image = mazeImage
-                maze(nodeList(frame).X, nodeList(frame).Y).mazeSolved = True
-                drawMaze(True)
-                mazeBox.Update()
-                Thread.Sleep(M)
-                frame += 1
-            End While
-        Else ' They don't want the animation to play
-            ' Finds the shortest path from the start node
-            While endNode <> startNode
-                For Each node In visited
-                    If maze(node.X, node.Y).weight < maze(endNode.X, endNode.Y).weight And checkConnectedCell(endNode.X, endNode.Y).Contains(node) Then
-                        maze(node.X, node.Y).mazeSolved = True
-                        endNode = node
-                        Exit For
-                    End If
-                Next
-            End While
-            ' Removes the start node to be overdrawn
-            maze(startNode.X, startNode.Y).mazeSolved = False
-        End If
-        ' Resets the variables used to animate and removes animation lock
-        drawMaze(False)
-        mazeBox.Image = mazeImage
-        nodeList.Clear()
-        frame = 0
-        animationLock(False)
-    End Sub
-
     Private Sub animationLock(Lock As Boolean) ' Locks all inputs to prevent backlogging and crashes
         If Lock = True Then
             ' Generate Button
@@ -643,43 +339,181 @@ Public Class Form1
             mazeEntryCombo.Enabled = True
         End If
     End Sub
+    Private Sub animate(Optional ByVal node As Point = Nothing, Optional ByVal heatList As List(Of Point) = Nothing)
+        drawMaze()
+        ' Wants to animate a header cell
+        If node <> Nothing Then
+            mazeImageGraphics.FillRectangle(New SolidBrush(Color.Yellow), node.X * M, node.Y * M, M, M)
+        End If
+        ' Wants a heat path to be drawn
+        If heatList IsNot Nothing Then
+            For Each point In heatList
+                ' Don't want to draw over the maze entry
+                If point <> mazeEntry Then
+                    mazeImageGraphics.FillRectangle(New SolidBrush(Color.FromArgb(255, 0, 220)), point.X * M, point.Y * M, M, M)
+                    ' Draws walls
+                    For Each cell In maze
+                        cell.drawWalls()
+                    Next
+                    ' Updates Maze box
+                    mazeBox.Image = mazeImage
+                    mazeBox.Update()
+                    Thread.Sleep(10)
+                End If
+            Next
+        End If
+        ' Updates Maze box
+        mazeBox.Image = mazeImage
+        mazeBox.Update()
+        Thread.Sleep(10)
+    End Sub
+    Private Sub randomisedDFS()
+        ' Backtracking Stack
+        Dim stack As Stack(Of Point) = New Stack(Of Point)
+        ' Randomly picks a node on the maze
+        Randomize()
+        Dim node As Point = New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1)
+        ' List used to store unvisted neighbours
+        Dim neighbours As List(Of Point) = New List(Of Point)
+        Dim direction As Integer
+
+        ' Push current node to the stack
+        stack.Push(node)
+        ' Until the stack is empty:
+        While stack.Count <> 0
+            ' Check neighbours
+            neighbours = maze(node.X, node.Y).checkUnvistedNeighbours
+            ' Pick a random direction
+            direction = Int(4 * Rnd())
+            ' If there is no open neighbours
+            If neighbours(0) = Nothing And neighbours(1) = Nothing And neighbours(2) = Nothing And neighbours(3) = Nothing Then
+                maze(node.X, node.Y).visited = True
+                node = stack.Pop()
+            Else
+                ' Makes sure it moves into an open neighbour
+                While neighbours(direction) = Nothing
+                    direction = Int(4 * Rnd())
+                End While
+                ' Makes sure the first node searched doesnt get inputted twice
+                If stack.Peek <> node Then
+                    stack.Push(node)
+                End If
+                ' Mark the cell as visted
+                maze(node.X, node.Y).visited = True
+                ' Break the wall between the cells and set node = postion of the cell we just broke into
+                node = maze(node.X, node.Y).breakWall(direction)
+                ' Checks if user wants quick animations
+                If quickAnimationBtn.Checked <> True Then
+                    ' Enable animation lock
+                    animationLock(True)
+                    ' Upadate mazeBox
+                    animate(node)
+                End If
+            End If
+        End While
+        ' Disable animation lock
+        animationLock(False)
+    End Sub
+    Private Sub dijkstra()
+        ' Queue 
+        Dim queue As Queue(Of Point) = New Queue(Of Point)
+        Dim visitedNodes As List(Of Point) = New List(Of Point)
+        ' Set the start node's weight = 0
+        maze(mazeEntry.X, mazeEntry.Y).weight = 0
+        ' Adds cell to the visted list
+        visitedNodes.Add(mazeEntry)
+        Dim weight As Integer = 1
+
+        ' Adds all connected cells to the queue
+        For Each point In maze(mazeEntry.X, mazeEntry.Y).connectedCell
+            queue.Enqueue(point)
+        Next
+
+        ' Until queue is empty::
+        While queue.Count <> 0
+            For i = 0 To queue.Count - 1
+                Dim tempNode As Point = queue.Dequeue()
+                visitedNodes.Add(tempNode)
+                maze(tempNode.X, tempNode.Y).weight = weight
+
+                ' ::Or we reach the maze exit
+                If tempNode = mazeExit Then
+                    Exit While
+                End If
+                ' If the we haven't visted that cell and its not in our queue already we add it to the queue
+                For Each point In maze(tempNode.X, tempNode.Y).connectedCell
+                    If visitedNodes.Contains(point) = False And queue.Contains(point) = False Then
+                        queue.Enqueue(point)
+                    End If
+                Next
+            Next
+            ' Increase weight
+            weight += 1
+        End While
+        ' Checks if user wants quick animations
+        If quickAnimationBtn.Checked <> True Then
+            ' Enable animation lock
+            animationLock(True)
+            ' Shows the heat map, higher heat = higher weight
+            animate(Nothing, visitedNodes)
+        End If
+
+        Dim endNode As Point = mazeExit
+        ' We will traverse the maze until we reach the maze entry
+        ' Until we reach the maze entry
+        While endNode <> mazeEntry
+            For Each node In visitedNodes
+                If maze(node.X, node.Y).weight < maze(endNode.X, endNode.Y).weight And maze(endNode.X, endNode.Y).connectedCell.Contains(node) Then
+                    maze(node.X, node.Y).mazeSolved = True
+                    ' Checks if user wants quick animations
+                    If quickAnimationBtn.Checked <> True Then
+                        ' Shows the creation of the shortest path
+                        animate()
+                    End If
+
+                    endNode = node
+                    Exit For
+                End If
+            Next
+        End While
+        maze(mazeEntry.X, mazeEntry.Y).mazeSolved = False
+        ' Disables animation lock
+        animationLock(False)
+    End Sub
 
     ' USER INPUT START
     Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
         ' Saves Maze Properties inputted by the user
         width = Int(widthTxtBox.Text) - 1
         height = Int(heightTxtBox.Text) - 1
-        If Double.TryParse(deadEndRemoverTxtBox.Text, deadEndPercent) Then
-            ' Input was a decimal
-
-        End If
-        ' Combo Box Inputs
         mazeEntryType = mazeEntryCombo.Text
         generationAlgorithm = generationCombo.Text
+        ' Intializes the maze
+        initializeMaze()
 
-        initializeMazeDraw()
+        ' Checks what generation algorithm user has chosen
         If generationAlgorithm = "DFS Backtracker" Then
-            mazeBox.Image = mazeImage
             randomisedDFS()
         End If
-
-        deadEndRemover()
-
+        ' Upadtes Maze box
+        drawMaze()
+        mazeBox.Image = mazeImage
     End Sub
 
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
         solveAlgorithm = solveCombo.Text
         ' Reset all cells that have .mazeSolved = True
         For Each cell In maze
-            If cell.mazeSolved = True Then
-                cell.mazeSolved = False
-            End If
+            cell.mazeSolved = False
         Next
-        drawMaze(False) ' Clear the previously drawn path
 
+        ' Checks what solving algorithm user has chosen
         If solveAlgorithm = "Dijkstra's Algorithm" Then
             dijkstra()
         End If
+        ' Upadtes Maze box
+        drawMaze()
+        mazeBox.Image = mazeImage
     End Sub
 
     ' Setting Colour Customisation
@@ -707,7 +541,7 @@ Public Class Form1
         If mazeImage.Equals(Nothing) = False Then
             Dim openFile As New SaveFileDialog
             openFile.FileName = Nothing
-            openFile.Filter = "Bitmap File's |*.svg"
+            openFile.Filter = "Bitmap File's |*.jpg"
             openFile.ShowDialog()
             Try
                 mazeImage.Save(openFile.FileName)
@@ -717,7 +551,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Label11_Click(sender As Object, e As EventArgs) Handles fps.Click
+    Private Sub Label11_Click(sender As Object, e As EventArgs) 
 
     End Sub
 
