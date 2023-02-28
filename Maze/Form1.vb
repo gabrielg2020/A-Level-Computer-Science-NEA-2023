@@ -22,6 +22,10 @@ Public Class Form1
     ' Controls when the from draws
     Public mazeImage As Bitmap
     Public mazeImageGraphics As Graphics
+    ' Stats Variables
+    Public deadEndToShow As Integer
+    Public solveTimer As Stopwatch = New Stopwatch
+    Public generationTimer As Stopwatch = New Stopwatch
 
     Public Class Cell
         ' Postion Properties
@@ -545,9 +549,12 @@ Public Class Form1
         initializeMaze()
 
         ' Checks what generation algorithm user has chosen
+        generationTimer.Reset()
+        generationTimer.Start()
         If generationAlgorithm = "DFS Backtracker" Then
             randomisedDFS()
         End If
+        generationTimer.Stop()
         ' Upadtes Maze box
         drawMaze()
         mazeBox.Image = mazeImage
@@ -561,9 +568,12 @@ Public Class Form1
         Next
 
         ' Checks what solving algorithm user has chosen
+        solveTimer.Reset()
+        solveTimer.Start()
         If solveAlgorithm = "Dijkstra's Algorithm" Then
             dijkstra()
         End If
+        solveTimer.Stop()
         ' Upadtes Maze box
         drawMaze()
         mazeBox.Image = mazeImage
@@ -611,6 +621,19 @@ Public Class Form1
                 ' They didn't select a file location
             End Try
         End If
+    End Sub
+
+    Private Sub viewStatsBtn_Click(sender As Object, e As EventArgs) Handles viewStatsBtn.Click
+        ' Find the dead end count
+        For Each cell In maze
+            cell.deadEndFinder()
+        Next
+        deadEndToShow = deadEndPos.Count()
+        deadEndPos.Clear()
+
+        MsgBox("Generation Time: " & Str(generationTimer.ElapsedMilliseconds() / 1000) & "s" & vbCrLf & "Total Dead Ends: " + Str(deadEndToShow) & vbCrLf & "Solve Time: " & Str(solveTimer.ElapsedMilliseconds() / 1000) & "s", MsgBoxStyle.OkOnly, "Maze Statisitics")
+
+
     End Sub
     ' USER INPUT END
 End Class
