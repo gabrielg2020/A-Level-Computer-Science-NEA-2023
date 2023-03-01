@@ -2,7 +2,7 @@
 Public Class Form1
     ' Drawing Constants
     Const PEN_SIZE As Integer = 2
-    Const M As Integer = 5
+    Const M As Integer = 30
     ' Maze properties
     Public maze As Cell(,)
     Public width As Integer
@@ -22,6 +22,11 @@ Public Class Form1
     ' Controls when the from draws
     Public mazeImage As Bitmap
     Public mazeImageGraphics As Graphics
+    ' Stats Variables
+    Public deadEndToShow As Integer
+    Public solveTimer As Stopwatch = New Stopwatch
+    Public generationTimer As Stopwatch = New Stopwatch
+    Public drawTimer As Stopwatch = New Stopwatch
 
     Public Class Cell
         ' Postion Properties
@@ -248,6 +253,8 @@ Public Class Form1
         Next
     End Sub
     Private Sub drawMaze() ' If False is passed through then the background cells will be drawn
+        drawTimer.Reset()
+        drawTimer.Start()
         For Each cell In maze
             ' Drawing the background
             If bgColour <> Color.Empty Then
@@ -281,6 +288,7 @@ Public Class Form1
             ' Drawing the walls
             cell.drawWalls()
         Next
+        drawTimer.Stop()
     End Sub
     Private Sub animationLock(Lock As Boolean) ' Locks all inputs to prevent backlogging and crashes
         If Lock = True Then
@@ -545,9 +553,12 @@ Public Class Form1
         initializeMaze()
 
         ' Checks what generation algorithm user has chosen
+        generationTimer.Reset()
+        generationTimer.Start()
         If generationAlgorithm = "DFS Backtracker" Then
             randomisedDFS()
         End If
+        generationTimer.Stop()
         ' Upadtes Maze box
         drawMaze()
         mazeBox.Image = mazeImage
@@ -561,9 +572,12 @@ Public Class Form1
         Next
 
         ' Checks what solving algorithm user has chosen
+        solveTimer.Reset()
+        solveTimer.Start()
         If solveAlgorithm = "Dijkstra's Algorithm" Then
             dijkstra()
         End If
+        solveTimer.Stop()
         ' Upadtes Maze box
         drawMaze()
         mazeBox.Image = mazeImage
@@ -573,6 +587,10 @@ Public Class Form1
         deadEndPercent = deadEndRemoverTxtBox.Text
         ' Removes dead ends
         deadEndRemover()
+        ' Removes the solved value for each cell
+        For Each cell In maze
+            cell.mazeSolved = False
+        Next
         ' Upadtes Maze box
         drawMaze()
         mazeBox.Image = mazeImage
@@ -611,6 +629,19 @@ Public Class Form1
                 ' They didn't select a file location
             End Try
         End If
+    End Sub
+
+    Private Sub viewStatsBtn_Click(sender As Object, e As EventArgs) Handles viewStatsBtn.Click
+        ' Find the dead end count
+        For Each cell In maze
+            cell.deadEndFinder()
+        Next
+        deadEndToShow = deadEndPos.Count()
+        deadEndPos.Clear()
+
+        MsgBox("Generation Time: " & Str(generationTimer.ElapsedMilliseconds() / 1000) & "s" & vbCrLf & "Solve Time: " & Str(solveTimer.ElapsedMilliseconds() / 1000) & "s" & vbCrLf & "Draw Time: " & Str(drawTimer.ElapsedMilliseconds() / 1000) & "s" & vbCrLf & "Total Dead Ends: " & Str(deadEndToShow), MsgBoxStyle.OkOnly, "Maze Statisitics")
+
+
     End Sub
     ' USER INPUT END
 End Class
