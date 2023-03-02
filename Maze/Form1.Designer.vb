@@ -40,7 +40,6 @@ Partial Class Form1
         Me.generateBtn = New System.Windows.Forms.Button()
         Me.solveBtn = New System.Windows.Forms.Button()
         Me.downloadBtn = New System.Windows.Forms.Button()
-        Me.viewStatsBtn = New System.Windows.Forms.Button()
         Me.mazeEntryCombo = New System.Windows.Forms.ComboBox()
         Me.generationCombo = New System.Windows.Forms.ComboBox()
         Me.solveCombo = New System.Windows.Forms.ComboBox()
@@ -52,16 +51,22 @@ Partial Class Form1
         Me.bgColourBtn = New System.Windows.Forms.Button()
         Me.mazeBox = New System.Windows.Forms.PictureBox()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
-        Me.quickAnimationBtn = New System.Windows.Forms.CheckBox()
+        Me.instantAnimationBtn = New System.Windows.Forms.CheckBox()
         Me.deadEndRemoverBtn = New System.Windows.Forms.Button()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.genTimeLbl = New System.Windows.Forms.Label()
+        Me.solveTimeLbl = New System.Windows.Forms.Label()
+        Me.drawTimeLbl = New System.Windows.Forms.Label()
+        Me.deadEndCountLbl = New System.Windows.Forms.Label()
         CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Title
         '
         resources.ApplyResources(Me.Title, "Title")
         Me.Title.BackColor = System.Drawing.Color.Transparent
-        Me.Title.ForeColor = System.Drawing.Color.White
+        Me.Title.ForeColor = System.Drawing.Color.Transparent
         Me.Title.Name = "Title"
         '
         'Label1
@@ -136,18 +141,21 @@ Partial Class Form1
         '
         'widthTxtBox
         '
+        Me.widthTxtBox.BackColor = System.Drawing.Color.White
         resources.ApplyResources(Me.widthTxtBox, "widthTxtBox")
         Me.widthTxtBox.ForeColor = System.Drawing.Color.Black
         Me.widthTxtBox.Name = "widthTxtBox"
         '
         'heightTxtBox
         '
+        Me.heightTxtBox.BackColor = System.Drawing.Color.White
         resources.ApplyResources(Me.heightTxtBox, "heightTxtBox")
         Me.heightTxtBox.ForeColor = System.Drawing.Color.Black
         Me.heightTxtBox.Name = "heightTxtBox"
         '
         'deadEndRemoverTxtBox
         '
+        Me.deadEndRemoverTxtBox.BackColor = System.Drawing.Color.White
         resources.ApplyResources(Me.deadEndRemoverTxtBox, "deadEndRemoverTxtBox")
         Me.deadEndRemoverTxtBox.ForeColor = System.Drawing.Color.Black
         Me.deadEndRemoverTxtBox.Name = "deadEndRemoverTxtBox"
@@ -175,14 +183,9 @@ Partial Class Form1
         Me.downloadBtn.Name = "downloadBtn"
         Me.downloadBtn.UseVisualStyleBackColor = True
         '
-        'viewStatsBtn
-        '
-        resources.ApplyResources(Me.viewStatsBtn, "viewStatsBtn")
-        Me.viewStatsBtn.Name = "viewStatsBtn"
-        Me.viewStatsBtn.UseVisualStyleBackColor = True
-        '
         'mazeEntryCombo
         '
+        Me.mazeEntryCombo.BackColor = System.Drawing.Color.White
         Me.mazeEntryCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         resources.ApplyResources(Me.mazeEntryCombo, "mazeEntryCombo")
         Me.mazeEntryCombo.ForeColor = System.Drawing.Color.Black
@@ -192,7 +195,7 @@ Partial Class Form1
         '
         'generationCombo
         '
-        Me.generationCombo.BackColor = System.Drawing.SystemColors.Window
+        Me.generationCombo.BackColor = System.Drawing.Color.White
         Me.generationCombo.Cursor = System.Windows.Forms.Cursors.Hand
         resources.ApplyResources(Me.generationCombo, "generationCombo")
         Me.generationCombo.ForeColor = System.Drawing.Color.Black
@@ -202,6 +205,7 @@ Partial Class Form1
         '
         'solveCombo
         '
+        Me.solveCombo.BackColor = System.Drawing.Color.White
         Me.solveCombo.Cursor = System.Windows.Forms.Cursors.Hand
         Me.solveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         resources.ApplyResources(Me.solveCombo, "solveCombo")
@@ -212,10 +216,10 @@ Partial Class Form1
         '
         'imageInputBtn
         '
-        Me.imageInputBtn.BackColor = System.Drawing.SystemColors.Window
+        Me.imageInputBtn.BackColor = System.Drawing.Color.White
         Me.imageInputBtn.Cursor = System.Windows.Forms.Cursors.Hand
         resources.ApplyResources(Me.imageInputBtn, "imageInputBtn")
-        Me.imageInputBtn.ForeColor = System.Drawing.Color.DimGray
+        Me.imageInputBtn.ForeColor = System.Drawing.Color.Black
         Me.imageInputBtn.Name = "imageInputBtn"
         Me.imageInputBtn.UseVisualStyleBackColor = False
         '
@@ -225,7 +229,7 @@ Partial Class Form1
         '
         'solveColourBtn
         '
-        Me.solveColourBtn.BackColor = System.Drawing.SystemColors.Window
+        Me.solveColourBtn.BackColor = System.Drawing.Color.White
         Me.solveColourBtn.Cursor = System.Windows.Forms.Cursors.Hand
         resources.ApplyResources(Me.solveColourBtn, "solveColourBtn")
         Me.solveColourBtn.ForeColor = System.Drawing.Color.Black
@@ -234,7 +238,7 @@ Partial Class Form1
         '
         'mazeColourBtn
         '
-        Me.mazeColourBtn.BackColor = System.Drawing.SystemColors.Window
+        Me.mazeColourBtn.BackColor = System.Drawing.Color.White
         Me.mazeColourBtn.Cursor = System.Windows.Forms.Cursors.Hand
         resources.ApplyResources(Me.mazeColourBtn, "mazeColourBtn")
         Me.mazeColourBtn.ForeColor = System.Drawing.Color.Black
@@ -243,7 +247,7 @@ Partial Class Form1
         '
         'bgColourBtn
         '
-        Me.bgColourBtn.BackColor = System.Drawing.SystemColors.Window
+        Me.bgColourBtn.BackColor = System.Drawing.Color.White
         Me.bgColourBtn.Cursor = System.Windows.Forms.Cursors.Hand
         resources.ApplyResources(Me.bgColourBtn, "bgColourBtn")
         Me.bgColourBtn.ForeColor = System.Drawing.Color.Black
@@ -257,15 +261,15 @@ Partial Class Form1
         Me.mazeBox.Name = "mazeBox"
         Me.mazeBox.TabStop = False
         '
-        'quickAnimationBtn
+        'instantAnimationBtn
         '
-        resources.ApplyResources(Me.quickAnimationBtn, "quickAnimationBtn")
-        Me.quickAnimationBtn.BackColor = System.Drawing.Color.Transparent
-        Me.quickAnimationBtn.Checked = True
-        Me.quickAnimationBtn.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.quickAnimationBtn.ForeColor = System.Drawing.Color.White
-        Me.quickAnimationBtn.Name = "quickAnimationBtn"
-        Me.quickAnimationBtn.UseVisualStyleBackColor = False
+        resources.ApplyResources(Me.instantAnimationBtn, "instantAnimationBtn")
+        Me.instantAnimationBtn.BackColor = System.Drawing.Color.Transparent
+        Me.instantAnimationBtn.Checked = True
+        Me.instantAnimationBtn.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.instantAnimationBtn.ForeColor = System.Drawing.Color.White
+        Me.instantAnimationBtn.Name = "instantAnimationBtn"
+        Me.instantAnimationBtn.UseVisualStyleBackColor = False
         '
         'deadEndRemoverBtn
         '
@@ -275,13 +279,45 @@ Partial Class Form1
         Me.deadEndRemoverBtn.Name = "deadEndRemoverBtn"
         Me.deadEndRemoverBtn.UseVisualStyleBackColor = False
         '
+        'PictureBox1
+        '
+        resources.ApplyResources(Me.PictureBox1, "PictureBox1")
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.TabStop = False
+        '
+        'genTimeLbl
+        '
+        resources.ApplyResources(Me.genTimeLbl, "genTimeLbl")
+        Me.genTimeLbl.Name = "genTimeLbl"
+        '
+        'solveTimeLbl
+        '
+        resources.ApplyResources(Me.solveTimeLbl, "solveTimeLbl")
+        Me.solveTimeLbl.Name = "solveTimeLbl"
+        '
+        'drawTimeLbl
+        '
+        resources.ApplyResources(Me.drawTimeLbl, "drawTimeLbl")
+        Me.drawTimeLbl.Name = "drawTimeLbl"
+        '
+        'deadEndCountLbl
+        '
+        resources.ApplyResources(Me.deadEndCountLbl, "deadEndCountLbl")
+        Me.deadEndCountLbl.Name = "deadEndCountLbl"
+        '
         'Form1
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackgroundImage = Global.Maze.My.Resources.Resources.Background
+        Me.BackColor = System.Drawing.Color.White
+        Me.BackgroundImage = Global.Maze.My.Resources.Resources.form_background_image
+        Me.Controls.Add(Me.deadEndCountLbl)
+        Me.Controls.Add(Me.drawTimeLbl)
+        Me.Controls.Add(Me.solveTimeLbl)
+        Me.Controls.Add(Me.genTimeLbl)
+        Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.deadEndRemoverBtn)
-        Me.Controls.Add(Me.quickAnimationBtn)
+        Me.Controls.Add(Me.instantAnimationBtn)
         Me.Controls.Add(Me.mazeBox)
         Me.Controls.Add(Me.bgColourBtn)
         Me.Controls.Add(Me.mazeColourBtn)
@@ -290,7 +326,6 @@ Partial Class Form1
         Me.Controls.Add(Me.solveCombo)
         Me.Controls.Add(Me.generationCombo)
         Me.Controls.Add(Me.mazeEntryCombo)
-        Me.Controls.Add(Me.viewStatsBtn)
         Me.Controls.Add(Me.downloadBtn)
         Me.Controls.Add(Me.solveBtn)
         Me.Controls.Add(Me.generateBtn)
@@ -312,6 +347,7 @@ Partial Class Form1
         Me.MinimizeBox = False
         Me.Name = "Form1"
         CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -334,7 +370,6 @@ Partial Class Form1
     Friend WithEvents generateBtn As Button
     Friend WithEvents solveBtn As Button
     Friend WithEvents downloadBtn As Button
-    Friend WithEvents viewStatsBtn As Button
     Friend WithEvents mazeEntryCombo As ComboBox
     Friend WithEvents generationCombo As ComboBox
     Friend WithEvents solveCombo As ComboBox
@@ -346,6 +381,11 @@ Partial Class Form1
     Friend WithEvents bgColourBtn As Button
     Friend WithEvents mazeBox As PictureBox
     Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
-    Friend WithEvents quickAnimationBtn As CheckBox
+    Friend WithEvents instantAnimationBtn As CheckBox
     Friend WithEvents deadEndRemoverBtn As Button
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents genTimeLbl As Label
+    Friend WithEvents solveTimeLbl As Label
+    Friend WithEvents drawTimeLbl As Label
+    Friend WithEvents deadEndCountLbl As Label
 End Class

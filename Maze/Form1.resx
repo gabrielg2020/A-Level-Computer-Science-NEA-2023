@@ -63,13 +63,13 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="Title.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 36pt</value>
+    <value>Segoe UI, 72pt</value>
   </data>
   <data name="Title.Location" type="System.Drawing.Point, System.Drawing">
-    <value>389, 9</value>
+    <value>572, 0</value>
   </data>
   <data name="Title.Size" type="System.Drawing.Size, System.Drawing">
-    <value>389, 65</value>
+    <value>776, 128</value>
   </data>
   <data name="Title.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -87,19 +87,19 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Title.ZOrder" xml:space="preserve">
-    <value>27</value>
+    <value>31</value>
   </data>
   <data name="Label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label1.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <data name="Label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 91</value>
+    <value>17, 165</value>
   </data>
   <data name="Label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>143, 32</value>
+    <value>212, 48</value>
   </data>
   <data name="Label1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -117,23 +117,23 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label1.ZOrder" xml:space="preserve">
-    <value>26</value>
+    <value>30</value>
   </data>
   <data name="Label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label2.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 141</value>
+    <value>17, 235</value>
   </data>
   <data name="Label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>78, 32</value>
+    <value>116, 48</value>
   </data>
   <data name="Label2.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -151,22 +151,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label2.ZOrder" xml:space="preserve">
-    <value>25</value>
+    <value>29</value>
   </data>
   <data name="Label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label3.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <data name="Label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 186</value>
+    <value>17, 305</value>
   </data>
   <data name="Label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 32</value>
+    <value>127, 48</value>
   </data>
   <data name="Label3.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -184,22 +184,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label3.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>28</value>
   </data>
   <data name="Label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label4.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <data name="Label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 227</value>
+    <value>17, 374</value>
   </data>
   <data name="Label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 32</value>
+    <value>365, 48</value>
   </data>
   <data name="Label4.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -217,22 +217,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label4.ZOrder" xml:space="preserve">
-    <value>23</value>
+    <value>27</value>
   </data>
   <data name="Label5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label5.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <data name="Label5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 271</value>
+    <value>17, 444</value>
   </data>
   <data name="Label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 32</value>
+    <value>305, 48</value>
   </data>
   <data name="Label5.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -250,22 +250,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label5.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>26</value>
   </data>
   <data name="Label6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label6.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <data name="Label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 320</value>
+    <value>17, 515</value>
   </data>
   <data name="Label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>222, 32</value>
+    <value>328, 48</value>
   </data>
   <data name="Label6.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -283,22 +283,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label6.ZOrder" xml:space="preserve">
-    <value>21</value>
+    <value>25</value>
   </data>
   <data name="Label7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label7.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <data name="Label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 354</value>
+    <value>17, 584</value>
   </data>
   <data name="Label7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>133, 32</value>
+    <value>195, 48</value>
   </data>
   <data name="Label7.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -316,22 +316,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label7.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>24</value>
   </data>
   <data name="Label8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label8.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <data name="Label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 415</value>
+    <value>17, 655</value>
   </data>
   <data name="Label8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>219, 32</value>
+    <value>326, 48</value>
   </data>
   <data name="Label8.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -349,22 +349,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label8.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>23</value>
   </data>
   <data name="Label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label9.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <data name="Label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 461</value>
+    <value>17, 725</value>
   </data>
   <data name="Label9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>150, 32</value>
+    <value>221, 48</value>
   </data>
   <data name="Label9.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -382,22 +382,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label9.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>22</value>
   </data>
   <data name="Label10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="Label10.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 27pt</value>
   </data>
   <data name="Label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="Label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 505</value>
+    <value>17, 795</value>
   </data>
   <data name="Label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>150, 32</value>
+    <value>221, 48</value>
   </data>
   <data name="Label10.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -415,13 +415,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label10.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>21</value>
   </data>
   <data name="widthTxtBox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 18pt</value>
   </data>
   <data name="widthTxtBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 136</value>
+    <value>389, 222</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="widthTxtBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
@@ -434,7 +434,7 @@
     <value>True</value>
   </data>
   <data name="widthTxtBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 41</value>
+    <value>273, 61</value>
   </data>
   <data name="widthTxtBox.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -455,13 +455,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;widthTxtBox.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>20</value>
   </data>
   <data name="heightTxtBox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 18pt</value>
   </data>
   <data name="heightTxtBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 181</value>
+    <value>389, 292</value>
   </data>
   <data name="heightTxtBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
@@ -473,7 +473,7 @@
     <value>True</value>
   </data>
   <data name="heightTxtBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 41</value>
+    <value>273, 61</value>
   </data>
   <data name="heightTxtBox.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -494,13 +494,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;heightTxtBox.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>19</value>
   </data>
   <data name="deadEndRemoverTxtBox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 18pt</value>
   </data>
   <data name="deadEndRemoverTxtBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 315</value>
+    <value>389, 502</value>
   </data>
   <data name="deadEndRemoverTxtBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
@@ -512,7 +512,7 @@
     <value>True</value>
   </data>
   <data name="deadEndRemoverTxtBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 41</value>
+    <value>273, 61</value>
   </data>
   <data name="deadEndRemoverTxtBox.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
@@ -533,7 +533,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;deadEndRemoverTxtBox.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>18</value>
   </data>
   <data name="generateBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -545,13 +545,13 @@
     <value>NoControl</value>
   </data>
   <data name="generateBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>469, 795</value>
+    <value>672, 871</value>
   </data>
   <data name="generateBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="generateBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 65</value>
+    <value>400, 73</value>
   </data>
   <data name="generateBtn.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
@@ -569,7 +569,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;generateBtn.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>17</value>
   </data>
   <data name="solveBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -581,13 +581,13 @@
     <value>NoControl</value>
   </data>
   <data name="solveBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>975, 795</value>
+    <value>1492, 871</value>
   </data>
   <data name="solveBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="solveBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 65</value>
+    <value>400, 73</value>
   </data>
   <data name="solveBtn.TabIndex" type="System.Int32, mscorlib">
     <value>23</value>
@@ -605,7 +605,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;solveBtn.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>16</value>
   </data>
   <data name="downloadBtn.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 10.2pt</value>
@@ -614,13 +614,13 @@
     <value>NoControl</value>
   </data>
   <data name="downloadBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>469, 864</value>
+    <value>672, 958</value>
   </data>
   <data name="downloadBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="downloadBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>700, 41</value>
+    <value>1220, 73</value>
   </data>
   <data name="downloadBtn.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
@@ -638,46 +638,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;downloadBtn.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="viewStatsBtn.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 10.2pt</value>
-  </data>
-  <data name="viewStatsBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="viewStatsBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>469, 909</value>
-  </data>
-  <data name="viewStatsBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
-  </data>
-  <data name="viewStatsBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>700, 41</value>
-  </data>
-  <data name="viewStatsBtn.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="viewStatsBtn.Text" xml:space="preserve">
-    <value>View Maze Statistics</value>
-  </data>
-  <data name="&gt;&gt;viewStatsBtn.Name" xml:space="preserve">
-    <value>viewStatsBtn</value>
-  </data>
-  <data name="&gt;&gt;viewStatsBtn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;viewStatsBtn.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;viewStatsBtn.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>15</value>
   </data>
   <data name="mazeEntryCombo.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
   <data name="mazeEntryCombo.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 29.25pt</value>
   </data>
   <data name="mazeEntryCombo.Items" xml:space="preserve">
     <value>Random</value>
@@ -692,13 +659,13 @@
     <value>Diagonal</value>
   </data>
   <data name="mazeEntryCombo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 360</value>
+    <value>389, 572</value>
   </data>
   <data name="mazeEntryCombo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="mazeEntryCombo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 40</value>
+    <value>273, 60</value>
   </data>
   <data name="mazeEntryCombo.TabIndex" type="System.Int32, mscorlib">
     <value>26</value>
@@ -713,13 +680,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mazeEntryCombo.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>14</value>
   </data>
   <data name="generationCombo.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
   <data name="generationCombo.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 29.25pt</value>
   </data>
   <data name="generationCombo.Items" xml:space="preserve">
     <value>DFS Backtracker</value>
@@ -731,13 +698,13 @@
     <value>Randomised Prims</value>
   </data>
   <data name="generationCombo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 227</value>
+    <value>389, 362</value>
   </data>
   <data name="generationCombo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="generationCombo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 40</value>
+    <value>273, 60</value>
   </data>
   <data name="generationCombo.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -752,13 +719,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;generationCombo.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>13</value>
   </data>
   <data name="solveCombo.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
   <data name="solveCombo.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+    <value>Segoe UI, 29.25pt</value>
   </data>
   <data name="solveCombo.Items" xml:space="preserve">
     <value>Dijkstra's Algorithm</value>
@@ -767,13 +734,13 @@
     <value>Breath Frist Search</value>
   </data>
   <data name="solveCombo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 271</value>
+    <value>389, 432</value>
   </data>
   <data name="solveCombo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="solveCombo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 40</value>
+    <value>273, 60</value>
   </data>
   <data name="solveCombo.TabIndex" type="System.Int32, mscorlib">
     <value>28</value>
@@ -788,7 +755,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;solveCombo.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>12</value>
   </data>
   <data name="imageInputBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -796,14 +763,17 @@
   <data name="imageInputBtn.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 18pt</value>
   </data>
+  <data name="imageInputBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="imageInputBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 91</value>
+    <value>389, 152</value>
   </data>
   <data name="imageInputBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="imageInputBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 41</value>
+    <value>273, 61</value>
   </data>
   <data name="imageInputBtn.TabIndex" type="System.Int32, mscorlib">
     <value>29</value>
@@ -821,7 +791,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;imageInputBtn.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>11</value>
   </data>
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -839,13 +809,13 @@
     <value>NoControl</value>
   </data>
   <data name="solveColourBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 499</value>
+    <value>389, 782</value>
   </data>
   <data name="solveColourBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="solveColourBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 41</value>
+    <value>277, 61</value>
   </data>
   <data name="solveColourBtn.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
@@ -863,7 +833,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;solveColourBtn.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>10</value>
   </data>
   <data name="mazeColourBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -875,13 +845,13 @@
     <value>NoControl</value>
   </data>
   <data name="mazeColourBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 454</value>
+    <value>389, 712</value>
   </data>
   <data name="mazeColourBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="mazeColourBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 41</value>
+    <value>277, 61</value>
   </data>
   <data name="mazeColourBtn.TabIndex" type="System.Int32, mscorlib">
     <value>31</value>
@@ -899,7 +869,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mazeColourBtn.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>9</value>
   </data>
   <data name="bgColourBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -911,13 +881,13 @@
     <value>NoControl</value>
   </data>
   <data name="bgColourBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>287, 409</value>
+    <value>389, 642</value>
   </data>
   <data name="bgColourBtn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="bgColourBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 41</value>
+    <value>277, 61</value>
   </data>
   <data name="bgColourBtn.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>
@@ -935,16 +905,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;bgColourBtn.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>8</value>
   </data>
   <data name="mazeBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>469, 91</value>
+    <value>672, 152</value>
   </data>
   <data name="mazeBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>
   </data>
   <data name="mazeBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>700, 700</value>
+    <value>1220, 691</value>
   </data>
   <data name="mazeBox.TabIndex" type="System.Int32, mscorlib">
     <value>34</value>
@@ -959,52 +929,52 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mazeBox.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>7</value>
   </data>
   <metadata name="FolderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>301, 17</value>
   </metadata>
-  <data name="quickAnimationBtn.AutoSize" type="System.Boolean, mscorlib">
+  <data name="instantAnimationBtn.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="quickAnimationBtn.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 18pt</value>
+  <data name="instantAnimationBtn.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 29.25pt</value>
   </data>
-  <data name="quickAnimationBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="instantAnimationBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="quickAnimationBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>261, 545</value>
+  <data name="instantAnimationBtn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1546, 91</value>
   </data>
-  <data name="quickAnimationBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 36</value>
+  <data name="instantAnimationBtn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>346, 56</value>
   </data>
-  <data name="quickAnimationBtn.TabIndex" type="System.Int32, mscorlib">
+  <data name="instantAnimationBtn.TabIndex" type="System.Int32, mscorlib">
     <value>35</value>
   </data>
-  <data name="quickAnimationBtn.Text" xml:space="preserve">
-    <value>Quick Animation</value>
+  <data name="instantAnimationBtn.Text" xml:space="preserve">
+    <value>Intsant Animation</value>
   </data>
-  <data name="&gt;&gt;quickAnimationBtn.Name" xml:space="preserve">
-    <value>quickAnimationBtn</value>
+  <data name="&gt;&gt;instantAnimationBtn.Name" xml:space="preserve">
+    <value>instantAnimationBtn</value>
   </data>
-  <data name="&gt;&gt;quickAnimationBtn.Type" xml:space="preserve">
+  <data name="&gt;&gt;instantAnimationBtn.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;quickAnimationBtn.Parent" xml:space="preserve">
+  <data name="&gt;&gt;instantAnimationBtn.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;quickAnimationBtn.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;instantAnimationBtn.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="deadEndRemoverBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
   <data name="deadEndRemoverBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>727, 796</value>
+    <value>1082, 871</value>
   </data>
   <data name="deadEndRemoverBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 65</value>
+    <value>400, 73</value>
   </data>
   <data name="deadEndRemoverBtn.TabIndex" type="System.Int32, mscorlib">
     <value>36</value>
@@ -1022,16 +992,169 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;deadEndRemoverBtn.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="PictureBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>17, 871</value>
+  </data>
+  <data name="PictureBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>640, 160</value>
+  </data>
+  <data name="PictureBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>37</value>
+  </data>
+  <data name="&gt;&gt;PictureBox1.Name" xml:space="preserve">
+    <value>PictureBox1</value>
+  </data>
+  <data name="&gt;&gt;PictureBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;PictureBox1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;PictureBox1.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="genTimeLbl.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="genTimeLbl.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 15.75pt</value>
+  </data>
+  <data name="genTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 888</value>
+  </data>
+  <data name="genTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>171, 30</value>
+  </data>
+  <data name="genTimeLbl.TabIndex" type="System.Int32, mscorlib">
+    <value>38</value>
+  </data>
+  <data name="genTimeLbl.Text" xml:space="preserve">
+    <value>Generation Time:</value>
+  </data>
+  <data name="&gt;&gt;genTimeLbl.Name" xml:space="preserve">
+    <value>genTimeLbl</value>
+  </data>
+  <data name="&gt;&gt;genTimeLbl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;genTimeLbl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;genTimeLbl.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="solveTimeLbl.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="solveTimeLbl.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 15.75pt</value>
+  </data>
+  <data name="solveTimeLbl.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="solveTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 918</value>
+  </data>
+  <data name="solveTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>118, 30</value>
+  </data>
+  <data name="solveTimeLbl.TabIndex" type="System.Int32, mscorlib">
+    <value>39</value>
+  </data>
+  <data name="solveTimeLbl.Text" xml:space="preserve">
+    <value>Solve Time:</value>
+  </data>
+  <data name="&gt;&gt;solveTimeLbl.Name" xml:space="preserve">
+    <value>solveTimeLbl</value>
+  </data>
+  <data name="&gt;&gt;solveTimeLbl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;solveTimeLbl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;solveTimeLbl.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="drawTimeLbl.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="drawTimeLbl.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 15.75pt</value>
+  </data>
+  <data name="drawTimeLbl.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="drawTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 948</value>
+  </data>
+  <data name="drawTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 30</value>
+  </data>
+  <data name="drawTimeLbl.TabIndex" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="drawTimeLbl.Text" xml:space="preserve">
+    <value>Draw Time:</value>
+  </data>
+  <data name="&gt;&gt;drawTimeLbl.Name" xml:space="preserve">
+    <value>drawTimeLbl</value>
+  </data>
+  <data name="&gt;&gt;drawTimeLbl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;drawTimeLbl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;drawTimeLbl.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="deadEndCountLbl.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="deadEndCountLbl.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 15.75pt</value>
+  </data>
+  <data name="deadEndCountLbl.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="deadEndCountLbl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 978</value>
+  </data>
+  <data name="deadEndCountLbl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>170, 30</value>
+  </data>
+  <data name="deadEndCountLbl.TabIndex" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
+  <data name="deadEndCountLbl.Text" xml:space="preserve">
+    <value>Dead End Count:</value>
+  </data>
+  <data name="&gt;&gt;deadEndCountLbl.Name" xml:space="preserve">
+    <value>deadEndCountLbl</value>
+  </data>
+  <data name="&gt;&gt;deadEndCountLbl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;deadEndCountLbl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;deadEndCountLbl.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>83</value>
+  </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>7, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1184, 1024</value>
+    <value>1904, 1041</value>
   </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 2, 3, 2</value>

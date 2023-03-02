@@ -2,7 +2,7 @@
 Public Class Form1
     ' Drawing Constants
     Const PEN_SIZE As Integer = 2
-    Const M As Integer = 30
+    Const M As Integer = 10
     ' Maze properties
     Public maze As Cell(,)
     Public width As Integer
@@ -310,8 +310,6 @@ Public Class Form1
             ' Rest TextBoxs
             downloadBtn.BackColor = Color.FromArgb(152, 158, 161)
             downloadBtn.Enabled = False
-            viewStatsBtn.BackColor = Color.FromArgb(152, 158, 161)
-            viewStatsBtn.Enabled = False
             widthTxtBox.BackColor = Color.FromArgb(152, 158, 161)
             widthTxtBox.Enabled = False
             heightTxtBox.BackColor = Color.FromArgb(152, 158, 161)
@@ -335,8 +333,6 @@ Public Class Form1
             ' Rest Button
             downloadBtn.BackColor = SystemColors.Window
             downloadBtn.Enabled = True
-            viewStatsBtn.BackColor = SystemColors.Window
-            viewStatsBtn.Enabled = True
             imageInputBtn.BackColor = SystemColors.Window
             imageInputBtn.Enabled = True
             bgColourBtn.BackColor = SystemColors.Window
@@ -425,7 +421,7 @@ Public Class Form1
                 ' Break the wall between the cells and set node = postion of the cell we just broke into
                 node = maze(node.X, node.Y).breakWall(direction)
                 ' Checks if user wants quick animations
-                If quickAnimationBtn.Checked <> True Then
+                If instantAnimationBtn.Checked <> True Then
                     ' Enable animation lock
                     animationLock(True)
                     ' Upadate mazeBox
@@ -473,7 +469,7 @@ Public Class Form1
             weight += 1
         End While
         ' Checks if user wants quick animations
-        If quickAnimationBtn.Checked <> True Then
+        If instantAnimationBtn.Checked <> True Then
             ' Enable animation lock
             animationLock(True)
             ' Shows the heat map, higher heat = higher weight
@@ -488,7 +484,7 @@ Public Class Form1
                 If maze(node.X, node.Y).weight < maze(endNode.X, endNode.Y).weight And maze(endNode.X, endNode.Y).connectedCell.Contains(node) Then
                     maze(node.X, node.Y).mazeSolved = True
                     ' Checks if user wants quick animations
-                    If quickAnimationBtn.Checked <> True Then
+                    If instantAnimationBtn.Checked <> True Then
                         ' Shows the creation of the shortest path
                         animate()
                     End If
@@ -562,6 +558,19 @@ Public Class Form1
         ' Upadtes Maze box
         drawMaze()
         mazeBox.Image = mazeImage
+
+        ' Updates Statistics
+        ' Find the dead end count
+        For Each cell In maze
+            cell.deadEndFinder()
+        Next
+        deadEndToShow = deadEndPos.Count()
+        deadEndPos.Clear()
+        ' Displays Data
+        genTimeLbl.Text = "Generation Time: " & Str(generationTimer.ElapsedMilliseconds() / 1000) & "s"
+        solveTimeLbl.Text = "Sove Time: " & Str(solveTimer.ElapsedMilliseconds() / 1000) & "s"
+        drawTimeLbl.Text = "Draw Time: " & Str(drawTimer.ElapsedMilliseconds() / 1000) & "s"
+        deadEndCountLbl.Text = "Dead End Count: " & Str(deadEndToShow)
     End Sub
 
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
@@ -629,19 +638,6 @@ Public Class Form1
                 ' They didn't select a file location
             End Try
         End If
-    End Sub
-
-    Private Sub viewStatsBtn_Click(sender As Object, e As EventArgs) Handles viewStatsBtn.Click
-        ' Find the dead end count
-        For Each cell In maze
-            cell.deadEndFinder()
-        Next
-        deadEndToShow = deadEndPos.Count()
-        deadEndPos.Clear()
-
-        MsgBox("Generation Time: " & Str(generationTimer.ElapsedMilliseconds() / 1000) & "s" & vbCrLf & "Solve Time: " & Str(solveTimer.ElapsedMilliseconds() / 1000) & "s" & vbCrLf & "Draw Time: " & Str(drawTimer.ElapsedMilliseconds() / 1000) & "s" & vbCrLf & "Total Dead Ends: " & Str(deadEndToShow), MsgBoxStyle.OkOnly, "Maze Statisitics")
-
-
     End Sub
     ' USER INPUT END
 End Class
