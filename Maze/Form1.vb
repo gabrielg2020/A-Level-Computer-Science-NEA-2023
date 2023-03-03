@@ -29,9 +29,17 @@ Public Class Form1
     Private solveTimer As Stopwatch = New Stopwatch
     Private generationTimer As Stopwatch = New Stopwatch
     Private drawTimer As Stopwatch = New Stopwatch
+    Private deadEndTimer As Stopwatch = New Stopwatch
     ' Babyproofing Variables
     Private mazeGenerated As Boolean = False
-
+    ' Image to maze Variables
+    Private inputImage As Bitmap
+    Private mazeWallList As List(Of Point) = New List(Of Point)
+    Private luminosity As Double
+    Const GAMMA As Double = 1.0
+    Const R As Double = 0.2126
+    Const G As Double = 0.7152
+    Const B As Double = 0.0722
 
     Public Class Cell
         ' Postion Properties
@@ -170,6 +178,27 @@ Public Class Form1
         End Function
     End Class
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' GUI Customisation
+        imageInputBtn.BackColor = Color.FromArgb(40, 60, 86)
+        widthTxtBox.BackColor = Color.FromArgb(40, 60, 86)
+        heightTxtBox.BackColor = Color.FromArgb(40, 60, 86)
+        generationCombo.BackColor = Color.FromArgb(40, 60, 86)
+        solveCombo.BackColor = Color.FromArgb(40, 60, 86)
+        mazeEntryCombo.BackColor = Color.FromArgb(40, 60, 86)
+        deadEndRemoverTxtBox.BackColor = Color.FromArgb(40, 60, 86)
+        bgColourBtn.BackColor = Color.FromArgb(40, 60, 86)
+        mazeColourBtn.BackColor = Color.FromArgb(40, 60, 86)
+        solveColourBtn.BackColor = Color.FromArgb(40, 60, 86)
+        statsPictureBox.BackColor = Color.FromArgb(40, 60, 86)
+        genTimeLbl.BackColor = Color.FromArgb(40, 60, 86)
+        solveTimeLbl.BackColor = Color.FromArgb(40, 60, 86)
+        drawTimeLbl.BackColor = Color.FromArgb(40, 60, 86)
+        deadEndTimeLbl.BackColor = Color.FromArgb(40, 60, 86)
+        deadEndCountLbl.BackColor = Color.FromArgb(40, 60, 86)
+        totalTimeLbl.BackColor = Color.FromArgb(40, 60, 86)
+
+
+        Me.WindowState = FormWindowState.Maximized
         generationCombo.SelectedIndex = 0 ' Makes index 0 default displayed on the combo list(so currently shows "DFS Backtracker" initially
         solveCombo.SelectedIndex = 0 ' Default displays (Dijkstra's Algortimn)
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Random"
@@ -235,7 +264,7 @@ Public Class Form1
                 End If
 
                 ' Setting the maze wall cells with the mazeWallBool
-                If i = 0 Or j = 0 Or i = width Or j = height Then
+                If i = 0 Or j = 0 Or i = width Or j = height Or mazeWallList.Contains(New Point(i, j)) Then
                     maze(i, j).mazeWallBool = True
                     maze(i, j).visited = True
                 End If
@@ -264,7 +293,7 @@ Public Class Form1
         ' Resets old timer, Starts new timer, Upates Status
         drawTimer.Reset()
         drawTimer.Start()
-        statusLbl.Text = "Status: Initializing Maze"
+        statusLbl.Text = "Status: Drawing Maze"
         statusLbl.Update()
         For Each cell In maze
             ' Drawing the background
@@ -304,67 +333,75 @@ Public Class Form1
     Private Sub animationLock(Lock As Boolean) ' Locks all inputs to prevent backlogging and crashes
         If Lock = True Then
             ' Generate Button
-            generateBtn.BackColor = Color.FromArgb(74, 145, 74)
+            generateBtn.BackColor = Color.FromArgb(18, 73, 18)
             generateBtn.Enabled = False
             ' Solve Button
-            solveBtn.BackColor = Color.FromArgb(142, 72, 72)
+            solveBtn.BackColor = Color.FromArgb(112, 22, 22)
             solveBtn.Enabled = False
+            ' Dead End Remover Button
+            deadEndRemoverBtn.BackColor = Color.FromArgb(0, 73, 73)
+            deadEndRemoverBtn.Enabled = False
+            ' Download Button
+            downloadBtn.BackColor = Color.FromArgb(19, 28, 40)
+            downloadBtn.Enabled = False
             ' Rest Button
-            imageInputBtn.BackColor = Color.FromArgb(152, 158, 161)
+            imageInputBtn.BackColor = Color.FromArgb(19, 28, 40)
             imageInputBtn.Enabled = False
-            bgColourBtn.BackColor = Color.FromArgb(152, 158, 161)
+            bgColourBtn.BackColor = Color.FromArgb(19, 28, 40)
             bgColourBtn.Enabled = False
-            mazeColourBtn.BackColor = Color.FromArgb(152, 158, 161)
+            mazeColourBtn.BackColor = Color.FromArgb(19, 28, 40)
             mazeColourBtn.Enabled = False
-            solveColourBtn.BackColor = Color.FromArgb(152, 158, 161)
+            solveColourBtn.BackColor = Color.FromArgb(19, 28, 40)
             solveColourBtn.Enabled = False
             ' Rest TextBoxs
-            downloadBtn.BackColor = Color.FromArgb(152, 158, 161)
-            downloadBtn.Enabled = False
-            widthTxtBox.BackColor = Color.FromArgb(152, 158, 161)
+            widthTxtBox.BackColor = Color.FromArgb(19, 28, 40)
             widthTxtBox.Enabled = False
-            heightTxtBox.BackColor = Color.FromArgb(152, 158, 161)
+            heightTxtBox.BackColor = Color.FromArgb(19, 28, 40)
             heightTxtBox.Enabled = False
-            deadEndRemoverTxtBox.BackColor = Color.FromArgb(152, 158, 161)
+            deadEndRemoverTxtBox.BackColor = Color.FromArgb(19, 28, 40)
             deadEndRemoverTxtBox.Enabled = False
             ' Rest ComboBoxs
-            generationCombo.BackColor = Color.FromArgb(152, 158, 161)
-            generationCombo.Enabled = False
-            solveCombo.BackColor = Color.FromArgb(152, 158, 161)
-            solveCombo.Enabled = False
-            mazeEntryCombo.BackColor = Color.FromArgb(152, 158, 161)
-            mazeEntryCombo.Enabled = False
+            generationCombo.BackColor = Color.FromArgb(19, 28, 40)
+            generationCombo.Update()
+            solveCombo.BackColor = Color.FromArgb(19, 28, 40)
+            solveCombo.Update()
+            mazeEntryCombo.BackColor = Color.FromArgb(19, 28, 40)
+            mazeEntryCombo.Update()
         Else
             ' Generate Button
-            generateBtn.BackColor = Color.FromArgb(128, 255, 128)
+            generateBtn.BackColor = Color.ForestGreen
             generateBtn.Enabled = True
             ' Solve Button
-            solveBtn.BackColor = Color.FromArgb(255, 128, 128)
+            solveBtn.BackColor = Color.Firebrick
             solveBtn.Enabled = True
-            ' Rest Button
-            downloadBtn.BackColor = SystemColors.Window
+            ' Dead End Remover Button
+            deadEndRemoverBtn.BackColor = Color.DarkCyan
+            deadEndRemoverBtn.Enabled = True
+            ' Download Button
+            downloadBtn.BackColor = Color.PaleVioletRed
             downloadBtn.Enabled = True
-            imageInputBtn.BackColor = SystemColors.Window
+            ' Rest Button
+            imageInputBtn.BackColor = Color.FromArgb(40, 60, 86)
             imageInputBtn.Enabled = True
-            bgColourBtn.BackColor = SystemColors.Window
+            bgColourBtn.BackColor = Color.FromArgb(40, 60, 86)
             bgColourBtn.Enabled = True
-            mazeColourBtn.BackColor = SystemColors.Window
+            mazeColourBtn.BackColor = Color.FromArgb(40, 60, 86)
             mazeColourBtn.Enabled = True
-            solveColourBtn.BackColor = SystemColors.Window
+            solveColourBtn.BackColor = Color.FromArgb(40, 60, 86)
             solveColourBtn.Enabled = True
             ' Rest TextBoxs
-            widthTxtBox.BackColor = SystemColors.Window
+            widthTxtBox.BackColor = Color.FromArgb(40, 60, 86)
             widthTxtBox.Enabled = True
-            heightTxtBox.BackColor = SystemColors.Window
+            heightTxtBox.BackColor = Color.FromArgb(40, 60, 86)
             heightTxtBox.Enabled = True
-            deadEndRemoverTxtBox.BackColor = SystemColors.Window
+            deadEndRemoverTxtBox.BackColor = Color.FromArgb(40, 60, 86)
             deadEndRemoverTxtBox.Enabled = True
             ' Rest ComboBoxs
-            generationCombo.BackColor = SystemColors.Window
+            generationCombo.BackColor = Color.FromArgb(40, 60, 86)
             generationCombo.Enabled = True
-            solveCombo.BackColor = SystemColors.Window
+            solveCombo.BackColor = Color.FromArgb(40, 60, 86)
             solveCombo.Enabled = True
-            mazeEntryCombo.BackColor = SystemColors.Window
+            mazeEntryCombo.BackColor = Color.FromArgb(40, 60, 86)
             mazeEntryCombo.Enabled = True
         End If
     End Sub
@@ -533,6 +570,13 @@ Public Class Form1
             ' Break the deadend
             maze(deadEndPos(positionPicked).X, deadEndPos(positionPicked).Y).breakWall(direction)
             initalDeadEnds = deadEndPos.Count()
+            ' Checks if user wants quick animations
+            If instantAnimationBtn.Checked <> True Then
+                ' Enable animation lock
+                animationLock(True)
+                ' Upadate mazeBox
+                animate(New Point(deadEndPos(positionPicked).X, deadEndPos(positionPicked).Y))
+            End If
             ' Find the new amount of deadends
             deadEndPos.Clear()
             For Each cell In maze
@@ -547,12 +591,11 @@ Public Class Form1
             End If
         End While
         deadEndPos.Clear()
+        animationLock(False)
     End Sub
     ' USER INPUT START
     Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
         ' Saves Maze Properties inputted by the user
-        Dim widthTxtLength As Integer = 0
-        Dim heigtTxtLength As Integer = 0
         ' Checking that the values inputed for width and height are valid
         If Integer.TryParse(widthTxtBox.Text, width) And width > 2 And Integer.TryParse(heightTxtBox.Text, height) And height > 2 Then
             width -= 1
@@ -579,6 +622,7 @@ Public Class Form1
                 solveTimeLbl.Text = "Sove Time: "
                 drawTimeLbl.Text = "Draw Time: "
                 deadEndCountLbl.Text = "Dead End Count: "
+                deadEndTimeLbl.Text = "Dead End Time: "
                 totalTimeLbl.Text = "Total Time "
                 Exit Sub
             End If
@@ -586,8 +630,6 @@ Public Class Form1
             ' If the multipier is below 3 that means it can be displayed on the form
             M = Math.Floor(Math.Min(1220 / Int(widthTxtBox.Text), 690 / Int(heightTxtBox.Text)))
         End If
-
-
 
         ' Intializes the maze
         initializeMaze()
@@ -629,11 +671,12 @@ Public Class Form1
         solveTimeLbl.Text = "Sove Time: "
         drawTimeLbl.Text = "Draw Time: " & Str(drawTimer.ElapsedMilliseconds() / 1000) & "s"
         deadEndCountLbl.Text = "Dead End Count: " & Str(deadEndToShow)
-        totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds()) / 1000) & "s"
-        ' Resets Status
+        deadEndTimeLbl.Text = "Dead End Time: "
+        totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + solveTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds() + deadEndTimer.ElapsedMilliseconds()) / 1000) & "s"
+        ' Resets Status, ' Resets Dialog Result
         statusLbl.Text = "Status: Doing Nothing"
+        downlaodGenerated = DialogResult.Cancel
     End Sub
-
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
         ' Makes sure a maze has been generated 
         If mazeGenerated = False Then
@@ -684,7 +727,7 @@ Public Class Form1
 
         ' Displays Statistics
         solveTimeLbl.Text = "Sove Time: " & Str(solveTimer.ElapsedMilliseconds() / 1000) & "s"
-        totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + solveTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds()) / 1000) & "s"
+        totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + solveTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds() + deadEndTimer.ElapsedMilliseconds()) / 1000) & "s"
         ' Resets Status
         statusLbl.Text = "Status: Doing Nothing"
     End Sub
@@ -704,12 +747,15 @@ Public Class Form1
             Exit Sub
         End If
 
-        ' Upates Status
+        ' Resets old timer, Starts new timer, Upates Status
+        deadEndTimer.Reset()
+        deadEndTimer.Start()
         statusLbl.Text = "Status: Removing Dead Ends"
         statusLbl.Update()
 
         ' Removes dead ends
         deadEndRemover()
+        deadEndTimer.Stop()
         ' Removes the solved value for each cell
         For Each cell In maze
             cell.mazeSolved = False
@@ -729,22 +775,22 @@ Public Class Form1
         solveTimeLbl.Text = "Sove Time: "
         drawTimeLbl.Text = "Draw Time: " & Str(drawTimer.ElapsedMilliseconds() / 1000) & "s"
         deadEndCountLbl.Text = "Dead End Count: " & Str(deadEndToShow)
-        totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + solveTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds()) / 1000) & "s"
+        deadEndTimeLbl.Text = "Dead End Time: " & Str(deadEndTimer.ElapsedMilliseconds() / 1000) & "s"
+        totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + solveTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds() + deadEndTimer.ElapsedMilliseconds()) / 1000) & "s"
         ' Resets Status
         statusLbl.Text = "Status: Doing Nothing"
-    End Sub
 
+    End Sub
     ' Setting Colour Customisation
     Private Function selectColour() As Color ' Opens a colour picker and returns the selected colour
         colorDialog.ShowDialog() ' Opens colour picker
         Return colorDialog.Color ' Returns picked colour
     End Function
-
     Private Sub downloadMaze()
         If mazeGenerated = True Then
             Dim openFile As New SaveFileDialog
             openFile.FileName = Nothing
-            openFile.Filter = "Bitmap File's |*.jpg"
+            openFile.Filter = "JPG File's |*.jpg"
             openFile.ShowDialog()
             Try
                 mazeImage.Save(openFile.FileName)
@@ -754,28 +800,46 @@ Public Class Form1
         Else
             MsgBox("No maze generated!" & vbCrLf & "Please press the generate button", MsgBoxStyle.OkOnly, "No maze generated")
         End If
-
-
-
     End Sub
-
     Private Sub bgColourBtn_Click(sender As Object, e As EventArgs) Handles bgColourBtn.Click
         bgColour = selectColour() ' Selects background colour 
         bgColourBtn.Text = bgColour.ToString
     End Sub
-
     Private Sub mazeColourBtn_Click(sender As Object, e As EventArgs) Handles mazeColourBtn.Click
         mazeColour = selectColour() ' Selects maze colour 
         mazeColourBtn.Text = mazeColour.ToString
     End Sub
-
     Private Sub solveColourBtn_Click(sender As Object, e As EventArgs) Handles solveColourBtn.Click
         solveColour = selectColour() ' Selects solve colour 
         solveColourBtn.Text = solveColour.ToString
     End Sub
-
     Private Sub downloadBtn_Click(sender As Object, e As EventArgs) Handles downloadBtn.Click
         downloadMaze()
+    End Sub
+
+    Private Sub imageInputBtn_Click(sender As Object, e As EventArgs) Handles imageInputBtn.Click
+        ' Requests and store image in memory
+        openFileDialog1.FileName = ""
+        openFileDialog1.Filter = "JPG Files(*.jpg)|*.jpg"
+        If openFileDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
+            inputImage = New Bitmap(Image.FromFile(openFileDialog1.FileName))
+            widthTxtBox.Text = inputImage.Width
+            heightTxtBox.Text = inputImage.Height
+        End If
+
+        Dim currentPixel As Color
+        ' Turns to grayscale
+        For x As Integer = 0 To inputImage.Width - 1
+            For y As Integer = 0 To inputImage.Height - 1
+                currentPixel = inputImage.GetPixel(x, y)
+                ' Finds lumiosity
+                luminosity = (currentPixel.R * R) ^ GAMMA + (currentPixel.B * B) ^ GAMMA + (currentPixel.G * G) ^ GAMMA
+                ' Altrting the gradient thershold
+                If luminosity <= 125 Then
+                    mazeWallList.Add(New Point(x, y))
+                End If
+            Next
+        Next
     End Sub
     ' USER INPUT END
 End Class
