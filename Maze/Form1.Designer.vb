@@ -58,6 +58,8 @@ Partial Class Form1
         Me.solveTimeLbl = New System.Windows.Forms.Label()
         Me.drawTimeLbl = New System.Windows.Forms.Label()
         Me.deadEndCountLbl = New System.Windows.Forms.Label()
+        Me.totalTimeLbl = New System.Windows.Forms.Label()
+        Me.statusLbl = New System.Windows.Forms.Label()
         CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -281,6 +283,7 @@ Partial Class Form1
         '
         'PictureBox1
         '
+        Me.PictureBox1.BackColor = System.Drawing.Color.White
         resources.ApplyResources(Me.PictureBox1, "PictureBox1")
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.TabStop = False
@@ -288,29 +291,48 @@ Partial Class Form1
         'genTimeLbl
         '
         resources.ApplyResources(Me.genTimeLbl, "genTimeLbl")
+        Me.genTimeLbl.BackColor = System.Drawing.Color.White
         Me.genTimeLbl.Name = "genTimeLbl"
         '
         'solveTimeLbl
         '
         resources.ApplyResources(Me.solveTimeLbl, "solveTimeLbl")
+        Me.solveTimeLbl.BackColor = System.Drawing.Color.White
         Me.solveTimeLbl.Name = "solveTimeLbl"
         '
         'drawTimeLbl
         '
         resources.ApplyResources(Me.drawTimeLbl, "drawTimeLbl")
+        Me.drawTimeLbl.BackColor = System.Drawing.Color.White
         Me.drawTimeLbl.Name = "drawTimeLbl"
         '
         'deadEndCountLbl
         '
         resources.ApplyResources(Me.deadEndCountLbl, "deadEndCountLbl")
+        Me.deadEndCountLbl.BackColor = System.Drawing.Color.White
         Me.deadEndCountLbl.Name = "deadEndCountLbl"
+        '
+        'totalTimeLbl
+        '
+        resources.ApplyResources(Me.totalTimeLbl, "totalTimeLbl")
+        Me.totalTimeLbl.BackColor = System.Drawing.Color.White
+        Me.totalTimeLbl.Name = "totalTimeLbl"
+        '
+        'statusLbl
+        '
+        resources.ApplyResources(Me.statusLbl, "statusLbl")
+        Me.statusLbl.BackColor = System.Drawing.Color.Transparent
+        Me.statusLbl.ForeColor = System.Drawing.Color.White
+        Me.statusLbl.Name = "statusLbl"
         '
         'Form1
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.BackgroundImage = Global.Maze.My.Resources.Resources.form_background_image
+        Me.BackgroundImage = Global.Maze.My.Resources.Resources.form_background_image1
+        Me.Controls.Add(Me.statusLbl)
+        Me.Controls.Add(Me.totalTimeLbl)
         Me.Controls.Add(Me.deadEndCountLbl)
         Me.Controls.Add(Me.drawTimeLbl)
         Me.Controls.Add(Me.solveTimeLbl)
@@ -388,4 +410,6 @@ Partial Class Form1
     Friend WithEvents solveTimeLbl As Label
     Friend WithEvents drawTimeLbl As Label
     Friend WithEvents deadEndCountLbl As Label
+    Friend WithEvents totalTimeLbl As Label
+    Friend WithEvents statusLbl As Label
 End Class

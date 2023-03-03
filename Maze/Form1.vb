@@ -2,31 +2,33 @@
 Public Class Form1
     ' Drawing Constants
     Const PEN_SIZE As Integer = 2
-    Const M As Integer = 10
+    Private M As Integer = 3
     ' Maze properties
-    Public maze As Cell(,)
-    Public width As Integer
-    Public height As Integer
-    Public deadEndPercent As Double
-    Public mazeEntryType As String
-    Public mazeEntry As Point
-    Public mazeExit As Point
-    Public deadEndPos As List(Of Point) = New List(Of Point)
+    Private maze As Cell(,)
+    Private width As Integer
+    Private height As Integer
+    Private deadEndPercent As Double
+    Private mazeEntryType As String
+    Private mazeEntry As Point
+    Private mazeExit As Point
+    Private deadEndPos As List(Of Point) = New List(Of Point)
     ' Maze Colour Customisation
-    Public bgColour As Color
-    Public mazeColour As Color
-    Public solveColour As Color
+    Private bgColour As Color
+    Private mazeColour As Color
+    Private solveColour As Color
     ' Maze Generation/Solving Inputs
-    Public generationAlgorithm As String
-    Public solveAlgorithm As String
+    Private generationAlgorithm As String
+    Private solveAlgorithm As String
     ' Controls when the from draws
-    Public mazeImage As Bitmap
-    Public mazeImageGraphics As Graphics
+    Private mazeImage As Bitmap
+    Private mazeImageGraphics As Graphics
+    Dim downlaodGenerated As DialogResult
+    Dim downlaodSolved As DialogResult
     ' Stats Variables
-    Public deadEndToShow As Integer
-    Public solveTimer As Stopwatch = New Stopwatch
-    Public generationTimer As Stopwatch = New Stopwatch
-    Public drawTimer As Stopwatch = New Stopwatch
+    Private deadEndToShow As Integer
+    Private solveTimer As Stopwatch = New Stopwatch
+    Private generationTimer As Stopwatch = New Stopwatch
+    Private drawTimer As Stopwatch = New Stopwatch
 
     Public Class Cell
         ' Postion Properties
@@ -40,7 +42,7 @@ Public Class Form1
         Public mazeEntryBool As Boolean = False
         Public mazeExitBool As Boolean = False
         Public mazeSolved As Boolean = False
-        Public deadEnd As Boolean = False
+        Private deadEnd As Boolean = False
         ' Generate/Solve Properties
         Public weight As Integer = 0
         Public visited As Boolean = False
@@ -170,6 +172,9 @@ Public Class Form1
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Random"
     End Sub
     Private Sub initializeMaze()
+        ' Resets old timer, Starts new timer, Upates Status
+        statusLbl.Text = "Status: Initializing Maze"
+        statusLbl.Update()
         ' Setting Maze Entry and Exit
         Select Case mazeEntryType
             Case "Random"
@@ -253,8 +258,11 @@ Public Class Form1
         Next
     End Sub
     Private Sub drawMaze() ' If False is passed through then the background cells will be drawn
+        ' Resets old timer, Starts new timer, Upates Status
         drawTimer.Reset()
         drawTimer.Start()
+        statusLbl.Text = "Status: Initializing Maze"
+        statusLbl.Update()
         For Each cell In maze
             ' Drawing the background
             If bgColour <> Color.Empty Then
@@ -545,19 +553,56 @@ Public Class Form1
         mazeEntryType = mazeEntryCombo.Text
         generationAlgorithm = generationCombo.Text
         deadEndPercent = deadEndRemoverTxtBox.Text
+
+        ' Changes multiplier value depending on the maze size
+        If Math.Floor(Math.Min(1220 / Int(widthTxtBox.Text), 690 / Int(heightTxtBox.Text))) < 3 Then
+            downlaodGenerated = MsgBox("Maze is too big to display!" & vbCrLf & "Want to download?" & vbCrLf & "WARNING! DEPENDING ON HARDWARE THIS MAY TAKE A LONG TIME", MsgBoxStyle.OkCancel, "Maze too big!")
+            ' If they want to download the maze will generate, statistics will be show and the maze will be downloaded
+            If downlaodGenerated = DialogResult.OK Then
+                instantAnimationBtn.Checked = True
+                M = 3
+            Else
+                ' If they dont wan to download it will reset statistics and exit the sub
+                genTimeLbl.Text = "Generation Time: "
+                solveTimeLbl.Text = "Sove Time: "
+                drawTimeLbl.Text = "Draw Time: "
+                deadEndCountLbl.Text = "Dead End Count: "
+                totalTimeLbl.Text = "Total Time "
+                Exit Sub
+            End If
+        Else
+            ' If the multipier is below 3 that means it can be displayed on the form
+            M = Math.Floor(Math.Min(1220 / Int(widthTxtBox.Text), 690 / Int(heightTxtBox.Text)))
+        End If
+
+
+
         ' Intializes the maze
         initializeMaze()
 
-        ' Checks what generation algorithm user has chosen
+
+        ' Resets old timer, Starts new timer, Upates Status
+        statusLbl.Text = "Status: Generating"
+        statusLbl.Update()
         generationTimer.Reset()
         generationTimer.Start()
+
+        ' Checks what generation algorithm user has chosen
         If generationAlgorithm = "DFS Backtracker" Then
             randomisedDFS()
         End If
         generationTimer.Stop()
-        ' Upadtes Maze box
+        ' Draws generate maze
         drawMaze()
-        mazeBox.Image = mazeImage
+
+        ' Checks if it should download the maze
+        If downlaodGenerated = DialogResult.OK Then
+            downloadMaze()
+        Else
+            ' Upadtes Maze box
+            mazeBox.Image = mazeImage
+        End If
+
 
         ' Updates Statistics
         ' Find the dead end count
@@ -566,11 +611,14 @@ Public Class Form1
         Next
         deadEndToShow = deadEndPos.Count()
         deadEndPos.Clear()
-        ' Displays Data
+        ' Displays Statistics
         genTimeLbl.Text = "Generation Time: " & Str(generationTimer.ElapsedMilliseconds() / 1000) & "s"
-        solveTimeLbl.Text = "Sove Time: " & Str(solveTimer.ElapsedMilliseconds() / 1000) & "s"
+        solveTimeLbl.Text = "Sove Time: "
         drawTimeLbl.Text = "Draw Time: " & Str(drawTimer.ElapsedMilliseconds() / 1000) & "s"
         deadEndCountLbl.Text = "Dead End Count: " & Str(deadEndToShow)
+        totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds()) / 1000) & "s"
+        ' Resets Status
+        statusLbl.Text = "Status: Doing Nothing"
     End Sub
 
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
@@ -580,16 +628,48 @@ Public Class Form1
             cell.mazeSolved = False
         Next
 
-        ' Checks what solving algorithm user has chosen
+        ' Checks if the maze can be displayed
+        If Math.Floor(Math.Min(1220 / Int(widthTxtBox.Text), 690 / Int(heightTxtBox.Text))) < 3 Then
+            ' If it cant be displayed ask if they want to download
+            downlaodSolved = MsgBox("Maze is too big to display!" & vbCrLf & "Want to download?" & vbCrLf & "WARNING! DEPENDING ON HARDWARE THIS MAY TAKE A LONG TIME", MsgBoxStyle.OkCancel, "Maze too big!")
+            ' If they don't want to download exit sub
+            If downlaodSolved = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+
+
+        ' Resets old timer, Starts new timer, Upates Status
         solveTimer.Reset()
         solveTimer.Start()
+        statusLbl.Text = "Status: Solving"
+        statusLbl.Update()
+        ' Checks what solving algorithm user has chosen
         If solveAlgorithm = "Dijkstra's Algorithm" Then
             dijkstra()
         End If
         solveTimer.Stop()
         ' Upadtes Maze box
         drawMaze()
-        mazeBox.Image = mazeImage
+
+        ' They want to download the solved image
+        If downlaodSolved = DialogResult.OK Then
+            downloadMaze()
+        Else
+            ' They dont want to download the solved image
+            ' Check if it's drawable
+            If Math.Floor(Math.Min(1220 / Int(widthTxtBox.Text), 690 / Int(heightTxtBox.Text))) >= 3 Then
+                mazeBox.Image = mazeImage
+            End If
+        End If
+
+
+
+        ' Displays Statistics
+        solveTimeLbl.Text = "Sove Time: " & Str(solveTimer.ElapsedMilliseconds() / 1000) & "s"
+        totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + solveTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds()) / 1000) & "s"
+        ' Resets Status
+        statusLbl.Text = "Status: Doing Nothing"
     End Sub
     Private Sub deadEndRemoverBtn_Click(sender As Object, e As EventArgs) Handles deadEndRemoverBtn.Click
         ' Saves the inputted percentage
@@ -603,13 +683,43 @@ Public Class Form1
         ' Upadtes Maze box
         drawMaze()
         mazeBox.Image = mazeImage
+        ' Upates Status
+        statusLbl.Text = "Status: Removing Dead Ends"
+        statusLbl.Update()
+        ' Find the dead end count
+        For Each cell In maze
+            cell.deadEndFinder()
+        Next
+        deadEndToShow = deadEndPos.Count()
+        deadEndPos.Clear()
+        ' Displays Statistics
+        solveTimeLbl.Text = "Sove Time: "
+        drawTimeLbl.Text = "Draw Time: " & Str(drawTimer.ElapsedMilliseconds() / 1000) & "s"
+        deadEndCountLbl.Text = "Dead End Count: " & Str(deadEndToShow)
+        totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + solveTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds()) / 1000) & "s"
+        ' Resets Status
+        statusLbl.Text = "Status: Doing Nothing"
     End Sub
 
     ' Setting Colour Customisation
-    Function selectColour() As Color ' Opens a colour picker and returns the selected colour
+    Private Function selectColour() As Color ' Opens a colour picker and returns the selected colour
         colorDialog.ShowDialog() ' Opens colour picker
         Return colorDialog.Color ' Returns picked colour
     End Function
+
+    Private Sub downloadMaze()
+        If mazeImage.Equals(Nothing) = False Then
+            Dim openFile As New SaveFileDialog
+            openFile.FileName = Nothing
+            openFile.Filter = "Bitmap File's |*.jpg"
+            openFile.ShowDialog()
+            Try
+                mazeImage.Save(openFile.FileName)
+            Catch ex As Exception
+                ' They didn't select a file location
+            End Try
+        End If
+    End Sub
 
     Private Sub bgColourBtn_Click(sender As Object, e As EventArgs) Handles bgColourBtn.Click
         bgColour = selectColour() ' Selects background colour 
@@ -627,17 +737,7 @@ Public Class Form1
     End Sub
 
     Private Sub downloadBtn_Click(sender As Object, e As EventArgs) Handles downloadBtn.Click
-        If mazeImage.Equals(Nothing) = False Then
-            Dim openFile As New SaveFileDialog
-            openFile.FileName = Nothing
-            openFile.Filter = "Bitmap File's |*.jpg"
-            openFile.ShowDialog()
-            Try
-                mazeImage.Save(openFile.FileName)
-            Catch ex As Exception
-                ' They didn't select a file location
-            End Try
-        End If
+        downloadMaze()
     End Sub
     ' USER INPUT END
 End Class
