@@ -1,6 +1,6 @@
 ﻿Imports System.Threading
 Public Class Form1
-    ' Drawing Constants
+    ' Drawing Variables
     Const PEN_SIZE As Integer = 2
     Private M As Integer = 3
     ' Maze properties
@@ -29,6 +29,9 @@ Public Class Form1
     Private solveTimer As Stopwatch = New Stopwatch
     Private generationTimer As Stopwatch = New Stopwatch
     Private drawTimer As Stopwatch = New Stopwatch
+    ' Babyproofing Variables
+    Private mazeGenerated As Boolean = False
+
 
     Public Class Cell
         ' Postion Properties
@@ -548,11 +551,20 @@ Public Class Form1
     ' USER INPUT START
     Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
         ' Saves Maze Properties inputted by the user
-        width = Int(widthTxtBox.Text) - 1
-        height = Int(heightTxtBox.Text) - 1
+        Dim widthTxtLength As Integer = 0
+        Dim heigtTxtLength As Integer = 0
+        ' Checking that the values inputed for width and height are valid
+        If Integer.TryParse(widthTxtBox.Text, width) And width > 2 And Integer.TryParse(heightTxtBox.Text, height) And height > 2 Then
+            width -= 1
+            height -= 1
+        Else
+            MsgBox("Make sure width and height are integers greater than 3", MsgBoxStyle.OkOnly, "Invalid Input")
+            Exit Sub
+        End If
+
         mazeEntryType = mazeEntryCombo.Text
         generationAlgorithm = generationCombo.Text
-        deadEndPercent = deadEndRemoverTxtBox.Text
+
 
         ' Changes multiplier value depending on the maze size
         If Math.Floor(Math.Min(1220 / Int(widthTxtBox.Text), 690 / Int(heightTxtBox.Text))) < 3 Then
@@ -579,7 +591,8 @@ Public Class Form1
 
         ' Intializes the maze
         initializeMaze()
-
+        ' Allows program to know whether or not a maze has been generated
+        mazeGenerated = True
 
         ' Resets old timer, Starts new timer, Upates Status
         statusLbl.Text = "Status: Generating"
@@ -622,7 +635,14 @@ Public Class Form1
     End Sub
 
     Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
+        ' Makes sure a maze has been generated 
+        If mazeGenerated = False Then
+            MsgBox("No maze generated!" & vbCrLf & "Please press the generate button", MsgBoxStyle.OkOnly, "No maze generated")
+            Exit Sub
+        End If
+        ' Sets solving algorithim to what the user has selected
         solveAlgorithm = solveCombo.Text
+
         ' Reset all cells that have .mazeSolved = True
         For Each cell In maze
             cell.mazeSolved = False
@@ -637,7 +657,6 @@ Public Class Form1
                 Exit Sub
             End If
         End If
-
 
         ' Resets old timer, Starts new timer, Upates Status
         solveTimer.Reset()
@@ -663,8 +682,6 @@ Public Class Form1
             End If
         End If
 
-
-
         ' Displays Statistics
         solveTimeLbl.Text = "Sove Time: " & Str(solveTimer.ElapsedMilliseconds() / 1000) & "s"
         totalTimeLbl.Text = "Total Time " & Str((generationTimer.ElapsedMilliseconds() + solveTimer.ElapsedMilliseconds() + drawTimer.ElapsedMilliseconds()) / 1000) & "s"
@@ -672,20 +689,36 @@ Public Class Form1
         statusLbl.Text = "Status: Doing Nothing"
     End Sub
     Private Sub deadEndRemoverBtn_Click(sender As Object, e As EventArgs) Handles deadEndRemoverBtn.Click
+        ' Makes sure a maze has been generated 
+        If mazeGenerated = False Then
+            MsgBox("No maze generated!" & vbCrLf & "Please press the generate button", MsgBoxStyle.OkOnly, "No maze generated")
+            Exit Sub
+        End If
+
         ' Saves the inputted percentage
-        deadEndPercent = deadEndRemoverTxtBox.Text
+        ' Checking that the values inputted for dead end remover is valid
+        If Double.TryParse(deadEndRemoverTxtBox.Text, deadEndPercent) And deadEndPercent <= 1.0 Then
+            deadEndPercent = deadEndRemoverTxtBox.Text
+        Else
+            MsgBox("Make sure dead end remover is a decimal number or 1", MsgBoxStyle.OkOnly, "Invalid Input")
+            Exit Sub
+        End If
+
+        ' Upates Status
+        statusLbl.Text = "Status: Removing Dead Ends"
+        statusLbl.Update()
+
         ' Removes dead ends
         deadEndRemover()
         ' Removes the solved value for each cell
         For Each cell In maze
             cell.mazeSolved = False
         Next
+
         ' Upadtes Maze box
         drawMaze()
         mazeBox.Image = mazeImage
-        ' Upates Status
-        statusLbl.Text = "Status: Removing Dead Ends"
-        statusLbl.Update()
+
         ' Find the dead end count
         For Each cell In maze
             cell.deadEndFinder()
@@ -708,7 +741,7 @@ Public Class Form1
     End Function
 
     Private Sub downloadMaze()
-        If mazeImage.Equals(Nothing) = False Then
+        If mazeGenerated = True Then
             Dim openFile As New SaveFileDialog
             openFile.FileName = Nothing
             openFile.Filter = "Bitmap File's |*.jpg"
@@ -718,7 +751,12 @@ Public Class Form1
             Catch ex As Exception
                 ' They didn't select a file location
             End Try
+        Else
+            MsgBox("No maze generated!" & vbCrLf & "Please press the generate button", MsgBoxStyle.OkOnly, "No maze generated")
         End If
+
+
+
     End Sub
 
     Private Sub bgColourBtn_Click(sender As Object, e As EventArgs) Handles bgColourBtn.Click
