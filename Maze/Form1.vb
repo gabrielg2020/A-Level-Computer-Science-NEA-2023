@@ -860,12 +860,66 @@ Public Class Form1
         downloadMaze()
     End Sub
 
+    Private Sub componentAnalysis(ByVal img As Bitmap)
+        Dim pixelWeight As String(,)
+        pixelWeight = New String(img.Width - 1, img.Height - 1) {}
+        Dim foot As List(Of String) = New List(Of String)
+        Dim weight As Integer = 1
+        ' Assign theroy weights to each pixel
+        For x As Integer = 0 To img.Width - 1
+            For y As Integer = 0 To img.Height - 1
+                ' If the pixel is black set its weight to 0
+                If img.GetPixel(x, y) = Color.FromArgb(0, 0, 0) Then
+
+                    pixelWeight(x, y) = "0"
+                Else ' Else set it to nothing
+                    pixelWeight(x, y) = "x"
+                End If
+            Next
+        Next
+        ' Assigns real weights to each pixel
+        For x As Integer = 1 To img.Width - 1
+            For y As Integer = 1 To img.Height - 1
+                ' The pixel is white
+                If pixelWeight(x, y) = "x" Then
+                    ' Checks the cell above and to the left, it will assign the biggest weight of the two
+                    pixelWeight(x, y) = Str(Math.Max(Int(pixelWeight(x - 1, y)), Int(pixelWeight(x, y - 1)))).Trim()
+                    If pixelWeight(x, y) = 0 Then
+                        pixelWeight(x, y) = weight
+                        weight += 1
+                        foot.Add(pixelWeight(x, y))
+                        ' If the weight above and left are not the same
+                    ElseIf pixelWeight(x - 1, y) <> pixelWeight(x, y - 1) And pixelWeight(x - 1, y) <> 0 And pixelWeight(x, y - 1) <> 0 Then
+                        ' Store the lowest weight to be reassigned later
+                        foot(foot.Count - 1) = Str(Math.Min(Int(pixelWeight(x - 1, y)), Int(pixelWeight(x, y - 1)))).Trim()
+                    End If
+                End If
+            Next
+        Next
+        ' Checks if there are lower weights to reassign
+        For x As Integer = 1 To img.Width - 1
+            For y As Integer = 1 To img.Height - 1
+                If pixelWeight(x, y) <> "0" Then
+                    pixelWeight(x, y) = foot(pixelWeight(x, y) - 1)
+                End If
+            Next
+        Next
+    End Sub
+
     Private Sub imageInputBtn_Click(sender As Object, e As EventArgs) Handles imageInputBtn.Click
         ' Requests and store image in memory
         openFileDialog1.FileName = ""
         openFileDialog1.Filter = "JPG Files(*.jpg)|*.jpg"
         If openFileDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
             inputImage = New Bitmap(Image.FromFile(openFileDialog1.FileName))
+            ' Adds a black border to an image, allowing it to be passed through componentAnalysis
+            Dim borderedInputImage As Bitmap = New Bitmap(inputImage.Width + (2), inputImage.Height + (2))
+            Using g As Graphics = Graphics.FromImage(borderedInputImage)
+                g.Clear(Color.Black)
+                g.DrawImage(inputImage, 1, 1, inputImage.Width, inputImage.Height)
+            End Using
+            inputImage = borderedInputImage
+            ' Sets width and height text boxs
             widthTxtBox.Text = inputImage.Width
             heightTxtBox.Text = inputImage.Height
         End If
@@ -879,10 +933,14 @@ Public Class Form1
                 luminosity = (currentPixel.R * R) ^ GAMMA + (currentPixel.B * B) ^ GAMMA + (currentPixel.G * G) ^ GAMMA
                 ' Altrting the gradient thershold
                 If luminosity <= 125 Then
+                    inputImage.SetPixel(x, y, Color.FromArgb(0, 0, 0))
                     mazeWallList.Add(New Point(x, y))
+                Else
+                    inputImage.SetPixel(x, y, Color.FromArgb(255, 255, 255))
                 End If
             Next
         Next
+        componentAnalysis(inputImage)
     End Sub
     ' USER INPUT END
 End Class
