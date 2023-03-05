@@ -19,6 +19,7 @@ Public Class Form1
     ' Maze Generation/Solving Inputs
     Private generationAlgorithm As String
     Private solveAlgorithm As String
+    Private mazeWallCount As Integer = 0
     ' Controls when the from draws
     Private mazeImage As Bitmap
     Private mazeImageGraphics As Graphics
@@ -147,7 +148,6 @@ Public Class Form1
             Dim neighbours As List(Of Point) = New List(Of Point)
 
             If mazeWallBool = True Then
-                Return Nothing
                 Exit Function
             End If
 
@@ -204,44 +204,11 @@ Public Class Form1
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Random"
     End Sub
     Private Sub initializeMaze()
+        mazeWallCount = 0
+
         ' Resets old timer, Starts new timer, Upates Status
         statusLbl.Text = "Status: Initializing Maze"
         statusLbl.Update()
-        ' Setting Maze Entry and Exit
-        Select Case mazeEntryType
-            Case "Random"
-                Randomize()
-                Dim randomType As Integer = Int((4 * Rnd()))
-                ' Chooses randomly what type of maze entry it will be
-                Select Case randomType
-                    Case 0 ' Start at a random top postion, finish at a random bottom position
-                        mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                        mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                    Case 1 ' Start at a random bottom postion, finish at a random top position
-                        mazeEntry = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                        mazeExit = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                    Case 2 ' Start at a random right postion, finish at a random left positon
-                        mazeEntry = New Point(1, Int(((height - 1) * Rnd()) + 1))
-                        mazeExit = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
-                    Case 3 ' Start at a random left postion, finish at a random right positon
-                        mazeEntry = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
-                        mazeExit = New Point(1, Int(((height - 1) * Rnd()) + 1))
-                End Select
-                If mazeEntry.X = 0 Or mazeEntry.Y = 0 Or mazeExit.X = 0 Or mazeExit.Y = 0 Then
-                    mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                    mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                End If
-            Case "Top - Bottom"
-                mazeEntry = New Point(Math.Round(width / 2) + 1, 1)
-                mazeExit = New Point(Math.Round(width / 2) + 1, height - 1)
-            Case "Right - Left"
-                mazeEntry = New Point(1, Math.Round(height / 2))
-                mazeExit = New Point(width - 1, Math.Round(height / 2))
-            Case "Diagonal"
-                mazeEntry = New Point(1, 1)
-                mazeExit = New Point(width - 1, height - 1)
-        End Select
-
         ' Initialize each cell with correct: Type and Wall Position
         maze = New Cell(width, height) {}
         mazeImage = New Bitmap(((width + 1) * M) + M, ((height + 1) * M) + M)
@@ -253,20 +220,11 @@ Public Class Form1
                 maze(i, j).x = i
                 maze(i, j).y = j
 
-                ' Setting the entry cell with the mazeEntryBool
-                If i = mazeEntry.X And j = mazeEntry.Y Then
-                    maze(i, j).mazeEntryBool = True
-                End If
-
-                ' Setting the exit cell with the mazeExitBool
-                If i = mazeExit.X And j = mazeExit.Y Then
-                    maze(i, j).mazeExitBool = True
-                End If
-
                 ' Setting the maze wall cells with the mazeWallBool
                 If i = 0 Or j = 0 Or i = width Or j = height Or mazeWallList.Contains(New Point(i, j)) Then
                     maze(i, j).mazeWallBool = True
                     maze(i, j).visited = True
+                    mazeWallCount += 1
                 End If
 
                 ' Giving each cell wall a start(0), end(1) and position on the screen
@@ -288,6 +246,80 @@ Public Class Form1
                 Next
             Next
         Next
+
+        ' Setting Maze Entry and Exit
+        Select Case mazeEntryType
+            Case "Random"
+                Randomize()
+                Dim randomType As Integer = Int((4 * Rnd()))
+                ' Chooses randomly what type of maze entry it will be
+                Select Case randomType
+                    Case 0 ' Start at a random top postion, finish at a random bottom position
+                        mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                        mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                        ' Makes sure the maze entry is not a maze wall
+                        ' While maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = True
+                        'mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                        'End While
+                        ' Makes sure the maze exit is not a maze wall
+                        'While maze(mazeExit.X, mazeExit.Y).mazeWallBool = True
+                        'mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                        'End While
+                    Case 1 ' Start at a random bottom postion, finish at a random top position
+                        mazeEntry = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                        mazeExit = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                        ' Makes sure the maze entry is not a maze wall
+                        'While maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = True
+                        'mazeEntry = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                        'End While
+                        ' Makes sure the maze exit is not a maze wall
+                        'While maze(mazeExit.X, mazeExit.Y).mazeWallBool = True
+                        'mazeExit = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                        'End While
+                    Case 2 ' Start at a random right postion, finish at a random left positon
+                        mazeEntry = New Point(1, Int(((height - 1) * Rnd()) + 1))
+                        mazeExit = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
+                        ' Makes sure the maze entry is not a maze wall
+                        'While maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = True
+                        'mazeEntry = New Point(1, Int(((height - 1) * Rnd()) + 1))
+                        'End While
+                        ' Makes sure the maze exit is not a maze wall
+                        ' While maze(mazeExit.X, mazeExit.Y).mazeWallBool = True
+                        'mazeExit = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
+                        'End While
+                    Case 3 ' Start at a random left postion, finish at a random right positon
+                        mazeEntry = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
+                        mazeExit = New Point(1, Int(((height - 1) * Rnd()) + 1))
+                        ' Makes sure the maze entry is not a maze wall
+                        ' While maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = True
+                        'mazeEntry = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
+                        'End While
+                        ' Makes sure the maze exit is not a maze wall
+                        'While maze(mazeExit.X, mazeExit.Y).mazeWallBool = True
+                        mazeExit = New Point(1, Int(((height - 1) * Rnd()) + 1))
+                        'End While
+                End Select
+                If mazeEntry.X = 0 Or mazeEntry.Y = 0 Or mazeExit.X = 0 Or mazeExit.Y = 0 Then
+                    mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
+                    mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
+                End If
+            Case "Top - Bottom"
+                mazeEntry = New Point(Math.Round(width / 2) + 1, 1)
+                mazeExit = New Point(Math.Round(width / 2) + 1, height - 1)
+            Case "Right - Left"
+                mazeEntry = New Point(1, Math.Round(height / 2))
+                mazeExit = New Point(width - 1, Math.Round(height / 2))
+            Case "Diagonal"
+                mazeEntry = New Point(1, 1)
+                mazeExit = New Point(width - 1, height - 1)
+        End Select
+
+        ' Setting the entry cell with the mazeEntryBool
+        maze(mazeEntry.X, mazeEntry.Y).mazeEntryBool = True
+        maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = False
+        ' Setting the exit cell with the mazeExitBool
+        maze(mazeExit.X, mazeExit.Y).mazeExitBool = True
+        maze(mazeExit.X, mazeExit.Y).mazeWallBool = False
     End Sub
     Private Sub drawMaze() ' If False is passed through then the background cells will be drawn
         ' Resets old timer, Starts new timer, Upates Status
@@ -433,27 +465,36 @@ Public Class Form1
         mazeBox.Update()
         Thread.Sleep(10)
     End Sub
-    Private Sub randomisedDFS()
+    Private Sub randomisedDFS(ByVal maze As Cell(,))
         ' Backtracking Stack
         Dim stack As Stack(Of Point) = New Stack(Of Point)
         ' Randomly picks a node on the maze
         Randomize()
         Dim node As Point = New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1)
+        ' Makes sure that the node picked isnt a maze wall
+        While maze(node.X, node.Y).mazeWallBool = True
+            node = New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1)
+        End While
+        Dim startNode As Point = node
         ' List used to store unvisted neighbours
         Dim neighbours As List(Of Point) = New List(Of Point)
         Dim direction As Integer
+        ' The number of cells we could possibly visted
+        Dim posibleVisited As Integer = maze.Length - mazeWallCount
+        Dim vistedCount As Integer = 0
 
-        ' Push current node to the stack
+        ' Push current node to the stack, mark it as visted
         stack.Push(node)
+        maze(node.X, node.Y).visited = True
+        vistedCount += 1
         ' Until the stack is empty:
-        While stack.Count <> 0
+        While posibleVisited <> vistedCount
             ' Check neighbours
             neighbours = maze(node.X, node.Y).checkUnvistedNeighbours
             ' Pick a random direction
             direction = Int(4 * Rnd())
             ' If there is no open neighbours
             If neighbours(0) = Nothing And neighbours(1) = Nothing And neighbours(2) = Nothing And neighbours(3) = Nothing Then
-                maze(node.X, node.Y).visited = True
                 node = stack.Pop()
             Else
                 ' Makes sure it moves into an open neighbour
@@ -461,13 +502,15 @@ Public Class Form1
                     direction = Int(4 * Rnd())
                 End While
                 ' Makes sure the first node searched doesnt get inputted twice
-                If stack.Peek <> node Then
+                If node <> startNode Then
                     stack.Push(node)
                 End If
-                ' Mark the cell as visted
-                maze(node.X, node.Y).visited = True
+
                 ' Break the wall between the cells and set node = postion of the cell we just broke into
                 node = maze(node.X, node.Y).breakWall(direction)
+                ' Mark the cell as visted
+                maze(node.X, node.Y).visited = True
+                vistedCount += 1
                 ' Checks if user wants quick animations
                 If instantAnimationBtn.Checked <> True Then
                     ' Enable animation lock
@@ -644,7 +687,7 @@ Public Class Form1
 
         ' Checks what generation algorithm user has chosen
         If generationAlgorithm = "DFS Backtracker" Then
-            randomisedDFS()
+            randomisedDFS(maze)
         End If
         generationTimer.Stop()
         ' Draws generate maze
