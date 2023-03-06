@@ -1,7 +1,8 @@
-﻿Imports System.Threading
+﻿Imports System.ComponentModel
+Imports System.Threading
 Public Class Form1
     ' Drawing Variables
-    Const PEN_SIZE As Integer = 2
+    Private Const PEN_SIZE As Integer = 2
     Private M As Integer = 3
     ' Maze properties
     Private maze As Cell(,)
@@ -13,9 +14,9 @@ Public Class Form1
     Private mazeExit As Point
     Private deadEndPos As List(Of Point) = New List(Of Point)
     ' Maze Colour Customisation
-    Private bgColour As Color
-    Private mazeColour As Color
-    Private solveColour As Color
+    Private bgColour As Color = Color.White
+    Private mazeColour As Color = Color.Black
+    Private solveColour As Color = Color.Silver
     ' Maze Generation/Solving Inputs
     Private generationAlgorithm As String
     Private solveAlgorithm As String
@@ -23,8 +24,8 @@ Public Class Form1
     ' Controls when the from draws
     Private mazeImage As Bitmap
     Private mazeImageGraphics As Graphics
-    Dim downlaodGenerated As DialogResult
-    Dim downlaodSolved As DialogResult
+    Private downlaodGenerated As DialogResult
+    Private downlaodSolved As DialogResult
     ' Stats Variables
     Private deadEndToShow As Integer
     Private solveTimer As Stopwatch = New Stopwatch
@@ -34,13 +35,15 @@ Public Class Form1
     ' Babyproofing Variables
     Private mazeGenerated As Boolean = False
     ' Image to maze Variables
+    Private imageInputted As Boolean = False
     Private inputImage As Bitmap
     Private mazeWallList As List(Of Point) = New List(Of Point)
     Private luminosity As Double
-    Const GAMMA As Double = 1.0
-    Const R As Double = 0.2126
-    Const G As Double = 0.7152
-    Const B As Double = 0.0722
+    Private Const GAMMA As Double = 1.0
+    Private Const R As Double = 0.2126
+    Private Const G As Double = 0.7152
+    Private Const B As Double = 0.0722
+    Private imgComponents As List(Of List(Of Point)) = New List(Of List(Of Point))
 
     Public Class Cell
         ' Postion Properties
@@ -148,31 +151,32 @@ Public Class Form1
             Dim neighbours As List(Of Point) = New List(Of Point)
 
             If mazeWallBool = True Then
+                Return {Point.Empty, Point.Empty, Point.Empty, Point.Empty}.ToList
                 Exit Function
             End If
 
             If Form1.maze(x, y - 1).visited = False Then
                 neighbours.Add(New Point(x, y - 1))
             Else
-                neighbours.Add(Nothing)
+                neighbours.Add(Point.Empty)
             End If
 
             If Form1.maze(x + 1, y).visited = False Then
                 neighbours.Add(New Point(x + 1, y))
             Else
-                neighbours.Add(Nothing)
+                neighbours.Add(Point.Empty)
             End If
 
             If Form1.maze(x, y + 1).visited = False Then
                 neighbours.Add(New Point(x, y + 1))
             Else
-                neighbours.Add(Nothing)
+                neighbours.Add(Point.Empty)
             End If
 
             If Form1.maze(x - 1, y).visited = False Then
                 neighbours.Add(New Point(x - 1, y))
             Else
-                neighbours.Add(Nothing)
+                neighbours.Add(Point.Empty)
             End If
             Return neighbours
         End Function
@@ -327,39 +331,42 @@ Public Class Form1
         drawTimer.Start()
         statusLbl.Text = "Status: Drawing Maze"
         statusLbl.Update()
+        ' Create brush objects for each color
+        Dim bgBrush As New SolidBrush(bgColour)
+        Dim mazeBrush As New SolidBrush(mazeColour)
+        Dim entryBrush As New SolidBrush(Color.Green)
+        Dim exitBrush As New SolidBrush(Color.Red)
+        Dim solvedBrush As New SolidBrush(Color.Gray)
+
         For Each cell In maze
-            ' Drawing the background
-            If bgColour <> Color.Empty Then
-                mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-            Else ' If user hasnt selected colour
-                mazeImageGraphics.FillRectangle(New SolidBrush(Color.White), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+            ' Determine the fill color based on cell properties
+            Dim fillBrush As Brush = bgBrush
+            If cell.mazeWallBool Then
+                fillBrush = mazeBrush
+            End If
+            If cell.mazeEntryBool Then
+                fillBrush = entryBrush
+            End If
+            If cell.mazeExitBool Then
+                fillBrush = exitBrush
+            End If
+            If cell.mazeSolved Then
+                fillBrush = solvedBrush
             End If
 
-            ' Drawing mazeWalls
-            If cell.mazeWallBool = True And mazeColour <> Color.Empty Then
-                mazeImageGraphics.FillRectangle(New SolidBrush(mazeColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-            ElseIf cell.mazeWallBool = True Then ' If user hasnt selected colour
-                mazeImageGraphics.FillRectangle(New SolidBrush(Color.Black), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-            End If
+            ' Draw the cell background and fill
+            mazeImageGraphics.FillRectangle(fillBrush, cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
 
-            ' Drawing the mazeEntry
-            If cell.mazeEntryBool = True Then
-                mazeImageGraphics.FillRectangle(New SolidBrush(Color.Green), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-            End If
-
-            ' Drawing mazeExit
-            If cell.mazeExitBool = True Then
-                mazeImageGraphics.FillRectangle(New SolidBrush(Color.Red), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-            End If
-
-            ' Drawing the solved path
-            If cell.mazeSolved = True Then
-                mazeImageGraphics.FillRectangle(New SolidBrush(Color.Gray), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
-            End If
-
-            ' Drawing the walls
+            ' Draw the walls
             cell.drawWalls()
         Next
+
+        ' Dispose of the brush objects
+        bgBrush.Dispose()
+        mazeBrush.Dispose()
+        entryBrush.Dispose()
+        exitBrush.Dispose()
+        solvedBrush.Dispose()
         drawTimer.Stop()
     End Sub
     Private Sub animationLock(Lock As Boolean) ' Locks all inputs to prevent backlogging and crashes
@@ -465,63 +472,51 @@ Public Class Form1
         mazeBox.Update()
         Thread.Sleep(10)
     End Sub
-    Private Sub randomisedDFS(ByVal maze As Cell(,))
-        ' Backtracking Stack
-        Dim stack As Stack(Of Point) = New Stack(Of Point)
-        ' Randomly picks a node on the maze
+
+    Private Sub settingMazeEntryExit(Optional component As List(Of Point) = Nothing)
+
+    End Sub
+
+    Private Sub randomisedDFS(Optional component As List(Of Point) = Nothing)
         Randomize()
-        Dim node As Point = New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1)
-        ' Makes sure that the node picked isnt a maze wall
-        While maze(node.X, node.Y).mazeWallBool = True
-            node = New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1)
-        End While
-        Dim startNode As Point = node
-        ' List used to store unvisted neighbours
-        Dim neighbours As List(Of Point) = New List(Of Point)
+        ' Backtracking stack
+        Dim stack As New Stack(Of Point)
+        Dim node As Point
+        ' Checking if array was inputted
+        If component Is Nothing Then
+            stack.Push(New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1))
+        Else
+            stack.Push(component(Int(component.Count * Rnd())))
+        End If
+        Dim neigbours As New List(Of Point)
         Dim direction As Integer
-        ' The number of cells we could possibly visted
-        Dim posibleVisited As Integer = maze.Length - mazeWallCount
-        Dim vistedCount As Integer = 0
-
-        ' Push current node to the stack, mark it as visted
-        stack.Push(node)
-        maze(node.X, node.Y).visited = True
-        vistedCount += 1
-        ' Until the stack is empty:
-        While posibleVisited <> vistedCount
+        ' Until the stack is empty
+        While stack.Count <> 0
+            node = stack.Pop()
             ' Check neighbours
-            neighbours = maze(node.X, node.Y).checkUnvistedNeighbours
-            ' Pick a random direction
-            direction = Int(4 * Rnd())
-            ' If there is no open neighbours
-            If neighbours(0) = Nothing And neighbours(1) = Nothing And neighbours(2) = Nothing And neighbours(3) = Nothing Then
-                node = stack.Pop()
-            Else
-                ' Makes sure it moves into an open neighbour
-                While neighbours(direction) = Nothing
-                    direction = Int(4 * Rnd())
-                End While
-                ' Makes sure the first node searched doesnt get inputted twice
-                If node <> startNode Then
-                    stack.Push(node)
-                End If
-
-                ' Break the wall between the cells and set node = postion of the cell we just broke into
+            neigbours = maze(node.X, node.Y).checkUnvistedNeighbours()
+            ' Checks if all neighbours are not empty 
+            If neigbours.All(Function(p) p.Equals(Point.Empty)) = False Then
+                stack.Push(node)
+                ' Make a new list that only contains the non empty values from neighbour
+                Dim validNeigbours As New List(Of Point)
+                For Each point In neigbours
+                    If point <> Point.Empty Then
+                        validNeigbours.Add(point)
+                    End If
+                Next
+                ' Randomly pick a valid neighbour. Find the index of that point within the orginal neighbour list and set that to direction
+                Randomize()
+                direction = neigbours.IndexOf(validNeigbours(Int(validNeigbours.Count * Rnd())))
+                ' Break the wall
                 node = maze(node.X, node.Y).breakWall(direction)
-                ' Mark the cell as visted
+                component.Remove(node)
+                ' Push to the stack
+                stack.Push(node)
+                ' Mark as visted
                 maze(node.X, node.Y).visited = True
-                vistedCount += 1
-                ' Checks if user wants quick animations
-                If instantAnimationBtn.Checked <> True Then
-                    ' Enable animation lock
-                    animationLock(True)
-                    ' Upadate mazeBox
-                    animate(node)
-                End If
             End If
         End While
-        ' Disable animation lock
-        animationLock(False)
     End Sub
     Private Sub dijkstra()
         ' Queue 
@@ -687,7 +682,13 @@ Public Class Form1
 
         ' Checks what generation algorithm user has chosen
         If generationAlgorithm = "DFS Backtracker" Then
-            randomisedDFS(maze)
+            If imageInputted = True Then
+                For Each component In imgComponents
+                    randomisedDFS(component)
+                Next
+            Else
+                randomisedDFS()
+            End If
         End If
         generationTimer.Stop()
         ' Draws generate maze
@@ -700,7 +701,6 @@ Public Class Form1
             ' Upadtes Maze box
             mazeBox.Image = mazeImage
         End If
-
 
         ' Updates Statistics
         ' Find the dead end count
@@ -859,66 +859,68 @@ Public Class Form1
     Private Sub downloadBtn_Click(sender As Object, e As EventArgs) Handles downloadBtn.Click
         downloadMaze()
     End Sub
-
-    Private Sub componentAnalysis(ByVal img As Bitmap)
-        Dim pixelWeight As String(,)
-        pixelWeight = New String(img.Width - 1, img.Height - 1) {}
-        Dim foot As List(Of String) = New List(Of String)
-        Dim weight As Integer = 1
-        ' Assign theroy weights to each pixel
-        For x As Integer = 0 To img.Width - 1
-            For y As Integer = 0 To img.Height - 1
-                ' If the pixel is black set its weight to 0
-                If img.GetPixel(x, y) = Color.FromArgb(0, 0, 0) Then
-
-                    pixelWeight(x, y) = "0"
-                Else ' Else set it to nothing
-                    pixelWeight(x, y) = "x"
+    Private Function componentAnalysis(ByVal image As Bitmap) As List(Of List(Of Point))
+        ' Create a list to store the components
+        Dim components As New List(Of List(Of Point))()
+        ' Create a 2D array to track which pixels have been visited
+        Dim visited(image.Width - 1, image.Height - 1) As Boolean
+        ' Loop through each pixel in the image
+        For y As Integer = 0 To image.Height - 1
+            For x As Integer = 0 To image.Width - 1
+                ' If this pixel has not been visted and its white(255,255,255)
+                If Not visited(x, y) And image.GetPixel(x, y) = Color.FromArgb(255, 255, 255) Then
+                    ' Create a list to store the pixels in the component
+                    Dim component As New List(Of Point)()
+                    ' Create a stack to store the pixels that need to be checked
+                    Dim stack As New Stack(Of Point)()
+                    stack.Push(New Point(x, y))
+                    ' Until all pixels have been checked
+                    While stack.Count > 0
+                        ' Store the current pixel
+                        Dim pixel As Point = stack.Pop()
+                        ' If this pixel has not been visted and is white
+                        If Not visited(pixel.X, pixel.Y) And image.GetPixel(pixel.X, pixel.Y) = Color.FromArgb(255, 255, 255) Then
+                            visited(pixel.X, pixel.Y) = True
+                            ' Add to the componet
+                            component.Add(pixel)
+                            ' Add neighbours to the stack
+                            If pixel.X > 0 Then
+                                stack.Push(New Point(pixel.X - 1, pixel.Y))
+                            End If
+                            If pixel.X < image.Width - 1 Then
+                                stack.Push(New Point(pixel.X + 1, pixel.Y))
+                            End If
+                            If pixel.Y > 0 Then
+                                stack.Push(New Point(pixel.X, pixel.Y - 1))
+                            End If
+                            If pixel.Y < image.Height - 1 Then
+                                stack.Push(New Point(pixel.X, pixel.Y + 1))
+                            End If
+                        End If
+                    End While
+                    components.Add(component)
                 End If
             Next
         Next
-        ' Assigns real weights to each pixel
-        For x As Integer = 1 To img.Width - 1
-            For y As Integer = 1 To img.Height - 1
-                ' The pixel is white
-                If pixelWeight(x, y) = "x" Then
-                    ' Checks the cell above and to the left, it will assign the biggest weight of the two
-                    pixelWeight(x, y) = Str(Math.Max(Int(pixelWeight(x - 1, y)), Int(pixelWeight(x, y - 1)))).Trim()
-                    If pixelWeight(x, y) = 0 Then
-                        pixelWeight(x, y) = weight
-                        weight += 1
-                        foot.Add(pixelWeight(x, y))
-                        ' If the weight above and left are not the same
-                    ElseIf pixelWeight(x - 1, y) <> pixelWeight(x, y - 1) And pixelWeight(x - 1, y) <> 0 And pixelWeight(x, y - 1) <> 0 Then
-                        ' Store the lowest weight to be reassigned later
-                        foot(foot.Count - 1) = Str(Math.Min(Int(pixelWeight(x - 1, y)), Int(pixelWeight(x, y - 1)))).Trim()
-                    End If
-                End If
-            Next
-        Next
-        ' Checks if there are lower weights to reassign
-        For x As Integer = 1 To img.Width - 1
-            For y As Integer = 1 To img.Height - 1
-                If pixelWeight(x, y) <> "0" Then
-                    pixelWeight(x, y) = foot(pixelWeight(x, y) - 1)
-                End If
-            Next
-        Next
-    End Sub
-
+        Return components
+    End Function
     Private Sub imageInputBtn_Click(sender As Object, e As EventArgs) Handles imageInputBtn.Click
+        If imageInputted = True Then
+            inputImage.Dispose()
+            mazeWallList.Clear()
+            imgComponents.Clear()
+            widthTxtBox.Text = 0
+            heightTxtBox.Text = 0
+            imageInputted = False
+            imageInputBtn.Text = "Input Image"
+            Exit Sub
+        End If
+
         ' Requests and store image in memory
         openFileDialog1.FileName = ""
         openFileDialog1.Filter = "JPG Files(*.jpg)|*.jpg"
         If openFileDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
             inputImage = New Bitmap(Image.FromFile(openFileDialog1.FileName))
-            ' Adds a black border to an image, allowing it to be passed through componentAnalysis
-            Dim borderedInputImage As Bitmap = New Bitmap(inputImage.Width + (2), inputImage.Height + (2))
-            Using g As Graphics = Graphics.FromImage(borderedInputImage)
-                g.Clear(Color.Black)
-                g.DrawImage(inputImage, 1, 1, inputImage.Width, inputImage.Height)
-            End Using
-            inputImage = borderedInputImage
             ' Sets width and height text boxs
             widthTxtBox.Text = inputImage.Width
             heightTxtBox.Text = inputImage.Height
@@ -940,7 +942,10 @@ Public Class Form1
                 End If
             Next
         Next
-        componentAnalysis(inputImage)
+        imgComponents = componentAnalysis(inputImage)
+
+        imageInputBtn.Text = "Cancel Image"
+        imageInputted = True
     End Sub
     ' USER INPUT END
 End Class
