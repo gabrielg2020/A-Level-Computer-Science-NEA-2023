@@ -334,9 +334,9 @@ Public Class Form1
         ' Create brush objects for each color
         Dim bgBrush As New SolidBrush(bgColour)
         Dim mazeBrush As New SolidBrush(mazeColour)
+        Dim solvedBrush As New SolidBrush(solveColour)
         Dim entryBrush As New SolidBrush(Color.Green)
         Dim exitBrush As New SolidBrush(Color.Red)
-        Dim solvedBrush As New SolidBrush(Color.Gray)
 
         For Each cell In maze
             ' Determine the fill color based on cell properties
@@ -444,8 +444,10 @@ Public Class Form1
             mazeEntryCombo.Enabled = True
         End If
     End Sub
-    Private Sub animate(Optional ByVal node As Point = Nothing, Optional ByVal heatList As List(Of Point) = Nothing)
-        drawMaze()
+    Private Sub animate(Optional ByVal node As Point = Nothing, Optional ByVal heatList As List(Of Point) = Nothing, Optional ByVal path As List(Of Point) = Nothing)
+        If path Is Nothing Then
+            drawMaze()
+        End If
         ' Wants to animate a header cell
         If node <> Nothing Then
             mazeImageGraphics.FillRectangle(New SolidBrush(Color.Yellow), node.X * M, node.Y * M, M, M)
@@ -456,15 +458,28 @@ Public Class Form1
             Dim normalisedWeight As Double
             For Each point In heatList
                 ' Don't want to draw over the maze entry
-                If point <> mazeEntry Then
+                If point <> mazeEntry And point <> mazeExit Then
                     weightV = maze(point.X, point.Y).weight
                     normalisedWeight = weightV / maxWeight
-
+                    ' Fill cell
                     mazeImageGraphics.FillRectangle(New SolidBrush(interpolateColor(pinkColor, purpleColor, normalisedWeight)), point.X * M, point.Y * M, M, M)
                     ' Draws walls
-                    For Each cell In maze
-                        cell.drawWalls()
-                    Next
+                    maze(point.X, point.Y).drawWalls()
+                    ' Updates Maze box
+                    mazeBox.Image = mazeImage
+                    mazeBox.Update()
+                    Thread.Sleep(10)
+                End If
+            Next
+        End If
+        ' Wants a normal path to be drawn
+        If path IsNot Nothing Then
+            For Each point In path
+                If point <> mazeEntry Then
+                    ' Fill cell
+                    mazeImageGraphics.FillRectangle(New SolidBrush(solveColour), point.X * M, point.Y * M, M, M)
+                    ' Draws walls
+                    maze(point.X, point.Y).drawWalls()
                     ' Updates Maze box
                     mazeBox.Image = mazeImage
                     mazeBox.Update()
@@ -561,33 +576,35 @@ Public Class Form1
             ' Increase weight
             weight += 1
         End While
-        maxWeight = weight
+        maxWeight = maze(mazeExit.X, mazeExit.Y).weight
         ' Checks if user wants quick animations
         If instantAnimationBtn.Checked <> True Then
             ' Enable animation lock
             animationLock(True)
             ' Shows the heat map, higher heat = higher weight
-            animate(Nothing, visitedNodes)
+            animate(heatList:=visitedNodes)
         End If
 
+        Dim path As List(Of Point) = New List(Of Point)
         Dim endNode As Point = mazeExit
         ' We will traverse the maze until we reach the maze entry
         ' Until we reach the maze entry
         While endNode <> mazeEntry
             For Each node In visitedNodes
                 If maze(node.X, node.Y).weight < maze(endNode.X, endNode.Y).weight And maze(endNode.X, endNode.Y).connectedCell.Contains(node) Then
-                    maze(node.X, node.Y).mazeSolved = True
-                    ' Checks if user wants quick animations
-                    If instantAnimationBtn.Checked <> True Then
-                        ' Shows the creation of the shortest path
-                        animate()
-                    End If
 
+                    maze(node.X, node.Y).mazeSolved = True
+                    path.Add(node)
                     endNode = node
                     Exit For
                 End If
             Next
         End While
+        ' Checks if user wants quick animations
+        If instantAnimationBtn.Checked <> True Then
+            ' Shows the creation of the shortest path
+            animate(path:=path)
+        End If
         maze(mazeEntry.X, mazeEntry.Y).mazeSolved = False
         ' Disables animation lock
         animationLock(False)
