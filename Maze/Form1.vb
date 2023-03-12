@@ -1,6 +1,8 @@
 ﻿Imports System.Threading
 
 Public Class Form1
+    ' Class instanse used to randomize numbers
+    Private rnd As New Random
     ' Drawing Variables
     Private Const PEN_SIZE As Integer = 2
     Private M As Integer = 3
@@ -12,14 +14,16 @@ Public Class Form1
     Private mazeEntryType As String
     Private mazeEntry As Point
     Private mazeExit As Point
-    Private deadEndPos As List(Of Point) = New List(Of Point)
+    Private deadEndPos As New List(Of Point)
     ' Maze Colour Customisation
     Private bgColour As Color = Color.White
     Private mazeColour As Color = Color.Black
     Private solveColour As Color = Color.Silver
     Private maxWeight As Integer = 0
-    Dim pinkColor As Color = Color.FromArgb(255, 0, 220) ' Pink color
-    Dim purpleColor As Color = Color.FromArgb(0, 0, 124) ' Purple color
+    Private pinkColor As Color = Color.FromArgb(255, 0, 220) ' Pink color
+    Private purpleColor As Color = Color.FromArgb(0, 0, 124) ' Purple color
+    ' Animation Variables
+    Private Const T As Integer = 10
     ' Maze Generation/Solving Inputs
     Private generationAlgorithm As String
     Private solveAlgorithm As String
@@ -31,28 +35,29 @@ Public Class Form1
     Private downlaodSolved As DialogResult
     ' Stats Variables
     Private deadEndToShow As Integer
-    Private solveTimer As Stopwatch = New Stopwatch
-    Private generationTimer As Stopwatch = New Stopwatch
-    Private drawTimer As Stopwatch = New Stopwatch
-    Private deadEndTimer As Stopwatch = New Stopwatch
+    Private solveTimer As New Stopwatch
+    Private generationTimer As New Stopwatch
+    Private drawTimer As New Stopwatch
+    Private deadEndTimer As New Stopwatch
     ' Babyproofing Variables
     Private mazeGenerated As Boolean = False
     ' Image to maze Variables
     Private imageInputted As Boolean = False
     Private inputImage As Bitmap
-    Private mazeWallList As List(Of Point) = New List(Of Point)
+    Private mazeWallList As New List(Of Point)
     Private luminosity As Double
     Private Const GAMMA As Double = 1.0
     Private Const R As Double = 0.2126
     Private Const G As Double = 0.7152
     Private Const B As Double = 0.0722
-    Private imgComponents As List(Of List(Of Point)) = New List(Of List(Of Point))
+    Private imgComponents As New List(Of List(Of Point))
+    Private largestComponent As New List(Of Point)
     Public Class Cell
         ' Postion Properties
         Public x As Integer
         Public y As Integer
         ' Wall Properties
-        Public walls As List(Of Boolean) = New List(Of Boolean)
+        Public walls As New List(Of Boolean)
         Public wallPos(3, 1) As Point
         ' Cell Type
         Public mazeWallBool As Boolean = False
@@ -63,7 +68,7 @@ Public Class Form1
         ' Generate/Solve Properties
         Public weight As Integer = 0
         Public visited As Boolean = False
-        Public connectedCell As List(Of Point) = New List(Of Point)
+        Public connectedCell As New List(Of Point)
 
         ' Sets all cells with all walls 
         Public Sub New()
@@ -150,7 +155,7 @@ Public Class Form1
 
         ' Method to check unvisted neighbours
         Public Function checkUnvistedNeighbours()
-            Dim neighbours As List(Of Point) = New List(Of Point)
+            Dim neighbours As New List(Of Point)
 
             If mazeWallBool = True Then
                 Return {Point.Empty, Point.Empty, Point.Empty, Point.Empty}.ToList
@@ -252,72 +257,53 @@ Public Class Form1
         Next
 
         ' Setting Maze Entry and Exit
-        Select Case mazeEntryType
-            Case "Random"
-                Randomize()
-                Dim randomType As Integer = Int((4 * Rnd()))
-                ' Chooses randomly what type of maze entry it will be
-                Select Case randomType
-                    Case 0 ' Start at a random top postion, finish at a random bottom position
-                        mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                        mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                        ' Makes sure the maze entry is not a maze wall
-                        ' While maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = True
-                        'mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                        'End While
-                        ' Makes sure the maze exit is not a maze wall
-                        'While maze(mazeExit.X, mazeExit.Y).mazeWallBool = True
-                        'mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                        'End While
-                    Case 1 ' Start at a random bottom postion, finish at a random top position
-                        mazeEntry = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                        mazeExit = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                        ' Makes sure the maze entry is not a maze wall
-                        'While maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = True
-                        'mazeEntry = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                        'End While
-                        ' Makes sure the maze exit is not a maze wall
-                        'While maze(mazeExit.X, mazeExit.Y).mazeWallBool = True
-                        'mazeExit = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                        'End While
-                    Case 2 ' Start at a random right postion, finish at a random left positon
-                        mazeEntry = New Point(1, Int(((height - 1) * Rnd()) + 1))
-                        mazeExit = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
-                        ' Makes sure the maze entry is not a maze wall
-                        'While maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = True
-                        'mazeEntry = New Point(1, Int(((height - 1) * Rnd()) + 1))
-                        'End While
-                        ' Makes sure the maze exit is not a maze wall
-                        ' While maze(mazeExit.X, mazeExit.Y).mazeWallBool = True
-                        'mazeExit = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
-                        'End While
-                    Case 3 ' Start at a random left postion, finish at a random right positon
-                        mazeEntry = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
-                        mazeExit = New Point(1, Int(((height - 1) * Rnd()) + 1))
-                        ' Makes sure the maze entry is not a maze wall
-                        ' While maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = True
-                        'mazeEntry = New Point(width - 1, Int(((height - 1) * Rnd()) + 1))
-                        'End While
-                        ' Makes sure the maze exit is not a maze wall
-                        'While maze(mazeExit.X, mazeExit.Y).mazeWallBool = True
-                        mazeExit = New Point(1, Int(((height - 1) * Rnd()) + 1))
-                        'End While
-                End Select
-                If mazeEntry.X = 0 Or mazeEntry.Y = 0 Or mazeExit.X = 0 Or mazeExit.Y = 0 Then
-                    mazeEntry = New Point((Int(((width - 1) * Rnd()) + 1)), 1)
-                    mazeExit = New Point(Int(((width - 1) * Rnd()) + 1), height - 1)
-                End If
-            Case "Top - Bottom"
-                mazeEntry = New Point(Math.Round(width / 2) + 1, 1)
-                mazeExit = New Point(Math.Round(width / 2) + 1, height - 1)
-            Case "Right - Left"
-                mazeEntry = New Point(1, Math.Round(height / 2))
-                mazeExit = New Point(width - 1, Math.Round(height / 2))
-            Case "Diagonal"
-                mazeEntry = New Point(1, 1)
-                mazeExit = New Point(width - 1, height - 1)
-        End Select
+        setMazeEntryExit()
+    End Sub
 
+    Private Sub setMazeEntryExit()
+        If imageInputted = True Then
+            ' Randomly picks a side
+            Dim side As Integer = rnd.Next(1, 2)
+
+            If side = 1 Then
+                mazeEntry = New Point(largestComponent.OrderByDescending(Function(p) p.X).First())
+                mazeExit = New Point(largestComponent.OrderByDescending(Function(p) p.X).Last())
+            Else
+                Dim orderedList As List(Of Point) = largestComponent.OrderByDescending(Function(p) p.Y)
+                mazeEntry = New Point(orderedList.First())
+                mazeExit = New Point(orderedList.Last())
+            End If
+        Else
+            Select Case mazeEntryType
+                Case "Random"
+                    Randomize()
+                    Dim randomType As Integer = rnd.Next(0, 5)
+                    ' Chooses randomly what type of maze entry it will be
+                    Select Case randomType
+                        Case 0 ' Start at a random top postion, finish at a random bottom position
+                            mazeEntry = New Point(rnd.Next(1, width), 1)
+                            mazeExit = New Point(rnd.Next(1, width), height - 1)
+                        Case 1 ' Start at a random bottom postion, finish at a random top position
+                            mazeEntry = New Point(rnd.Next(1, width), height - 1)
+                            mazeExit = New Point(rnd.Next(1, width), 1)
+                        Case 2 ' Start at a random right postion, finish at a random left positon
+                            mazeEntry = New Point(1, rnd.Next(1, height))
+                            mazeExit = New Point(width - 1, rnd.Next(1, height))
+                        Case 3 ' Start at a random left postion, finish at a random right positon
+                            mazeEntry = New Point(width - 1, rnd.Next(1, height))
+                            mazeExit = New Point(1, rnd.Next(1, height))
+                    End Select
+                Case "Top - Bottom"
+                    mazeEntry = New Point(Math.Round(width / 2), 1)
+                    mazeExit = New Point(Math.Round(width / 2), height - 1)
+                Case "Right - Left"
+                    mazeEntry = New Point(1, Math.Round(height / 2))
+                    mazeExit = New Point(width - 1, Math.Round(height / 2))
+                Case "Diagonal"
+                    mazeEntry = New Point(1, 1)
+                    mazeExit = New Point(width - 1, height - 1)
+            End Select
+        End If
         ' Setting the entry cell with the mazeEntryBool
         maze(mazeEntry.X, mazeEntry.Y).mazeEntryBool = True
         maze(mazeEntry.X, mazeEntry.Y).mazeWallBool = False
@@ -325,6 +311,7 @@ Public Class Form1
         maze(mazeExit.X, mazeExit.Y).mazeExitBool = True
         maze(mazeExit.X, mazeExit.Y).mazeWallBool = False
     End Sub
+
     Private Sub drawMaze() ' If False is passed through then the background cells will be drawn
         ' Resets old timer, Starts new timer, Upates Status
         drawTimer.Reset()
@@ -468,7 +455,7 @@ Public Class Form1
                     ' Updates Maze box
                     mazeBox.Image = mazeImage
                     mazeBox.Update()
-                    Thread.Sleep(10)
+                    Thread.Sleep(M)
                 End If
             Next
         End If
@@ -483,16 +470,15 @@ Public Class Form1
                     ' Updates Maze box
                     mazeBox.Image = mazeImage
                     mazeBox.Update()
-                    Thread.Sleep(10)
+                    Thread.Sleep(M)
                 End If
             Next
         End If
         ' Updates Maze box
         mazeBox.Image = mazeImage
         mazeBox.Update()
-        Thread.Sleep(10)
+        Thread.Sleep(M)
     End Sub
-
     ' Interpolate between two colors based on a ratio (0.0 to 1.0)
     Function interpolateColor(color1 As Color, color2 As Color, ratio As Double) As Color
         Dim r As Double = Int(color1.R) + (Int(color2.R) - Int(color1.R)) * ratio
@@ -507,9 +493,9 @@ Public Class Form1
         Dim node As Point
         ' Checking if array was inputted
         If component Is Nothing Then
-            stack.Push(New Point(Int((width - 1) * Rnd()) + 1, Int((height - 1) * Rnd()) + 1))
+            stack.Push(New Point(rnd.Next(1, width), rnd.Next(1, height)))
         Else
-            stack.Push(component(Int(component.Count * Rnd())))
+            stack.Push(component(rnd.Next(0, component.Count())))
         End If
         Dim neigbours As New List(Of Point)
         Dim direction As Integer
@@ -530,7 +516,7 @@ Public Class Form1
                 Next
                 ' Randomly pick a valid neighbour. Find the index of that point within the orginal neighbour list and set that to direction
                 Randomize()
-                direction = neigbours.IndexOf(validNeigbours(Int(validNeigbours.Count * Rnd())))
+                direction = neigbours.IndexOf(validNeigbours(rnd.Next(0, validNeigbours.Count())))
                 ' Break the wall
                 node = maze(node.X, node.Y).breakWall(direction)
                 ' Push to the stack
@@ -542,8 +528,8 @@ Public Class Form1
     End Sub
     Private Sub dijkstra()
         ' Queue 
-        Dim queue As Queue(Of Point) = New Queue(Of Point)
-        Dim visitedNodes As List(Of Point) = New List(Of Point)
+        Dim queue As New Queue(Of Point)
+        Dim visitedNodes As New List(Of Point)
         ' Set the start node's weight = 0
         maze(mazeEntry.X, mazeEntry.Y).weight = 0
         ' Adds cell to the visted list
@@ -585,7 +571,7 @@ Public Class Form1
             animate(heatList:=visitedNodes)
         End If
 
-        Dim path As List(Of Point) = New List(Of Point)
+        Dim path As New List(Of Point)
         Dim endNode As Point = mazeExit
         ' We will traverse the maze until we reach the maze entry
         ' Until we reach the maze entry
@@ -623,11 +609,11 @@ Public Class Form1
 
         While numToBeRemoved <> 0
             ' Randomly pick a deadend and direction
-            positionPicked = Int(deadEndPos.Count() * Rnd())
-            direction = Int(4 * Rnd())
+            positionPicked = rnd.Next(0, deadEndPos.Count())
+            direction = rnd.Next(1, height + 1)
             ' Makes sure that it doesn't break into a maze wall
             While maze(deadEndPos(positionPicked).X, deadEndPos(positionPicked).Y).breakWall(direction) = Nothing
-                direction = Int(4 * Rnd())
+                direction = rnd.Next(0, 5)
             End While
 
             ' Break the deadend
@@ -885,6 +871,7 @@ Public Class Form1
         downloadMaze()
     End Sub
     Private Function componentAnalysis(ByVal image As Bitmap) As List(Of List(Of Point))
+        largestComponent.Clear()
         ' Create a list to store the components
         Dim components As New List(Of List(Of Point))()
         ' Create a 2D array to track which pixels have been visited
@@ -927,6 +914,12 @@ Public Class Form1
                 End If
             Next
         Next
+        ' Find the largest component
+        For Each component As List(Of Point) In components
+            If component.Count > largestComponent.Count Then
+                largestComponent = component
+            End If
+        Next
         Return components
     End Function
 
@@ -948,9 +941,27 @@ Public Class Form1
         openFileDialog1.Filter = "JPG Files(*.jpg)|*.jpg"
         If openFileDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
             inputImage = New Bitmap(Image.FromFile(openFileDialog1.FileName))
+            ' Calculate the new image dimensions
+            Dim newWidth As Integer = inputImage.Width + 2
+            Dim newHeight As Integer = inputImage.Height + 2
+            ' Create the new bitmap with the larger dimensions
+            Dim newImage As New Bitmap(newWidth, newHeight)
+            ' Draw the original image onto the new bitmap
+            Using g As Graphics = Graphics.FromImage(newImage)
+                g.DrawImage(inputImage, New Point(1, 1))
+            End Using
+            ' Draw a border around the image
+            Using g As Graphics = Graphics.FromImage(newImage)
+                Using p As New Pen(Color.Black)
+                    g.DrawRectangle(p, New Rectangle(0, 0, newWidth - 1, newHeight - 1))
+                End Using
+            End Using
+            inputImage = newImage
             ' Sets width and height text boxs
             widthTxtBox.Text = inputImage.Width
             heightTxtBox.Text = inputImage.Height
+        Else
+            Exit Sub
         End If
 
         Dim currentPixel As Color
