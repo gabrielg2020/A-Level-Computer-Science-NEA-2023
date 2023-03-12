@@ -1,5 +1,5 @@
-﻿Imports System.ComponentModel
-Imports System.Threading
+﻿Imports System.Threading
+
 Public Class Form1
     ' Drawing Variables
     Private Const PEN_SIZE As Integer = 2
@@ -17,6 +17,9 @@ Public Class Form1
     Private bgColour As Color = Color.White
     Private mazeColour As Color = Color.Black
     Private solveColour As Color = Color.Silver
+    Private maxWeight As Integer = 0
+    Dim pinkColor As Color = Color.FromArgb(255, 0, 220) ' Pink color
+    Dim purpleColor As Color = Color.FromArgb(0, 0, 124) ' Purple color
     ' Maze Generation/Solving Inputs
     Private generationAlgorithm As String
     Private solveAlgorithm As String
@@ -44,7 +47,6 @@ Public Class Form1
     Private Const G As Double = 0.7152
     Private Const B As Double = 0.0722
     Private imgComponents As List(Of List(Of Point)) = New List(Of List(Of Point))
-
     Public Class Cell
         ' Postion Properties
         Public x As Integer
@@ -201,8 +203,6 @@ Public Class Form1
         deadEndCountLbl.BackColor = Color.FromArgb(40, 60, 86)
         totalTimeLbl.BackColor = Color.FromArgb(40, 60, 86)
 
-
-        Me.WindowState = FormWindowState.Maximized
         generationCombo.SelectedIndex = 0 ' Makes index 0 default displayed on the combo list(so currently shows "DFS Backtracker" initially
         solveCombo.SelectedIndex = 0 ' Default displays (Dijkstra's Algortimn)
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Random"
@@ -452,10 +452,15 @@ Public Class Form1
         End If
         ' Wants a heat path to be drawn
         If heatList IsNot Nothing Then
+            Dim weightV As Integer
+            Dim normalisedWeight As Double
             For Each point In heatList
                 ' Don't want to draw over the maze entry
                 If point <> mazeEntry Then
-                    mazeImageGraphics.FillRectangle(New SolidBrush(Color.FromArgb(255, 0, 220)), point.X * M, point.Y * M, M, M)
+                    weightV = maze(point.X, point.Y).weight
+                    normalisedWeight = weightV / maxWeight
+
+                    mazeImageGraphics.FillRectangle(New SolidBrush(interpolateColor(pinkColor, purpleColor, normalisedWeight)), point.X * M, point.Y * M, M, M)
                     ' Draws walls
                     For Each cell In maze
                         cell.drawWalls()
@@ -473,10 +478,13 @@ Public Class Form1
         Thread.Sleep(10)
     End Sub
 
-    Private Sub settingMazeEntryExit(Optional component As List(Of Point) = Nothing)
-
-    End Sub
-
+    ' Interpolate between two colors based on a ratio (0.0 to 1.0)
+    Function interpolateColor(color1 As Color, color2 As Color, ratio As Double) As Color
+        Dim r As Double = Int(color1.R) + (Int(color2.R) - Int(color1.R)) * ratio
+        Dim g As Double = Int(color1.G) + (Int(color2.G) - Int(color1.G)) * ratio
+        Dim b As Double = Int(color1.B) + (Int(color2.B) - Int(color1.B)) * ratio
+        Return Color.FromArgb((r), (g), (b))
+    End Function
     Private Sub randomisedDFS(Optional component As List(Of Point) = Nothing)
         Randomize()
         ' Backtracking stack
@@ -510,7 +518,6 @@ Public Class Form1
                 direction = neigbours.IndexOf(validNeigbours(Int(validNeigbours.Count * Rnd())))
                 ' Break the wall
                 node = maze(node.X, node.Y).breakWall(direction)
-                component.Remove(node)
                 ' Push to the stack
                 stack.Push(node)
                 ' Mark as visted
@@ -554,6 +561,7 @@ Public Class Form1
             ' Increase weight
             weight += 1
         End While
+        maxWeight = weight
         ' Checks if user wants quick animations
         If instantAnimationBtn.Checked <> True Then
             ' Enable animation lock
@@ -904,18 +912,20 @@ Public Class Form1
         Next
         Return components
     End Function
+
     Private Sub imageInputBtn_Click(sender As Object, e As EventArgs) Handles imageInputBtn.Click
+        ' Rest variable 
         If imageInputted = True Then
             inputImage.Dispose()
             mazeWallList.Clear()
             imgComponents.Clear()
+            mazeBox.Image = Nothing
             widthTxtBox.Text = 0
             heightTxtBox.Text = 0
             imageInputted = False
             imageInputBtn.Text = "Input Image"
             Exit Sub
         End If
-
         ' Requests and store image in memory
         openFileDialog1.FileName = ""
         openFileDialog1.Filter = "JPG Files(*.jpg)|*.jpg"
