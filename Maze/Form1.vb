@@ -97,7 +97,7 @@ Public Class Form1
                 If wall = True And mazeWallBool = False Then
                     wallCount += 1
                 End If
-                If wallCount = 3 Then
+                If wallCount = 3 And Not Form1.deadEndPos.Contains(New Point(x, y)) Then
                     Form1.deadEndPos.Add(New Point(x, y))
                 End If
             Next
@@ -107,7 +107,7 @@ Public Class Form1
         Public Function breakWall(ByVal d As Integer)
             ' Makes sure the cell isn't a maze wall
             If mazeWallBool = True Then
-                Return Nothing
+                Return Point.Empty
                 Exit Function
             End If
             ' Breaks wall depending on the d (direction)
@@ -115,7 +115,7 @@ Public Class Form1
                 ' The wall selected must be broken but also the neighbours wall
                 Case 0 ' Breaking the top wall
                     If Form1.maze(x, y - 1).mazeWallBool = True Then
-                        Return Nothing
+                        Return Point.Empty
                         Exit Function
                     End If
                     walls(d) = False
@@ -124,7 +124,7 @@ Public Class Form1
                     Form1.maze(x, y - 1).connectedCell.Add(New Point(x, y))
                 Case 1 ' Breaking the right wall
                     If Form1.maze(x + 1, y).mazeWallBool = True Then
-                        Return Nothing
+                        Return Point.Empty
                         Exit Function
                     End If
                     walls(d) = False
@@ -133,7 +133,7 @@ Public Class Form1
                     Form1.maze(x + 1, y).connectedCell.Add(New Point(x, y))
                 Case 2 ' Breaking the bottom wall
                     If Form1.maze(x, y + 1).mazeWallBool = True Then
-                        Return Nothing
+                        Return Point.Empty
                         Exit Function
                     End If
                     walls(d) = False
@@ -142,7 +142,7 @@ Public Class Form1
                     Form1.maze(x, y + 1).connectedCell.Add(New Point(x, y))
                 Case 3 ' Breaking the left wall
                     If Form1.maze(x - 1, y).mazeWallBool = True Then
-                        Return Nothing
+                        Return Point.Empty
                         Exit Function
                     End If
                     walls(d) = False
@@ -597,47 +597,38 @@ Public Class Form1
     End Sub
     Private Sub deadEndRemover()
         Dim numToBeRemoved As Integer
+        Dim deadEnd As Point
+        Dim node As Point
         Dim direction As Integer
-        Dim positionPicked As Integer
-        Dim initalDeadEnds As Integer
-        ' Finds all the dead ends
+        ' Find the deadends
         For Each cell In maze
             cell.deadEndFinder()
         Next
         ' Calculate the amount of dead end to remove
         numToBeRemoved = Math.Round(deadEndPos.Count() * deadEndPercent)
-
-        While numToBeRemoved <> 0
-            ' Randomly pick a deadend and direction
-            positionPicked = rnd.Next(0, deadEndPos.Count())
-            direction = rnd.Next(1, height + 1)
-            ' Makes sure that it doesn't break into a maze wall
-            While maze(deadEndPos(positionPicked).X, deadEndPos(positionPicked).Y).breakWall(direction) = Nothing
-                direction = rnd.Next(0, 5)
-            End While
-
-            ' Break the deadend
-            maze(deadEndPos(positionPicked).X, deadEndPos(positionPicked).Y).breakWall(direction)
-            initalDeadEnds = deadEndPos.Count()
-            ' Checks if user wants quick animations
-            If instantAnimationBtn.Checked <> True Then
-                ' Enable animation lock
-                animationLock(True)
-                ' Upadate mazeBox
-                animate(New Point(deadEndPos(positionPicked).X, deadEndPos(positionPicked).Y))
-            End If
-            ' Find the new amount of deadends
-            deadEndPos.Clear()
-            For Each cell In maze
-                cell.deadEndFinder()
+        Dim removed As Integer = 0
+        While removed <> numToBeRemoved
+            ' Pick a random cell
+            deadEnd = deadEndPos(rnd.Next(0, deadEndPos.Count))
+            ' Finds valid indexs
+            Dim validIdexs As New List(Of Integer)
+            For i As Integer = 0 To 3
+                If maze(deadEnd.X, deadEnd.Y).walls(i) Then
+                    validIdexs.Add(i)
+                End If
             Next
-            ' The amount needed to be removed is the amount of dead ends it had initally - the amount of dead ends it has now
-            ' This is useful as removing 1 wall can remove 2 deadends
-            numToBeRemoved -= initalDeadEnds - deadEndPos.Count()
-            ' If we have ran out of dead ends to remove
-            If deadEndPos.Count = 0 Then
-                Exit While
+            ' Pick a valid wall to break
+            Do
+                direction = validIdexs(rnd.Next(0, validIdexs.Count))
+                node = maze(deadEnd.X, deadEnd.Y).breakWall(direction)
+            Loop While node.IsEmpty
+            ' Removes from dead end list as changes the number of deadends removed.
+            deadEndPos.Remove(deadEnd)
+            If deadEndPos.Contains(node) Then
+                deadEndPos.Remove(node)
+                removed += 1
             End If
+            removed += 1
         End While
         deadEndPos.Clear()
         animationLock(False)
