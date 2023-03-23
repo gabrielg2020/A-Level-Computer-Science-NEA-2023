@@ -63,39 +63,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend ReadOnly Property backgroubd() As System.Drawing.Bitmap
+        Friend ReadOnly Property formBG() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("backgroubd", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property Background() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("Background", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property form_background_image() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("form_background_image", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property form_background_image1() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("form_background_image1", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("formBG", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

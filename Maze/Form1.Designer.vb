@@ -22,373 +22,347 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Me.Title = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.widthTxtBox = New System.Windows.Forms.TextBox()
-        Me.heightTxtBox = New System.Windows.Forms.TextBox()
-        Me.deadEndRemoverTxtBox = New System.Windows.Forms.TextBox()
-        Me.generateBtn = New System.Windows.Forms.Button()
-        Me.solveBtn = New System.Windows.Forms.Button()
-        Me.downloadBtn = New System.Windows.Forms.Button()
-        Me.mazeEntryCombo = New System.Windows.Forms.ComboBox()
-        Me.generationCombo = New System.Windows.Forms.ComboBox()
-        Me.solveCombo = New System.Windows.Forms.ComboBox()
-        Me.imageInputBtn = New System.Windows.Forms.Button()
-        Me.openFileDialog1 = New System.Windows.Forms.OpenFileDialog()
-        Me.colorDialog = New System.Windows.Forms.ColorDialog()
-        Me.solveColourBtn = New System.Windows.Forms.Button()
-        Me.mazeColourBtn = New System.Windows.Forms.Button()
-        Me.bgColourBtn = New System.Windows.Forms.Button()
-        Me.mazeBox = New System.Windows.Forms.PictureBox()
-        Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
-        Me.instantAnimationBtn = New System.Windows.Forms.CheckBox()
-        Me.deadEndRemoverBtn = New System.Windows.Forms.Button()
-        Me.statsPictureBox = New System.Windows.Forms.PictureBox()
-        Me.genTimeLbl = New System.Windows.Forms.Label()
-        Me.solveTimeLbl = New System.Windows.Forms.Label()
-        Me.drawTimeLbl = New System.Windows.Forms.Label()
-        Me.deadEndCountLbl = New System.Windows.Forms.Label()
-        Me.totalTimeLbl = New System.Windows.Forms.Label()
-        Me.statusLbl = New System.Windows.Forms.Label()
-        Me.deadEndTimeLbl = New System.Windows.Forms.Label()
-        CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.statsPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SuspendLayout()
-        '
-        'Title
-        '
-        resources.ApplyResources(Me.Title, "Title")
-        Me.Title.BackColor = System.Drawing.Color.Transparent
-        Me.Title.ForeColor = System.Drawing.Color.Transparent
-        Me.Title.Name = "Title"
-        '
-        'Label1
-        '
-        resources.ApplyResources(Me.Label1, "Label1")
-        Me.Label1.BackColor = System.Drawing.Color.Transparent
-        Me.Label1.ForeColor = System.Drawing.Color.White
-        Me.Label1.Name = "Label1"
-        '
-        'Label2
-        '
-        resources.ApplyResources(Me.Label2, "Label2")
-        Me.Label2.BackColor = System.Drawing.Color.Transparent
-        Me.Label2.ForeColor = System.Drawing.Color.White
-        Me.Label2.Name = "Label2"
-        '
-        'Label3
-        '
-        resources.ApplyResources(Me.Label3, "Label3")
-        Me.Label3.BackColor = System.Drawing.Color.Transparent
-        Me.Label3.ForeColor = System.Drawing.Color.White
-        Me.Label3.Name = "Label3"
-        '
-        'Label4
-        '
-        resources.ApplyResources(Me.Label4, "Label4")
-        Me.Label4.BackColor = System.Drawing.Color.Transparent
-        Me.Label4.ForeColor = System.Drawing.Color.White
-        Me.Label4.Name = "Label4"
-        '
-        'Label5
-        '
-        resources.ApplyResources(Me.Label5, "Label5")
-        Me.Label5.BackColor = System.Drawing.Color.Transparent
-        Me.Label5.ForeColor = System.Drawing.Color.White
-        Me.Label5.Name = "Label5"
-        '
-        'Label6
-        '
-        resources.ApplyResources(Me.Label6, "Label6")
-        Me.Label6.BackColor = System.Drawing.Color.Transparent
-        Me.Label6.ForeColor = System.Drawing.Color.White
-        Me.Label6.Name = "Label6"
-        '
-        'Label7
-        '
-        resources.ApplyResources(Me.Label7, "Label7")
-        Me.Label7.BackColor = System.Drawing.Color.Transparent
-        Me.Label7.ForeColor = System.Drawing.Color.White
-        Me.Label7.Name = "Label7"
-        '
-        'Label8
-        '
-        resources.ApplyResources(Me.Label8, "Label8")
-        Me.Label8.BackColor = System.Drawing.Color.Transparent
-        Me.Label8.ForeColor = System.Drawing.Color.White
-        Me.Label8.Name = "Label8"
-        '
-        'Label9
-        '
-        resources.ApplyResources(Me.Label9, "Label9")
-        Me.Label9.BackColor = System.Drawing.Color.Transparent
-        Me.Label9.ForeColor = System.Drawing.Color.White
-        Me.Label9.Name = "Label9"
-        '
-        'Label10
-        '
-        resources.ApplyResources(Me.Label10, "Label10")
-        Me.Label10.BackColor = System.Drawing.Color.Transparent
-        Me.Label10.ForeColor = System.Drawing.Color.White
-        Me.Label10.Name = "Label10"
-        '
-        'widthTxtBox
-        '
-        Me.widthTxtBox.BackColor = System.Drawing.Color.Black
-        resources.ApplyResources(Me.widthTxtBox, "widthTxtBox")
-        Me.widthTxtBox.ForeColor = System.Drawing.Color.White
-        Me.widthTxtBox.Name = "widthTxtBox"
-        '
-        'heightTxtBox
-        '
-        Me.heightTxtBox.BackColor = System.Drawing.Color.Black
-        resources.ApplyResources(Me.heightTxtBox, "heightTxtBox")
-        Me.heightTxtBox.ForeColor = System.Drawing.Color.White
-        Me.heightTxtBox.Name = "heightTxtBox"
-        '
-        'deadEndRemoverTxtBox
-        '
-        Me.deadEndRemoverTxtBox.BackColor = System.Drawing.Color.Black
-        resources.ApplyResources(Me.deadEndRemoverTxtBox, "deadEndRemoverTxtBox")
-        Me.deadEndRemoverTxtBox.ForeColor = System.Drawing.Color.White
-        Me.deadEndRemoverTxtBox.Name = "deadEndRemoverTxtBox"
-        '
-        'generateBtn
-        '
-        Me.generateBtn.BackColor = System.Drawing.Color.ForestGreen
-        Me.generateBtn.Cursor = System.Windows.Forms.Cursors.Hand
-        resources.ApplyResources(Me.generateBtn, "generateBtn")
-        Me.generateBtn.ForeColor = System.Drawing.Color.White
-        Me.generateBtn.Name = "generateBtn"
-        Me.generateBtn.UseVisualStyleBackColor = False
-        '
-        'solveBtn
-        '
-        Me.solveBtn.BackColor = System.Drawing.Color.Firebrick
-        Me.solveBtn.Cursor = System.Windows.Forms.Cursors.Hand
-        resources.ApplyResources(Me.solveBtn, "solveBtn")
-        Me.solveBtn.ForeColor = System.Drawing.Color.White
-        Me.solveBtn.Name = "solveBtn"
-        Me.solveBtn.UseVisualStyleBackColor = False
-        '
-        'downloadBtn
-        '
-        Me.downloadBtn.BackColor = System.Drawing.Color.PaleVioletRed
-        resources.ApplyResources(Me.downloadBtn, "downloadBtn")
-        Me.downloadBtn.ForeColor = System.Drawing.Color.White
-        Me.downloadBtn.Name = "downloadBtn"
-        Me.downloadBtn.UseVisualStyleBackColor = False
-        '
-        'mazeEntryCombo
-        '
-        Me.mazeEntryCombo.BackColor = System.Drawing.Color.Black
-        Me.mazeEntryCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        resources.ApplyResources(Me.mazeEntryCombo, "mazeEntryCombo")
-        Me.mazeEntryCombo.ForeColor = System.Drawing.Color.White
-        Me.mazeEntryCombo.FormattingEnabled = True
-        Me.mazeEntryCombo.Items.AddRange(New Object() {resources.GetString("mazeEntryCombo.Items"), resources.GetString("mazeEntryCombo.Items1"), resources.GetString("mazeEntryCombo.Items2"), resources.GetString("mazeEntryCombo.Items3")})
-        Me.mazeEntryCombo.Name = "mazeEntryCombo"
-        '
-        'generationCombo
-        '
-        Me.generationCombo.BackColor = System.Drawing.Color.Black
-        Me.generationCombo.Cursor = System.Windows.Forms.Cursors.Hand
-        resources.ApplyResources(Me.generationCombo, "generationCombo")
-        Me.generationCombo.ForeColor = System.Drawing.Color.White
-        Me.generationCombo.FormattingEnabled = True
-        Me.generationCombo.Items.AddRange(New Object() {resources.GetString("generationCombo.Items"), resources.GetString("generationCombo.Items1"), resources.GetString("generationCombo.Items2")})
-        Me.generationCombo.Name = "generationCombo"
-        '
-        'solveCombo
-        '
-        Me.solveCombo.BackColor = System.Drawing.Color.Black
-        Me.solveCombo.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.solveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        resources.ApplyResources(Me.solveCombo, "solveCombo")
-        Me.solveCombo.ForeColor = System.Drawing.Color.White
-        Me.solveCombo.FormattingEnabled = True
-        Me.solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1")})
-        Me.solveCombo.Name = "solveCombo"
-        '
-        'imageInputBtn
-        '
-        Me.imageInputBtn.BackColor = System.Drawing.Color.Black
-        Me.imageInputBtn.Cursor = System.Windows.Forms.Cursors.Hand
-        resources.ApplyResources(Me.imageInputBtn, "imageInputBtn")
-        Me.imageInputBtn.ForeColor = System.Drawing.Color.White
-        Me.imageInputBtn.Name = "imageInputBtn"
-        Me.imageInputBtn.UseVisualStyleBackColor = False
-        '
-        'openFileDialog1
-        '
-        Me.openFileDialog1.FileName = "openFileDialog"
-        '
-        'solveColourBtn
-        '
-        Me.solveColourBtn.BackColor = System.Drawing.Color.Black
-        Me.solveColourBtn.Cursor = System.Windows.Forms.Cursors.Hand
-        resources.ApplyResources(Me.solveColourBtn, "solveColourBtn")
-        Me.solveColourBtn.ForeColor = System.Drawing.Color.White
-        Me.solveColourBtn.Name = "solveColourBtn"
-        Me.solveColourBtn.UseVisualStyleBackColor = False
-        '
-        'mazeColourBtn
-        '
-        Me.mazeColourBtn.BackColor = System.Drawing.Color.Black
-        Me.mazeColourBtn.Cursor = System.Windows.Forms.Cursors.Hand
-        resources.ApplyResources(Me.mazeColourBtn, "mazeColourBtn")
-        Me.mazeColourBtn.ForeColor = System.Drawing.Color.White
-        Me.mazeColourBtn.Name = "mazeColourBtn"
-        Me.mazeColourBtn.UseVisualStyleBackColor = False
-        '
-        'bgColourBtn
-        '
-        Me.bgColourBtn.BackColor = System.Drawing.Color.Black
-        Me.bgColourBtn.Cursor = System.Windows.Forms.Cursors.Hand
-        resources.ApplyResources(Me.bgColourBtn, "bgColourBtn")
-        Me.bgColourBtn.ForeColor = System.Drawing.Color.White
-        Me.bgColourBtn.Name = "bgColourBtn"
-        Me.bgColourBtn.UseVisualStyleBackColor = False
-        '
-        'mazeBox
-        '
-        Me.mazeBox.BackColor = System.Drawing.Color.White
-        resources.ApplyResources(Me.mazeBox, "mazeBox")
-        Me.mazeBox.Name = "mazeBox"
-        Me.mazeBox.TabStop = False
-        '
-        'instantAnimationBtn
-        '
-        resources.ApplyResources(Me.instantAnimationBtn, "instantAnimationBtn")
-        Me.instantAnimationBtn.BackColor = System.Drawing.Color.Transparent
-        Me.instantAnimationBtn.Checked = True
-        Me.instantAnimationBtn.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.instantAnimationBtn.ForeColor = System.Drawing.Color.White
-        Me.instantAnimationBtn.Name = "instantAnimationBtn"
-        Me.instantAnimationBtn.UseVisualStyleBackColor = False
-        '
-        'deadEndRemoverBtn
-        '
-        Me.deadEndRemoverBtn.BackColor = System.Drawing.Color.DarkCyan
-        resources.ApplyResources(Me.deadEndRemoverBtn, "deadEndRemoverBtn")
-        Me.deadEndRemoverBtn.ForeColor = System.Drawing.Color.White
-        Me.deadEndRemoverBtn.Name = "deadEndRemoverBtn"
-        Me.deadEndRemoverBtn.UseVisualStyleBackColor = False
-        '
-        'statsPictureBox
-        '
-        Me.statsPictureBox.BackColor = System.Drawing.Color.Black
-        resources.ApplyResources(Me.statsPictureBox, "statsPictureBox")
-        Me.statsPictureBox.Name = "statsPictureBox"
-        Me.statsPictureBox.TabStop = False
-        '
-        'genTimeLbl
-        '
-        resources.ApplyResources(Me.genTimeLbl, "genTimeLbl")
-        Me.genTimeLbl.BackColor = System.Drawing.Color.Transparent
-        Me.genTimeLbl.ForeColor = System.Drawing.Color.White
-        Me.genTimeLbl.Name = "genTimeLbl"
-        '
-        'solveTimeLbl
-        '
-        resources.ApplyResources(Me.solveTimeLbl, "solveTimeLbl")
-        Me.solveTimeLbl.BackColor = System.Drawing.Color.Transparent
-        Me.solveTimeLbl.ForeColor = System.Drawing.Color.White
-        Me.solveTimeLbl.Name = "solveTimeLbl"
-        '
-        'drawTimeLbl
-        '
-        resources.ApplyResources(Me.drawTimeLbl, "drawTimeLbl")
-        Me.drawTimeLbl.BackColor = System.Drawing.Color.Transparent
-        Me.drawTimeLbl.ForeColor = System.Drawing.Color.White
-        Me.drawTimeLbl.Name = "drawTimeLbl"
-        '
-        'deadEndCountLbl
-        '
-        resources.ApplyResources(Me.deadEndCountLbl, "deadEndCountLbl")
-        Me.deadEndCountLbl.BackColor = System.Drawing.Color.Transparent
-        Me.deadEndCountLbl.ForeColor = System.Drawing.Color.White
-        Me.deadEndCountLbl.Name = "deadEndCountLbl"
-        '
-        'totalTimeLbl
-        '
-        resources.ApplyResources(Me.totalTimeLbl, "totalTimeLbl")
-        Me.totalTimeLbl.BackColor = System.Drawing.Color.Transparent
-        Me.totalTimeLbl.ForeColor = System.Drawing.Color.White
-        Me.totalTimeLbl.Name = "totalTimeLbl"
-        '
-        'statusLbl
-        '
-        resources.ApplyResources(Me.statusLbl, "statusLbl")
-        Me.statusLbl.BackColor = System.Drawing.Color.Transparent
-        Me.statusLbl.ForeColor = System.Drawing.Color.White
-        Me.statusLbl.Name = "statusLbl"
-        '
-        'deadEndTimeLbl
-        '
-        resources.ApplyResources(Me.deadEndTimeLbl, "deadEndTimeLbl")
-        Me.deadEndTimeLbl.BackColor = System.Drawing.Color.Transparent
-        Me.deadEndTimeLbl.ForeColor = System.Drawing.Color.White
-        Me.deadEndTimeLbl.Name = "deadEndTimeLbl"
-        '
-        'Form1
-        '
+        Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(Form1))
+        Title = New Label()
+        Label1 = New Label()
+        Label2 = New Label()
+        Label3 = New Label()
+        Label4 = New Label()
+        Label5 = New Label()
+        Label6 = New Label()
+        Label7 = New Label()
+        Label8 = New Label()
+        Label9 = New Label()
+        Label10 = New Label()
+        widthTxtBox = New TextBox()
+        heightTxtBox = New TextBox()
+        deadEndRemoverTxtBox = New TextBox()
+        generateBtn = New Button()
+        solveBtn = New Button()
+        downloadBtn = New Button()
+        mazeEntryCombo = New ComboBox()
+        generationCombo = New ComboBox()
+        solveCombo = New ComboBox()
+        imageInputBtn = New Button()
+        openFileDialog1 = New OpenFileDialog()
+        colorDialog = New ColorDialog()
+        solveColourBtn = New Button()
+        mazeColourBtn = New Button()
+        bgColourBtn = New Button()
+        mazeBox = New PictureBox()
+        FolderBrowserDialog1 = New FolderBrowserDialog()
+        instantAnimationBtn = New CheckBox()
+        deadEndRemoverBtn = New Button()
+        statsPictureBox = New PictureBox()
+        genTimeLbl = New Label()
+        solveTimeLbl = New Label()
+        drawTimeLbl = New Label()
+        deadEndCountLbl = New Label()
+        totalTimeLbl = New Label()
+        statusLbl = New Label()
+        deadEndTimeLbl = New Label()
+        CType(mazeBox, ComponentModel.ISupportInitialize).BeginInit()
+        CType(statsPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        SuspendLayout()
+        ' 
+        ' Title
+        ' 
+        resources.ApplyResources(Title, "Title")
+        Title.BackColor = Color.Transparent
+        Title.ForeColor = Color.Transparent
+        Title.Name = "Title"' 
+        ' Label1
+        ' 
+        resources.ApplyResources(Label1, "Label1")
+        Label1.BackColor = Color.Transparent
+        Label1.ForeColor = Color.White
+        Label1.Name = "Label1"' 
+        ' Label2
+        ' 
+        resources.ApplyResources(Label2, "Label2")
+        Label2.BackColor = Color.Transparent
+        Label2.ForeColor = Color.White
+        Label2.Name = "Label2"' 
+        ' Label3
+        ' 
+        resources.ApplyResources(Label3, "Label3")
+        Label3.BackColor = Color.Transparent
+        Label3.ForeColor = Color.White
+        Label3.Name = "Label3"' 
+        ' Label4
+        ' 
+        resources.ApplyResources(Label4, "Label4")
+        Label4.BackColor = Color.Transparent
+        Label4.ForeColor = Color.White
+        Label4.Name = "Label4"' 
+        ' Label5
+        ' 
+        resources.ApplyResources(Label5, "Label5")
+        Label5.BackColor = Color.Transparent
+        Label5.ForeColor = Color.White
+        Label5.Name = "Label5"' 
+        ' Label6
+        ' 
+        resources.ApplyResources(Label6, "Label6")
+        Label6.BackColor = Color.Transparent
+        Label6.ForeColor = Color.White
+        Label6.Name = "Label6"' 
+        ' Label7
+        ' 
+        resources.ApplyResources(Label7, "Label7")
+        Label7.BackColor = Color.Transparent
+        Label7.ForeColor = Color.White
+        Label7.Name = "Label7"' 
+        ' Label8
+        ' 
+        resources.ApplyResources(Label8, "Label8")
+        Label8.BackColor = Color.Transparent
+        Label8.ForeColor = Color.White
+        Label8.Name = "Label8"' 
+        ' Label9
+        ' 
+        resources.ApplyResources(Label9, "Label9")
+        Label9.BackColor = Color.Transparent
+        Label9.ForeColor = Color.White
+        Label9.Name = "Label9"' 
+        ' Label10
+        ' 
+        resources.ApplyResources(Label10, "Label10")
+        Label10.BackColor = Color.Transparent
+        Label10.ForeColor = Color.White
+        Label10.Name = "Label10"' 
+        ' widthTxtBox
+        ' 
+        widthTxtBox.BackColor = Color.Black
+        resources.ApplyResources(widthTxtBox, "widthTxtBox")
+        widthTxtBox.ForeColor = Color.White
+        widthTxtBox.Name = "widthTxtBox"' 
+        ' heightTxtBox
+        ' 
+        heightTxtBox.BackColor = Color.Black
+        resources.ApplyResources(heightTxtBox, "heightTxtBox")
+        heightTxtBox.ForeColor = Color.White
+        heightTxtBox.Name = "heightTxtBox"' 
+        ' deadEndRemoverTxtBox
+        ' 
+        deadEndRemoverTxtBox.BackColor = Color.Black
+        resources.ApplyResources(deadEndRemoverTxtBox, "deadEndRemoverTxtBox")
+        deadEndRemoverTxtBox.ForeColor = Color.White
+        deadEndRemoverTxtBox.Name = "deadEndRemoverTxtBox"' 
+        ' generateBtn
+        ' 
+        generateBtn.BackColor = Color.ForestGreen
+        generateBtn.Cursor = Cursors.Hand
+        resources.ApplyResources(generateBtn, "generateBtn")
+        generateBtn.ForeColor = Color.White
+        generateBtn.Name = "generateBtn"
+        generateBtn.UseVisualStyleBackColor = False
+        ' 
+        ' solveBtn
+        ' 
+        solveBtn.BackColor = Color.Firebrick
+        solveBtn.Cursor = Cursors.Hand
+        resources.ApplyResources(solveBtn, "solveBtn")
+        solveBtn.ForeColor = Color.White
+        solveBtn.Name = "solveBtn"
+        solveBtn.UseVisualStyleBackColor = False
+        ' 
+        ' downloadBtn
+        ' 
+        downloadBtn.BackColor = Color.PaleVioletRed
+        resources.ApplyResources(downloadBtn, "downloadBtn")
+        downloadBtn.ForeColor = Color.White
+        downloadBtn.Name = "downloadBtn"
+        downloadBtn.UseVisualStyleBackColor = False
+        ' 
+        ' mazeEntryCombo
+        ' 
+        mazeEntryCombo.BackColor = Color.Black
+        mazeEntryCombo.DropDownStyle = ComboBoxStyle.DropDownList
+        resources.ApplyResources(mazeEntryCombo, "mazeEntryCombo")
+        mazeEntryCombo.ForeColor = Color.White
+        mazeEntryCombo.FormattingEnabled = True
+        mazeEntryCombo.Items.AddRange(New Object() {resources.GetString("mazeEntryCombo.Items"), resources.GetString("mazeEntryCombo.Items1"), resources.GetString("mazeEntryCombo.Items2"), resources.GetString("mazeEntryCombo.Items3")})
+        mazeEntryCombo.Name = "mazeEntryCombo"' 
+        ' generationCombo
+        ' 
+        generationCombo.BackColor = Color.Black
+        generationCombo.Cursor = Cursors.Hand
+        resources.ApplyResources(generationCombo, "generationCombo")
+        generationCombo.ForeColor = Color.White
+        generationCombo.FormattingEnabled = True
+        generationCombo.Items.AddRange(New Object() {resources.GetString("generationCombo.Items"), resources.GetString("generationCombo.Items1"), resources.GetString("generationCombo.Items2")})
+        generationCombo.Name = "generationCombo"' 
+        ' solveCombo
+        ' 
+        solveCombo.BackColor = Color.Black
+        solveCombo.Cursor = Cursors.Hand
+        solveCombo.DropDownStyle = ComboBoxStyle.DropDownList
+        resources.ApplyResources(solveCombo, "solveCombo")
+        solveCombo.ForeColor = Color.White
+        solveCombo.FormattingEnabled = True
+        solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1")})
+        solveCombo.Name = "solveCombo"' 
+        ' imageInputBtn
+        ' 
+        imageInputBtn.BackColor = Color.Black
+        imageInputBtn.Cursor = Cursors.Hand
+        resources.ApplyResources(imageInputBtn, "imageInputBtn")
+        imageInputBtn.ForeColor = Color.White
+        imageInputBtn.Name = "imageInputBtn"
+        imageInputBtn.UseVisualStyleBackColor = False
+        ' 
+        ' openFileDialog1
+        ' 
+        openFileDialog1.FileName = "openFileDialog"' 
+        ' solveColourBtn
+        ' 
+        solveColourBtn.BackColor = Color.Black
+        solveColourBtn.Cursor = Cursors.Hand
+        resources.ApplyResources(solveColourBtn, "solveColourBtn")
+        solveColourBtn.ForeColor = Color.White
+        solveColourBtn.Name = "solveColourBtn"
+        solveColourBtn.UseVisualStyleBackColor = False
+        ' 
+        ' mazeColourBtn
+        ' 
+        mazeColourBtn.BackColor = Color.Black
+        mazeColourBtn.Cursor = Cursors.Hand
+        resources.ApplyResources(mazeColourBtn, "mazeColourBtn")
+        mazeColourBtn.ForeColor = Color.White
+        mazeColourBtn.Name = "mazeColourBtn"
+        mazeColourBtn.UseVisualStyleBackColor = False
+        ' 
+        ' bgColourBtn
+        ' 
+        bgColourBtn.BackColor = Color.Black
+        bgColourBtn.Cursor = Cursors.Hand
+        resources.ApplyResources(bgColourBtn, "bgColourBtn")
+        bgColourBtn.ForeColor = Color.White
+        bgColourBtn.Name = "bgColourBtn"
+        bgColourBtn.UseVisualStyleBackColor = False
+        ' 
+        ' mazeBox
+        ' 
+        mazeBox.BackColor = Color.White
+        resources.ApplyResources(mazeBox, "mazeBox")
+        mazeBox.Name = "mazeBox"
+        mazeBox.TabStop = False
+        ' 
+        ' instantAnimationBtn
+        ' 
+        resources.ApplyResources(instantAnimationBtn, "instantAnimationBtn")
+        instantAnimationBtn.BackColor = Color.Transparent
+        instantAnimationBtn.Checked = True
+        instantAnimationBtn.CheckState = CheckState.Checked
+        instantAnimationBtn.ForeColor = Color.White
+        instantAnimationBtn.Name = "instantAnimationBtn"
+        instantAnimationBtn.UseVisualStyleBackColor = False
+        ' 
+        ' deadEndRemoverBtn
+        ' 
+        deadEndRemoverBtn.BackColor = Color.DarkCyan
+        resources.ApplyResources(deadEndRemoverBtn, "deadEndRemoverBtn")
+        deadEndRemoverBtn.ForeColor = Color.White
+        deadEndRemoverBtn.Name = "deadEndRemoverBtn"
+        deadEndRemoverBtn.UseVisualStyleBackColor = False
+        ' 
+        ' statsPictureBox
+        ' 
+        statsPictureBox.BackColor = Color.Black
+        resources.ApplyResources(statsPictureBox, "statsPictureBox")
+        statsPictureBox.Name = "statsPictureBox"
+        statsPictureBox.TabStop = False
+        ' 
+        ' genTimeLbl
+        ' 
+        resources.ApplyResources(genTimeLbl, "genTimeLbl")
+        genTimeLbl.BackColor = Color.Transparent
+        genTimeLbl.ForeColor = Color.White
+        genTimeLbl.Name = "genTimeLbl"' 
+        ' solveTimeLbl
+        ' 
+        resources.ApplyResources(solveTimeLbl, "solveTimeLbl")
+        solveTimeLbl.BackColor = Color.Transparent
+        solveTimeLbl.ForeColor = Color.White
+        solveTimeLbl.Name = "solveTimeLbl"' 
+        ' drawTimeLbl
+        ' 
+        resources.ApplyResources(drawTimeLbl, "drawTimeLbl")
+        drawTimeLbl.BackColor = Color.Transparent
+        drawTimeLbl.ForeColor = Color.White
+        drawTimeLbl.Name = "drawTimeLbl"' 
+        ' deadEndCountLbl
+        ' 
+        resources.ApplyResources(deadEndCountLbl, "deadEndCountLbl")
+        deadEndCountLbl.BackColor = Color.Transparent
+        deadEndCountLbl.ForeColor = Color.White
+        deadEndCountLbl.Name = "deadEndCountLbl"' 
+        ' totalTimeLbl
+        ' 
+        resources.ApplyResources(totalTimeLbl, "totalTimeLbl")
+        totalTimeLbl.BackColor = Color.Transparent
+        totalTimeLbl.ForeColor = Color.White
+        totalTimeLbl.Name = "totalTimeLbl"' 
+        ' statusLbl
+        ' 
+        resources.ApplyResources(statusLbl, "statusLbl")
+        statusLbl.BackColor = Color.Transparent
+        statusLbl.ForeColor = Color.White
+        statusLbl.Name = "statusLbl"' 
+        ' deadEndTimeLbl
+        ' 
+        resources.ApplyResources(deadEndTimeLbl, "deadEndTimeLbl")
+        deadEndTimeLbl.BackColor = Color.Transparent
+        deadEndTimeLbl.ForeColor = Color.White
+        deadEndTimeLbl.Name = "deadEndTimeLbl"' 
+        ' Form1
+        ' 
         resources.ApplyResources(Me, "$this")
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackColor = System.Drawing.Color.White
-        Me.BackgroundImage = Global.Maze.My.Resources.Resources.form_background_image1
-        Me.Controls.Add(Me.deadEndTimeLbl)
-        Me.Controls.Add(Me.statusLbl)
-        Me.Controls.Add(Me.totalTimeLbl)
-        Me.Controls.Add(Me.deadEndCountLbl)
-        Me.Controls.Add(Me.drawTimeLbl)
-        Me.Controls.Add(Me.solveTimeLbl)
-        Me.Controls.Add(Me.genTimeLbl)
-        Me.Controls.Add(Me.statsPictureBox)
-        Me.Controls.Add(Me.deadEndRemoverBtn)
-        Me.Controls.Add(Me.instantAnimationBtn)
-        Me.Controls.Add(Me.mazeBox)
-        Me.Controls.Add(Me.bgColourBtn)
-        Me.Controls.Add(Me.mazeColourBtn)
-        Me.Controls.Add(Me.solveColourBtn)
-        Me.Controls.Add(Me.imageInputBtn)
-        Me.Controls.Add(Me.solveCombo)
-        Me.Controls.Add(Me.generationCombo)
-        Me.Controls.Add(Me.mazeEntryCombo)
-        Me.Controls.Add(Me.downloadBtn)
-        Me.Controls.Add(Me.solveBtn)
-        Me.Controls.Add(Me.generateBtn)
-        Me.Controls.Add(Me.deadEndRemoverTxtBox)
-        Me.Controls.Add(Me.heightTxtBox)
-        Me.Controls.Add(Me.widthTxtBox)
-        Me.Controls.Add(Me.Label10)
-        Me.Controls.Add(Me.Label9)
-        Me.Controls.Add(Me.Label8)
-        Me.Controls.Add(Me.Label7)
-        Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.Title)
-        Me.MinimizeBox = False
-        Me.Name = "Form1"
-        CType(Me.mazeBox, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.statsPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
-
+        AutoScaleMode = AutoScaleMode.Font
+        BackColor = Color.White
+        BackgroundImage = My.Resources.Resources.formBG
+        Controls.Add(deadEndTimeLbl)
+        Controls.Add(statusLbl)
+        Controls.Add(totalTimeLbl)
+        Controls.Add(deadEndCountLbl)
+        Controls.Add(drawTimeLbl)
+        Controls.Add(solveTimeLbl)
+        Controls.Add(genTimeLbl)
+        Controls.Add(statsPictureBox)
+        Controls.Add(deadEndRemoverBtn)
+        Controls.Add(instantAnimationBtn)
+        Controls.Add(mazeBox)
+        Controls.Add(bgColourBtn)
+        Controls.Add(mazeColourBtn)
+        Controls.Add(solveColourBtn)
+        Controls.Add(imageInputBtn)
+        Controls.Add(solveCombo)
+        Controls.Add(generationCombo)
+        Controls.Add(mazeEntryCombo)
+        Controls.Add(downloadBtn)
+        Controls.Add(solveBtn)
+        Controls.Add(generateBtn)
+        Controls.Add(deadEndRemoverTxtBox)
+        Controls.Add(heightTxtBox)
+        Controls.Add(widthTxtBox)
+        Controls.Add(Label10)
+        Controls.Add(Label9)
+        Controls.Add(Label8)
+        Controls.Add(Label7)
+        Controls.Add(Label6)
+        Controls.Add(Label5)
+        Controls.Add(Label4)
+        Controls.Add(Label3)
+        Controls.Add(Label2)
+        Controls.Add(Label1)
+        Controls.Add(Title)
+        MinimizeBox = False
+        Name = "Form1"
+        CType(mazeBox, ComponentModel.ISupportInitialize).EndInit()
+        CType(statsPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        ResumeLayout(False)
+        PerformLayout()
     End Sub
 
     Friend WithEvents Title As Label
