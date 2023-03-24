@@ -25,8 +25,9 @@ Partial Class Form2
         images = New PictureBox()
         goRightBtn = New Button()
         goLeftbtn = New Button()
-        TextBox1 = New TextBox()
+        tutorialTxt = New TextBox()
         backBtn = New PictureBox()
+        Title = New Label()
         CType(images, ComponentModel.ISupportInitialize).BeginInit()
         CType(backBtn, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
@@ -67,18 +68,20 @@ Partial Class Form2
         goLeftbtn.Text = "<"
         goLeftbtn.UseVisualStyleBackColor = False
         ' 
-        ' TextBox1
+        ' tutorialTxt
         ' 
-        TextBox1.Location = New Point(119, 623)
-        TextBox1.Multiline = True
-        TextBox1.Name = "TextBox1"
-        TextBox1.Size = New Size(751, 72)
-        TextBox1.TabIndex = 5
+        tutorialTxt.Font = New Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point)
+        tutorialTxt.Location = New Point(119, 623)
+        tutorialTxt.Multiline = True
+        tutorialTxt.Name = "tutorialTxt"
+        tutorialTxt.Size = New Size(751, 72)
+        tutorialTxt.TabIndex = 5
+        tutorialTxt.TextAlign = HorizontalAlignment.Center
         ' 
         ' backBtn
         ' 
         backBtn.BackColor = Color.Transparent
-        backBtn.BackgroundImage = My.Resources.Resources.back_button1
+        backBtn.BackgroundImage = My.Resources.Resources.back_button
         backBtn.Cursor = Cursors.Hand
         backBtn.ImeMode = ImeMode.NoControl
         backBtn.Location = New Point(12, 12)
@@ -87,14 +90,27 @@ Partial Class Form2
         backBtn.TabIndex = 46
         backBtn.TabStop = False
         ' 
+        ' Title
+        ' 
+        Title.AutoSize = True
+        Title.BackColor = Color.Transparent
+        Title.Font = New Font("Segoe UI", 72F, FontStyle.Regular, GraphicsUnit.Point)
+        Title.ForeColor = Color.Transparent
+        Title.ImeMode = ImeMode.NoControl
+        Title.Location = New Point(281, -14)
+        Title.Name = "Title"
+        Title.Size = New Size(416, 128)
+        Title.TabIndex = 47
+        Title.Text = "Tutorials"' 
         ' Form2
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackgroundImage = My.Resources.Resources.helperBG
         ClientSize = New Size(984, 716)
+        Controls.Add(Title)
         Controls.Add(backBtn)
-        Controls.Add(TextBox1)
+        Controls.Add(tutorialTxt)
         Controls.Add(goLeftbtn)
         Controls.Add(goRightBtn)
         Controls.Add(images)
@@ -109,6 +125,7 @@ Partial Class Form2
     Friend WithEvents images As PictureBox
     Friend WithEvents goRightBtn As Button
     Friend WithEvents goLeftbtn As Button
-    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents tutorialTxt As TextBox
     Friend WithEvents backBtn As PictureBox
+    Friend WithEvents Title As Label
 End Class

@@ -188,6 +188,13 @@ Public Class Form1
             Return neighbours
         End Function
     End Class
+
+
+    Public Sub New()
+        ' This call is required by the designer.
+        InitializeComponent()
+        ' Add any initialization after the InitializeComponent() call.
+    End Sub
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' GUI Customisation
         imageInputBtn.BackColor = Color.FromArgb(40, 60, 86)
@@ -277,7 +284,7 @@ Public Class Form1
             Select Case mazeEntryType
                 Case "Random"
                     Randomize()
-                    Dim randomType As Integer = rnd.Next(0, 5)
+                    Dim randomType As Integer = rnd.Next(0, 4)
                     ' Chooses randomly what type of maze entry it will be
                     Select Case randomType
                         Case 0 ' Start at a random top postion, finish at a random bottom position
@@ -981,5 +988,6 @@ Public Class Form1
         Me.Hide()
         Form2.Show()
     End Sub
+
     ' USER INPUT END
 End Class

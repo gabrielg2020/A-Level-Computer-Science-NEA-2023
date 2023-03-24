@@ -332,7 +332,7 @@ Partial Class Form1
         resources.ApplyResources(Me, "$this")
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.White
-        BackgroundImage = My.Resources.Resources.form_background_image1
+        BackgroundImage = My.Resources.Resources.formBG
         Controls.Add(helperBtn)
         Controls.Add(deadEndTimeLbl)
         Controls.Add(statusLbl)

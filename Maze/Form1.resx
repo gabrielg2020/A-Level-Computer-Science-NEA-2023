@@ -1022,7 +1022,7 @@
     <value>Segoe UI, 15.75pt</value>
   </data>
   <data name="genTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 888</value>
+    <value>27, 935</value>
   </data>
   <data name="genTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>171, 30</value>
@@ -1055,7 +1055,7 @@
     <value>NoControl</value>
   </data>
   <data name="solveTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 918</value>
+    <value>27, 965</value>
   </data>
   <data name="solveTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>118, 30</value>
@@ -1088,7 +1088,7 @@
     <value>NoControl</value>
   </data>
   <data name="drawTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 948</value>
+    <value>27, 995</value>
   </data>
   <data name="drawTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>117, 30</value>
@@ -1121,7 +1121,7 @@
     <value>NoControl</value>
   </data>
   <data name="deadEndCountLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>321, 888</value>
+    <value>321, 935</value>
   </data>
   <data name="deadEndCountLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>170, 30</value>
@@ -1154,7 +1154,7 @@
     <value>NoControl</value>
   </data>
   <data name="totalTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>321, 948</value>
+    <value>321, 995</value>
   </data>
   <data name="totalTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>113, 30</value>
@@ -1217,7 +1217,7 @@
     <value>NoControl</value>
   </data>
   <data name="deadEndTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>321, 918</value>
+    <value>321, 965</value>
   </data>
   <data name="deadEndTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>159, 30</value>
