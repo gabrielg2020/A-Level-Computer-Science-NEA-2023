@@ -188,7 +188,7 @@ Public Class Form1
             Return neighbours
         End Function
     End Class
-    Private Sub Form1_Load(sender As Object, e As EventArgs)
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' GUI Customisation
         imageInputBtn.BackColor = Color.FromArgb(40, 60, 86)
         widthTxtBox.BackColor = Color.FromArgb(40, 60, 86)
@@ -634,7 +634,7 @@ Public Class Form1
         animationLock(False)
     End Sub
     ' USER INPUT START
-    Private Sub generateBtn_Click(sender As Object, e As EventArgs)
+    Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
         ' Saves Maze Properties inputted by the user
         ' Checking that the values inputed for width and height are valid
         If Integer.TryParse(widthTxtBox.Text, width) And width > 2 And Integer.TryParse(heightTxtBox.Text, height) And height > 2 Then
@@ -722,7 +722,7 @@ Public Class Form1
         statusLbl.Text = "Status: Doing Nothing"
         downlaodGenerated = DialogResult.Cancel
     End Sub
-    Private Sub solveBtn_Click(sender As Object, e As EventArgs)
+    Private Sub solveBtn_Click(sender As Object, e As EventArgs) Handles solveBtn.Click
         ' Makes sure a maze has been generated 
         If mazeGenerated = False Then
             MsgBox("No maze generated!" & vbCrLf & "Please press the generate button", MsgBoxStyle.OkOnly, "No maze generated")
@@ -776,7 +776,7 @@ Public Class Form1
         ' Resets Status
         statusLbl.Text = "Status: Doing Nothing"
     End Sub
-    Private Sub deadEndRemoverBtn_Click(sender As Object, e As EventArgs)
+    Private Sub deadEndRemoverBtn_Click(sender As Object, e As EventArgs) Handles deadEndRemoverBtn.Click
         ' Makes sure a maze has been generated 
         If mazeGenerated = False Then
             MsgBox("No maze generated!" & vbCrLf & "Please press the generate button", MsgBoxStyle.OkOnly, "No maze generated")
@@ -846,19 +846,19 @@ Public Class Form1
             MsgBox("No maze generated!" & vbCrLf & "Please press the generate button", MsgBoxStyle.OkOnly, "No maze generated")
         End If
     End Sub
-    Private Sub bgColourBtn_Click(sender As Object, e As EventArgs)
+    Private Sub bgColourBtn_Click(sender As Object, e As EventArgs) Handles bgColourBtn.Click
         bgColour = selectColour() ' Selects background colour 
         bgColourBtn.Text = bgColour.ToString
     End Sub
-    Private Sub mazeColourBtn_Click(sender As Object, e As EventArgs)
+    Private Sub mazeColourBtn_Click(sender As Object, e As EventArgs) Handles mazeColourBtn.Click
         mazeColour = selectColour() ' Selects maze colour 
         mazeColourBtn.Text = mazeColour.ToString
     End Sub
-    Private Sub solveColourBtn_Click(sender As Object, e As EventArgs)
+    Private Sub solveColourBtn_Click(sender As Object, e As EventArgs) Handles solveColourBtn.Click
         solveColour = selectColour() ' Selects solve colour 
         solveColourBtn.Text = solveColour.ToString
     End Sub
-    Private Sub downloadBtn_Click(sender As Object, e As EventArgs)
+    Private Sub downloadBtn_Click(sender As Object, e As EventArgs) Handles downloadBtn.Click
         downloadMaze()
     End Sub
     Private Function componentAnalysis(ByVal image As Bitmap) As List(Of List(Of Point))
@@ -914,7 +914,7 @@ Public Class Form1
         Return components
     End Function
 
-    Private Sub imageInputBtn_Click(sender As Object, e As EventArgs)
+    Private Sub imageInputBtn_Click(sender As Object, e As EventArgs) Handles imageInputBtn.Click
         ' Rest variable 
         If imageInputted = True Then
             inputImage.Dispose()
@@ -975,6 +975,11 @@ Public Class Form1
 
         imageInputBtn.Text = "Cancel Image"
         imageInputted = True
+    End Sub
+
+    Private Sub helperBtn_Click(sender As Object, e As EventArgs) Handles helperBtn.Click
+        Me.Hide()
+        Form2.Show()
     End Sub
     ' USER INPUT END
 End Class

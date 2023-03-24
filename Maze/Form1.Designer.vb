@@ -61,8 +61,10 @@ Partial Class Form1
         totalTimeLbl = New Label()
         statusLbl = New Label()
         deadEndTimeLbl = New Label()
+        helperBtn = New PictureBox()
         CType(mazeBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(statsPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        CType(helperBtn, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' Title
@@ -316,12 +318,22 @@ Partial Class Form1
         deadEndTimeLbl.BackColor = Color.Transparent
         deadEndTimeLbl.ForeColor = Color.White
         deadEndTimeLbl.Name = "deadEndTimeLbl"' 
+        ' helperBtn
+        ' 
+        helperBtn.BackColor = Color.Transparent
+        helperBtn.BackgroundImage = My.Resources.Resources.helper_icon
+        helperBtn.Cursor = Cursors.Hand
+        resources.ApplyResources(helperBtn, "helperBtn")
+        helperBtn.Name = "helperBtn"
+        helperBtn.TabStop = False
+        ' 
         ' Form1
         ' 
         resources.ApplyResources(Me, "$this")
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.White
-        BackgroundImage = My.Resources.Resources.formBG
+        BackgroundImage = My.Resources.Resources.form_background_image1
+        Controls.Add(helperBtn)
         Controls.Add(deadEndTimeLbl)
         Controls.Add(statusLbl)
         Controls.Add(totalTimeLbl)
@@ -361,6 +373,7 @@ Partial Class Form1
         Name = "Form1"
         CType(mazeBox, ComponentModel.ISupportInitialize).EndInit()
         CType(statsPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        CType(helperBtn, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -403,4 +416,5 @@ Partial Class Form1
     Friend WithEvents totalTimeLbl As Label
     Friend WithEvents statusLbl As Label
     Friend WithEvents deadEndTimeLbl As Label
+    Friend WithEvents helperBtn As PictureBox
 End Class
