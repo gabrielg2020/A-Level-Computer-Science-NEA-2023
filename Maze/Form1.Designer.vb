@@ -203,7 +203,7 @@ Partial Class Form1
         resources.ApplyResources(solveCombo, "solveCombo")
         solveCombo.ForeColor = Color.White
         solveCombo.FormattingEnabled = True
-        solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1"), resources.GetString("solveCombo.Items2"), resources.GetString("solveCombo.Items3")})
+        solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1"), resources.GetString("solveCombo.Items2"), resources.GetString("solveCombo.Items3"), resources.GetString("solveCombo.Items4")})
         solveCombo.Name = "solveCombo"' 
         ' imageInputBtn
         ' 

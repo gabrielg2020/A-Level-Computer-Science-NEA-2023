@@ -92,6 +92,67 @@ Public Class Form1
             Return i
         End Function
     End Class
+    ' Priority Queue Class
+    Public Class PriorityQueue(Of priority As IComparable, value)
+        Private ReadOnly dictionary As SortedDictionary(Of priority, Queue(Of value))
+
+        ' Constructor
+        Public Sub New()
+            ' This assigns the items in the dictionary
+            dictionary = New SortedDictionary(Of priority, Queue(Of value))()
+        End Sub
+
+        ' Adds values to the queue
+        Public Sub Enqueue(priority As priority, value As value)
+            ' If we have a new priority we create a new queue
+            If Not dictionary.ContainsKey(priority) Then
+                dictionary(priority) = New Queue(Of value)()
+            End If
+            ' Add value to queue
+            dictionary(priority).Enqueue(value)
+        End Sub
+
+        ' Removes values to the queue
+        Public Function Dequeue() As value
+            ' This helps when debugging
+            If dictionary.Count = 0 Then
+                Throw New InvalidOperationException("The priority queue is empty.")
+            End If
+
+            Dim firstPair As KeyValuePair(Of priority, Queue(Of value)) = dictionary.First()
+            Dim value As value = firstPair.Value.Dequeue()
+
+            If firstPair.Value.Count = 0 Then
+                dictionary.Remove(firstPair.Key)
+            End If
+
+            Return value
+        End Function
+
+        ' Checks if the whole queue is empty
+        Public Function isEmpty() As Boolean
+            Return dictionary.Count = 0
+        End Function
+
+        ' Returns the number of items in the queue
+        Public Function Count() As Integer
+            Dim totalCount As Integer = 0
+            For Each q In dictionary.Values
+                totalCount += q.Count
+            Next
+            Return totalCount
+        End Function
+
+        ' Checks if a value is in the queue
+        Public Function Contains(v As value) As Boolean
+            For Each q In dictionary.Values
+                If q.Contains(v) Then
+                    Return True
+                End If
+            Next
+            Return False
+        End Function
+    End Class
     ' Cell Class
     Public Class Cell
         ' Postion Properties
@@ -108,6 +169,7 @@ Public Class Form1
         Private deadEnd As Boolean = False
         ' Generate/Solve Properties
         Public weight As Integer = 0
+        Public heuristicWeight As Integer = 0
         Public visited As Boolean = False
         Public connectedCell As New List(Of Point)
 
@@ -599,6 +661,10 @@ Public Class Form1
     End Sub
 
     ' Solving 
+    Private Function distanceCalc(a As Point, b As Point) As Double
+        Return Math.Sqrt(((a.X - a.X) ^ 2) + ((b.Y - b.Y) ^ 2))
+    End Function
+
     Private Sub dijkstra()
         ' Queue 
         Dim queue As New Queue(Of Point)
@@ -668,6 +734,55 @@ Public Class Form1
         ' Disables animation lock
         animationLock(False)
     End Sub
+
+    Private Sub Astar()
+        ' My heurisitic value is the euclidean
+        Dim pQueue As New PriorityQueue(Of Double, Point)()
+        Dim visitedNodes As New List(Of Point)
+        ' Set the start node's weight = 0
+        maze(mazeEntry.X, mazeEntry.Y).heuristicWeight = 0 + distanceCalc(mazeEntry, mazeExit)
+        ' Adds cell to the visted list
+        visitedNodes.Add(mazeEntry)
+        Dim heuristicWeight As Integer = 1
+
+        For Each point In maze(mazeEntry.X, mazeEntry.Y).connectedCell
+            pQueue.Enqueue(distanceCalc(mazeEntry, mazeExit), point)
+        Next
+
+        While Not pQueue.isEmpty()
+            For i = 0 To pQueue.Count - 1
+                Dim tempNode As Point = pQueue.Dequeue()
+                visitedNodes.Add(tempNode)
+                maze(tempNode.X, tempNode.Y).heuristicWeight = heuristicWeight + distanceCalc(tempNode, mazeExit)
+
+                If tempNode = mazeExit Then
+                    Exit While
+                End If
+
+                For Each point In maze(tempNode.X, tempNode.Y).connectedCell
+                    If visitedNodes.Contains(point) = False And pQueue.Contains(point) = False Then
+                        pQueue.Enqueue(distanceCalc(point, mazeExit), point)
+                    End If
+                Next
+            Next
+            heuristicWeight += 1
+        End While
+
+        Dim path As New List(Of Point)
+        Dim endNode As Point = mazeExit
+        While endNode <> mazeEntry
+            For Each node In visitedNodes
+                If maze(node.X, node.Y).heuristicWeight < maze(endNode.X, endNode.Y).heuristicWeight And maze(endNode.X, endNode.Y).connectedCell.Contains(node) Then
+                    maze(node.X, node.Y).mazeSolved = True
+                    path.Add(node)
+                    endNode = node
+                    Exit For
+                End If
+            Next
+        End While
+        maze(mazeEntry.X, mazeEntry.Y).mazeSolved = False
+    End Sub
+
 
     Private Sub wallFollower(type As String)
         Dim node As Point = mazeEntry
@@ -861,6 +976,8 @@ Public Class Form1
         ' Checks what solving algorithm user has chosen
         If solveAlgorithm = "Dijkstra's Algorithm" Then
             dijkstra()
+        ElseIf solveAlgorithm = "A*" Then
+            Astar()
         ElseIf solveAlgorithm = "Wall Follower LHR" Then
             wallFollower("LHR")
         ElseIf solveAlgorithm = "Wall Follower RHR" Then
