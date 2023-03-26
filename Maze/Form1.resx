@@ -697,6 +697,9 @@
   <data name="generationCombo.Items2" xml:space="preserve">
     <value>Randomised Prims</value>
   </data>
+  <data name="generationCombo.Items3" xml:space="preserve">
+    <value>s</value>
+  </data>
   <data name="generationCombo.Location" type="System.Drawing.Point, System.Drawing">
     <value>389, 362</value>
   </data>
@@ -732,6 +735,12 @@
   </data>
   <data name="solveCombo.Items1" xml:space="preserve">
     <value>Breath Frist Search</value>
+  </data>
+  <data name="solveCombo.Items2" xml:space="preserve">
+    <value>Wall Follower LHR</value>
+  </data>
+  <data name="solveCombo.Items3" xml:space="preserve">
+    <value>Wall Follower RHR</value>
   </data>
   <data name="solveCombo.Location" type="System.Drawing.Point, System.Drawing">
     <value>389, 432</value>

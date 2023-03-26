@@ -1,4 +1,6 @@
 ﻿Imports System.Threading
+Imports System.Collections.Generic
+Imports Maze.Form1
 
 Public Class Form1
     ' Class instanse used to randomize numbers
@@ -52,6 +54,45 @@ Public Class Form1
     Private Const B As Double = 0.0722
     Private imgComponents As New List(Of List(Of Point))
     Private largestComponent As New List(Of Point)
+    ' Circular Queue Class
+    Class CircularQueue(Of T)
+        Private ReadOnly items As List(Of T)
+        Private currentIndex As Integer
+
+        ' Constructor
+        Public Sub New(i As IEnumerable(Of T))
+            ' This assigns the items in the queue
+            items = New List(Of T)(i)
+            currentIndex = 0
+        End Sub
+
+        ' This function return value will be same type and the input
+        Public Function turnRight() As T
+            If items.Count = 0 Then
+                ' This helps when debugging
+                Throw New InvalidOperationException("The queue is empty")
+            End If
+
+
+            currentIndex = (currentIndex + 1) Mod items.Count
+            Dim i As T = items(currentIndex)
+            Return i
+        End Function
+
+        ' This function return value will be same type and the input
+        Public Function turnLeft() As T
+            If items.Count = 0 Then
+                ' This helps when debugging
+                Throw New InvalidOperationException("The queue is empty")
+            End If
+
+            currentIndex = (currentIndex - 1 + items.Count) Mod items.Count
+            Dim i As T = items(currentIndex)
+
+            Return i
+        End Function
+    End Class
+    ' Cell Class
     Public Class Cell
         ' Postion Properties
         Public x As Integer
@@ -69,6 +110,7 @@ Public Class Form1
         Public weight As Integer = 0
         Public visited As Boolean = False
         Public connectedCell As New List(Of Point)
+
 
         ' Sets all cells with all walls 
         Public Sub New()
@@ -187,8 +229,29 @@ Public Class Form1
             End If
             Return neighbours
         End Function
-    End Class
 
+        Function checkConnectedCell(d As Integer)
+            Select Case d
+                Case 0 ' Check above
+                    If connectedCell.Contains(New Point(x, y - 1)) Then
+                        Return New Point(x, y - 1)
+                    End If
+                Case 1 ' Check Right
+                    If connectedCell.Contains(New Point(x + 1, y)) Then
+                        Return New Point(x + 1, y)
+                    End If
+                Case 2 ' Check Below
+                    If connectedCell.Contains(New Point(x, y + 1)) Then
+                        Return New Point(x, y + 1)
+                    End If
+                Case 3 ' Check Left
+                    If connectedCell.Contains(New Point(x - 1, y)) Then
+                        Return New Point(x - 1, y)
+                    End If
+            End Select
+            Return Point.Empty
+        End Function
+    End Class
 
     Public Sub New()
         ' This call is required by the designer.
@@ -218,6 +281,9 @@ Public Class Form1
         generationCombo.SelectedIndex = 0 ' Makes index 0 default displayed on the combo list(so currently shows "DFS Backtracker" initially
         solveCombo.SelectedIndex = 0 ' Default displays (Dijkstra's Algortimn)
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Random"
+
+
+
     End Sub
     Private Sub initializeMaze()
         mazeWallCount = 0
@@ -266,7 +332,6 @@ Public Class Form1
         ' Setting Maze Entry and Exit
         setMazeEntryExit()
     End Sub
-
     Private Sub setMazeEntryExit()
         If imageInputted = True Then
             ' Randomly picks a side
@@ -318,7 +383,6 @@ Public Class Form1
         maze(mazeExit.X, mazeExit.Y).mazeExitBool = True
         maze(mazeExit.X, mazeExit.Y).mazeWallBool = False
     End Sub
-
     Private Sub drawMaze() ' If False is passed through then the background cells will be drawn
         ' Resets old timer, Starts new timer, Upates Status
         drawTimer.Reset()
@@ -533,6 +597,8 @@ Public Class Form1
             End If
         End While
     End Sub
+
+    ' Solving 
     Private Sub dijkstra()
         ' Queue 
         Dim queue As New Queue(Of Point)
@@ -602,6 +668,39 @@ Public Class Form1
         ' Disables animation lock
         animationLock(False)
     End Sub
+
+    Private Sub wallFollower(type As String)
+        Dim node As Point = mazeEntry
+        Dim directionQueue As New CircularQueue(Of Integer)({0, 1, 2, 3})
+        Dim index As Integer
+        Dim path As New List(Of Point)
+
+
+        While node <> mazeExit
+            If type = "LHR" Then
+                index = directionQueue.turnLeft
+            ElseIf type = "RHR" Then
+                index = directionQueue.turnRight
+            End If
+            If maze(node.X, node.Y).checkConnectedCell(index) <> Point.Empty Then
+                node = maze(node.X, node.Y).checkConnectedCell(index)
+            Else
+                Do
+                    If type = "LHR" Then
+                        index = directionQueue.turnRight
+                    ElseIf type = "RHR" Then
+                        index = directionQueue.turnLeft
+                    End If
+                Loop Until maze(node.X, node.Y).checkConnectedCell(index) <> Point.Empty
+                node = maze(node.X, node.Y).checkConnectedCell(index)
+            End If
+            If node <> mazeEntry And node <> mazeExit Then
+                maze(node.X, node.Y).mazeSolved = True
+            End If
+        End While
+    End Sub
+
+
     Private Sub deadEndRemover()
         Dim numToBeRemoved As Integer
         Dim deadEnd As Point
@@ -698,6 +797,7 @@ Public Class Form1
             Else
                 randomisedDFS()
             End If
+        ElseIf generationAlgorithm = "Wave Function Collapse" Then
         End If
         generationTimer.Stop()
         ' Draws generate maze
@@ -761,6 +861,10 @@ Public Class Form1
         ' Checks what solving algorithm user has chosen
         If solveAlgorithm = "Dijkstra's Algorithm" Then
             dijkstra()
+        ElseIf solveAlgorithm = "Wall Follower LHR" Then
+            wallFollower("LHR")
+        ElseIf solveAlgorithm = "Wall Follower RHR" Then
+            wallFollower("RHR")
         End If
         solveTimer.Stop()
         ' Upadtes Maze box
@@ -984,7 +1088,7 @@ Public Class Form1
         imageInputted = True
     End Sub
 
-    Private Sub helperBtn_Click(sender As Object, e As EventArgs) Handles helperBtn.Click
+    Private Sub helperBtn_Click(sender As Object, e As EventArgs)
         Me.Hide()
         Form2.Show()
     End Sub

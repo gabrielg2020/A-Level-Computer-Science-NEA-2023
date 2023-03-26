@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\College\\Computer Science NEA\\Code\\New folder\\A-Level-Computer-Science-NEA-2023-3be91145a2729b1e1b56136bf5ee7074b4853f9e\\Maze\\Maze.vbproj",
+      "projectUniqueName": "D:\\College\\Computer Science NEA\\Code\\A-Level-Computer-Science-NEA-2023\\Maze\\Maze.vbproj",
       "projectName": "Maze",
-      "projectPath": "D:\\College\\Computer Science NEA\\Code\\New folder\\A-Level-Computer-Science-NEA-2023-3be91145a2729b1e1b56136bf5ee7074b4853f9e\\Maze\\Maze.vbproj",
+      "projectPath": "D:\\College\\Computer Science NEA\\Code\\A-Level-Computer-Science-NEA-2023\\Maze\\Maze.vbproj",
       "packagesPath": "C:\\Users\\gabri\\.nuget\\packages\\",
-      "outputPath": "D:\\College\\Computer Science NEA\\Code\\New folder\\A-Level-Computer-Science-NEA-2023-3be91145a2729b1e1b56136bf5ee7074b4853f9e\\Maze\\obj\\",
+      "outputPath": "D:\\College\\Computer Science NEA\\Code\\A-Level-Computer-Science-NEA-2023\\Maze\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\gabri\\AppData\\Roaming\\NuGet\\NuGet.Config",

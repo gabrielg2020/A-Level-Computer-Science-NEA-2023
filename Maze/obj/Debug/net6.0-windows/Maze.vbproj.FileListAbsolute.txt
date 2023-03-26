@@ -36,3 +36,22 @@ D:\College\Computer Science NEA\Code\New folder\A-Level-Computer-Science-NEA-202
 D:\College\Computer Science NEA\Code\New folder\A-Level-Computer-Science-NEA-2023-3be91145a2729b1e1b56136bf5ee7074b4853f9e\Maze\obj\Debug\net6.0-windows\Maze.pdb
 D:\College\Computer Science NEA\Code\New folder\A-Level-Computer-Science-NEA-2023-3be91145a2729b1e1b56136bf5ee7074b4853f9e\Maze\obj\Debug\net6.0-windows\Maze.genruntimeconfig.cache
 D:\College\Computer Science NEA\Code\New folder\A-Level-Computer-Science-NEA-2023-3be91145a2729b1e1b56136bf5ee7074b4853f9e\Maze\obj\Debug\net6.0-windows\ref\Maze.dll
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\bin\Debug\net6.0-windows\Maze.exe
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\bin\Debug\net6.0-windows\Maze.deps.json
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\bin\Debug\net6.0-windows\Maze.runtimeconfig.json
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\bin\Debug\net6.0-windows\Maze.dll
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\bin\Debug\net6.0-windows\Maze.pdb
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.vbproj.AssemblyReference.cache
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.Form1.resources
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.Form2.resources
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.Resources.resources
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.vbproj.GenerateResource.cache
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.GeneratedMSBuildEditorConfig.editorconfig
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.AssemblyInfoInputs.cache
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.AssemblyInfo.vb
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.vbproj.CoreCompileInputs.cache
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.dll
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\refint\Maze.dll
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.pdb
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\Maze.genruntimeconfig.cache
+D:\College\Computer Science NEA\Code\A-Level-Computer-Science-NEA-2023\Maze\obj\Debug\net6.0-windows\ref\Maze.dll

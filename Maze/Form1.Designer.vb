@@ -193,7 +193,7 @@ Partial Class Form1
         resources.ApplyResources(generationCombo, "generationCombo")
         generationCombo.ForeColor = Color.White
         generationCombo.FormattingEnabled = True
-        generationCombo.Items.AddRange(New Object() {resources.GetString("generationCombo.Items"), resources.GetString("generationCombo.Items1"), resources.GetString("generationCombo.Items2")})
+        generationCombo.Items.AddRange(New Object() {resources.GetString("generationCombo.Items"), resources.GetString("generationCombo.Items1"), resources.GetString("generationCombo.Items2"), resources.GetString("generationCombo.Items3")})
         generationCombo.Name = "generationCombo"' 
         ' solveCombo
         ' 
@@ -203,7 +203,7 @@ Partial Class Form1
         resources.ApplyResources(solveCombo, "solveCombo")
         solveCombo.ForeColor = Color.White
         solveCombo.FormattingEnabled = True
-        solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1")})
+        solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1"), resources.GetString("solveCombo.Items2"), resources.GetString("solveCombo.Items3")})
         solveCombo.Name = "solveCombo"' 
         ' imageInputBtn
         ' 
