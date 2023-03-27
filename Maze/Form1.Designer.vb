@@ -22,6 +22,7 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        components = New ComponentModel.Container()
         Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(Form1))
         Title = New Label()
         Label1 = New Label()
@@ -62,6 +63,7 @@ Partial Class Form1
         statusLbl = New Label()
         deadEndTimeLbl = New Label()
         helperBtn = New PictureBox()
+        animationTimer = New Timer(components)
         CType(mazeBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(statsPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(helperBtn, ComponentModel.ISupportInitialize).BeginInit()
@@ -327,6 +329,9 @@ Partial Class Form1
         helperBtn.Name = "helperBtn"
         helperBtn.TabStop = False
         ' 
+        ' animationTimer
+        ' 
+        ' 
         ' Form1
         ' 
         resources.ApplyResources(Me, "$this")
@@ -417,4 +422,5 @@ Partial Class Form1
     Friend WithEvents statusLbl As Label
     Friend WithEvents deadEndTimeLbl As Label
     Friend WithEvents helperBtn As PictureBox
+    Friend WithEvents animationTimer As Timer
 End Class
