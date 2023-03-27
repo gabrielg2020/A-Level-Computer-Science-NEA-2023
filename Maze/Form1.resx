@@ -740,9 +740,12 @@
     <value>A*</value>
   </data>
   <data name="solveCombo.Items3" xml:space="preserve">
-    <value>Wall Follower LHR</value>
+    <value>Dead-End Filling</value>
   </data>
   <data name="solveCombo.Items4" xml:space="preserve">
+    <value>Wall Follower LHR</value>
+  </data>
+  <data name="solveCombo.Items5" xml:space="preserve">
     <value>Wall Follower RHR</value>
   </data>
   <data name="solveCombo.Location" type="System.Drawing.Point, System.Drawing">

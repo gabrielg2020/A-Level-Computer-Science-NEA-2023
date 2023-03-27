@@ -207,6 +207,21 @@ Public Class Form1
             Next
         End Sub
 
+        Public Function isDeadEnd()
+            Dim wallCount As Integer = 0
+            ' Checks each wall
+            For Each wall In walls
+                If wall = True And mazeWallBool = False Then
+                    wallCount += 1
+                End If
+            Next
+            If wallCount = 3 Then
+                Return True
+            Else
+                Return False
+            End If
+        End Function
+
         ' Method to break wall
         Public Function breakWall(ByVal d As Integer)
             ' Makes sure the cell isn't a maze wall
@@ -662,128 +677,162 @@ Public Class Form1
 
     ' Solving 
     Private Function distanceCalc(a As Point, b As Point) As Double
-        Return Math.Sqrt(((a.X - a.X) ^ 2) + ((b.Y - b.Y) ^ 2))
+        Return Math.Abs(a.X - a.X) + Math.Abs(b.Y - b.Y)
     End Function
-
     Private Sub dijkstra()
-        ' Queue 
-        Dim queue As New Queue(Of Point)
-        Dim visitedNodes As New List(Of Point)
-        ' Set the start node's weight = 0
-        maze(mazeEntry.X, mazeEntry.Y).weight = 0
-        ' Adds cell to the visted list
-        visitedNodes.Add(mazeEntry)
-        Dim weight As Integer = 1
-
-        ' Adds all connected cells to the queue
-        For Each point In maze(mazeEntry.X, mazeEntry.Y).connectedCell
-            queue.Enqueue(point)
-        Next
-
-        ' Until queue is empty::
-        While queue.Count <> 0
-            For i = 0 To queue.Count - 1
-                Dim tempNode As Point = queue.Dequeue()
-                visitedNodes.Add(tempNode)
-                maze(tempNode.X, tempNode.Y).weight = weight
-
-                ' ::Or we reach the maze exit
-                If tempNode = mazeExit Then
-                    Exit While
-                End If
-                ' If the we haven't visted that cell and its not in our queue already we add it to the queue
-                For Each point In maze(tempNode.X, tempNode.Y).connectedCell
-                    If visitedNodes.Contains(point) = False And queue.Contains(point) = False Then
-                        queue.Enqueue(point)
-                    End If
-                Next
-            Next
-            ' Increase weight
-            weight += 1
-        End While
-        maxWeight = maze(mazeExit.X, mazeExit.Y).weight
-        ' Checks if user wants quick animations
-        If instantAnimationBtn.Checked <> True Then
-            ' Enable animation lock
-            animationLock(True)
-            ' Shows the heat map, higher heat = higher weight
-            animate(heatList:=visitedNodes)
-        End If
-
-        Dim path As New List(Of Point)
-        Dim endNode As Point = mazeExit
-        ' We will traverse the maze until we reach the maze entry
-        ' Until we reach the maze entry
-        While endNode <> mazeEntry
-            For Each node In visitedNodes
-                If maze(node.X, node.Y).weight < maze(endNode.X, endNode.Y).weight And maze(endNode.X, endNode.Y).connectedCell.Contains(node) Then
-
-                    maze(node.X, node.Y).mazeSolved = True
-                    path.Add(node)
-                    endNode = node
-                    Exit For
-                End If
-            Next
-        End While
-        ' Checks if user wants quick animations
-        If instantAnimationBtn.Checked <> True Then
-            ' Shows the creation of the shortest path
-            animate(path:=path)
-        End If
-        maze(mazeEntry.X, mazeEntry.Y).mazeSolved = False
-        ' Disables animation lock
-        animationLock(False)
-    End Sub
-
-    Private Sub Astar()
-        ' My heurisitic value is the euclidean
+        ' Create a dictionary to store the distances and a priority queue to store unprocessed nodes
+        Dim distances As New Dictionary(Of Point, Double)
         Dim pQueue As New PriorityQueue(Of Double, Point)()
-        Dim visitedNodes As New List(Of Point)
-        ' Set the start node's weight = 0
-        maze(mazeEntry.X, mazeEntry.Y).heuristicWeight = 0 + distanceCalc(mazeEntry, mazeExit)
-        ' Adds cell to the visted list
-        visitedNodes.Add(mazeEntry)
-        Dim heuristicWeight As Integer = 1
 
-        For Each point In maze(mazeEntry.X, mazeEntry.Y).connectedCell
-            pQueue.Enqueue(distanceCalc(mazeEntry, mazeExit), point)
-        Next
+        ' Initialize the distance for the start node and add it to the priority queue
+        distances(mazeEntry) = 0
+        pQueue.Enqueue(0, mazeEntry)
 
         While Not pQueue.isEmpty()
-            For i = 0 To pQueue.Count - 1
-                Dim tempNode As Point = pQueue.Dequeue()
-                visitedNodes.Add(tempNode)
-                maze(tempNode.X, tempNode.Y).heuristicWeight = heuristicWeight + distanceCalc(tempNode, mazeExit)
+            ' Get the node with the lowest distance from the priority queue and set it as the current node
+            Dim current As Point = pQueue.Dequeue()
 
-                If tempNode = mazeExit Then
-                    Exit While
+            ' If the current node is the destination node, the algorithm is complete
+            If current = mazeExit Then
+                Exit While
+            End If
+
+            For Each neighbor In maze(current.X, current.Y).connectedCell
+                ' Calculate the tentative distance from the start node to the neighbor through the current node
+                Dim tentative_distance As Double = distances(current) + 1 ' Assuming a distance of 1 between connected cells
+
+                ' If the neighbor is not in the distances dictionary, add it with a large initial value
+                If Not distances.ContainsKey(neighbor) Then
+                    distances(neighbor) = Double.MaxValue
                 End If
 
-                For Each point In maze(tempNode.X, tempNode.Y).connectedCell
-                    If visitedNodes.Contains(point) = False And pQueue.Contains(point) = False Then
-                        pQueue.Enqueue(distanceCalc(point, mazeExit), point)
+                ' If the tentative distance is less than the existing distance of the neighbor, update the neighbor's distance
+                If tentative_distance < distances(neighbor) Then
+                    distances(neighbor) = tentative_distance
+
+                    ' If the neighbor is not in the priority queue, add it with the updated distance
+                    If Not pQueue.Contains(neighbor) Then
+                        pQueue.Enqueue(tentative_distance, neighbor)
                     End If
-                Next
+                End If
             Next
-            heuristicWeight += 1
         End While
 
+        ' Reconstruct the path
         Dim path As New List(Of Point)
-        Dim endNode As Point = mazeExit
-        While endNode <> mazeEntry
-            For Each node In visitedNodes
-                If maze(node.X, node.Y).heuristicWeight < maze(endNode.X, endNode.Y).heuristicWeight And maze(endNode.X, endNode.Y).connectedCell.Contains(node) Then
-                    maze(node.X, node.Y).mazeSolved = True
-                    path.Add(node)
-                    endNode = node
+        Dim currentNode As Point = mazeExit
+        While currentNode <> mazeEntry
+            For Each node In maze(currentNode.X, currentNode.Y).connectedCell
+                If distances(node) < distances(currentNode) Then
+                    currentNode = node
+                    path.Add(currentNode)
                     Exit For
                 End If
             Next
         End While
+
+        ' Mark the path as solved
+        For Each node In path
+            maze(node.X, node.Y).mazeSolved = True
+        Next
         maze(mazeEntry.X, mazeEntry.Y).mazeSolved = False
     End Sub
+    Private Sub BFS()
+        Dim queue As New Queue(Of Point)
+        Dim visitedNodes As New List(Of Point)
+        Dim parents As New Dictionary(Of Point, Point)()
+        Dim currentNode As Point
 
+        queue.Enqueue(mazeEntry)
 
+        While queue.Count <> 0
+            currentNode = queue.Dequeue()
+
+            If currentNode = mazeExit Then
+                Exit While
+            End If
+
+            For Each point In maze(currentNode.X, currentNode.Y).connectedCell
+                If Not visitedNodes.Contains(point) Then
+                    visitedNodes.Add(point)
+                    parents(point) = currentNode
+                    queue.Enqueue(point)
+                End If
+            Next
+        End While
+
+        ' Reconstruct the path
+        Dim path As New List(Of Point)
+        currentNode = mazeExit
+        While currentNode <> mazeEntry AndAlso parents.ContainsKey(currentNode)
+            currentNode = parents(currentNode)
+            path.Add(currentNode)
+        End While
+
+        ' Mark the path as solved
+        For Each node In path
+            maze(node.X, node.Y).mazeSolved = True
+        Next
+        maze(mazeEntry.X, mazeEntry.Y).mazeSolved = False
+    End Sub
+    Private Sub Astar()
+        ' Create a dictionary to store the g_costs and parent information for each point
+        Dim g_costs As New Dictionary(Of Point, Double)
+        Dim parents As New Dictionary(Of Point, Point)
+
+        ' Create the priority queue for open nodes
+        Dim pQueue As New PriorityQueue(Of Double, Point)()
+
+        ' Initialize the g_cost and heuristic value for the start node
+        g_costs(mazeEntry) = 0
+        pQueue.Enqueue(distanceCalc(mazeEntry, mazeExit), mazeEntry)
+
+        While Not pQueue.isEmpty()
+            ' Get the node with the lowest f_cost (g_cost + heuristic) from the priority queue and set it as the current node
+            Dim current As Point = pQueue.Dequeue()
+
+            ' If the current node is the destination node, proceed to reconstruct the path
+            If current = mazeExit Then
+                Exit While
+            End If
+
+            For Each neighbor In maze(current.X, current.Y).connectedCell
+                ' Calculate the tentative g_cost from the start node to the neighbor through the current node
+                Dim tentative_g_cost As Double = g_costs(current) + distanceCalc(current, neighbor)
+
+                ' If the neighbor is not in the g_costs dictionary, add it with a large initial value
+                If Not g_costs.ContainsKey(neighbor) Then
+                    g_costs(neighbor) = Double.MaxValue
+                End If
+
+                ' If the tentative g_cost is less than the existing g_cost of the neighbor, update the neighbor's g_cost and parent
+                If tentative_g_cost < g_costs(neighbor) Then
+                    parents(neighbor) = current
+                    g_costs(neighbor) = tentative_g_cost
+                    Dim f_cost As Double = g_costs(neighbor) + distanceCalc(neighbor, mazeExit)
+
+                    ' If the neighbor is not in the priority queue, add it with the calculated f_cost
+                    If Not pQueue.Contains(neighbor) Then
+                        pQueue.Enqueue(f_cost, neighbor)
+                    End If
+                End If
+            Next
+        End While
+
+        ' Reconstruct the path
+        Dim path As New List(Of Point)
+        Dim currentNode As Point = mazeExit
+        While currentNode <> mazeEntry AndAlso parents.ContainsKey(currentNode)
+            currentNode = parents(currentNode)
+            path.Add(currentNode)
+        End While
+
+        ' Mark the path as solved
+        For Each node In path
+            maze(node.X, node.Y).mazeSolved = True
+        Next
+        maze(mazeEntry.X, mazeEntry.Y).mazeSolved = False
+    End Sub
     Private Sub wallFollower(type As String)
         Dim node As Point = mazeEntry
         Dim directionQueue As New CircularQueue(Of Integer)({0, 1, 2, 3})
@@ -976,6 +1025,8 @@ Public Class Form1
         ' Checks what solving algorithm user has chosen
         If solveAlgorithm = "Dijkstra's Algorithm" Then
             dijkstra()
+        ElseIf solveAlgorithm = "Breath Frist Search" Then
+            BFS()
         ElseIf solveAlgorithm = "A*" Then
             Astar()
         ElseIf solveAlgorithm = "Wall Follower LHR" Then
@@ -1209,6 +1260,7 @@ Public Class Form1
         Me.Hide()
         Form2.Show()
     End Sub
+
 
     ' USER INPUT END
 End Class
