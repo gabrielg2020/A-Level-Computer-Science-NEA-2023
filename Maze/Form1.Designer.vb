@@ -65,6 +65,7 @@ Partial Class Form1
         helperBtn = New PictureBox()
         solvedPathAnimationTimer = New Timer(components)
         heatMapAnimationTimer = New Timer(components)
+        cancelAnimationBtn = New Button()
         CType(mazeBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(statsPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(helperBtn, ComponentModel.ISupportInitialize).BeginInit()
@@ -138,19 +139,19 @@ Partial Class Form1
         Label10.Name = "Label10"' 
         ' widthTxtBox
         ' 
-        widthTxtBox.BackColor = Color.Black
+        widthTxtBox.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         resources.ApplyResources(widthTxtBox, "widthTxtBox")
         widthTxtBox.ForeColor = Color.White
         widthTxtBox.Name = "widthTxtBox"' 
         ' heightTxtBox
         ' 
-        heightTxtBox.BackColor = Color.Black
+        heightTxtBox.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         resources.ApplyResources(heightTxtBox, "heightTxtBox")
         heightTxtBox.ForeColor = Color.White
         heightTxtBox.Name = "heightTxtBox"' 
         ' deadEndRemoverTxtBox
         ' 
-        deadEndRemoverTxtBox.BackColor = Color.Black
+        deadEndRemoverTxtBox.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         resources.ApplyResources(deadEndRemoverTxtBox, "deadEndRemoverTxtBox")
         deadEndRemoverTxtBox.ForeColor = Color.White
         deadEndRemoverTxtBox.Name = "deadEndRemoverTxtBox"' 
@@ -182,7 +183,7 @@ Partial Class Form1
         ' 
         ' mazeEntryCombo
         ' 
-        mazeEntryCombo.BackColor = Color.Black
+        mazeEntryCombo.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         mazeEntryCombo.DropDownStyle = ComboBoxStyle.DropDownList
         resources.ApplyResources(mazeEntryCombo, "mazeEntryCombo")
         mazeEntryCombo.ForeColor = Color.White
@@ -191,7 +192,7 @@ Partial Class Form1
         mazeEntryCombo.Name = "mazeEntryCombo"' 
         ' generationCombo
         ' 
-        generationCombo.BackColor = Color.Black
+        generationCombo.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         generationCombo.Cursor = Cursors.Hand
         resources.ApplyResources(generationCombo, "generationCombo")
         generationCombo.ForeColor = Color.White
@@ -200,7 +201,7 @@ Partial Class Form1
         generationCombo.Name = "generationCombo"' 
         ' solveCombo
         ' 
-        solveCombo.BackColor = Color.Black
+        solveCombo.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         solveCombo.Cursor = Cursors.Hand
         solveCombo.DropDownStyle = ComboBoxStyle.DropDownList
         resources.ApplyResources(solveCombo, "solveCombo")
@@ -210,7 +211,7 @@ Partial Class Form1
         solveCombo.Name = "solveCombo"' 
         ' imageInputBtn
         ' 
-        imageInputBtn.BackColor = Color.Black
+        imageInputBtn.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         imageInputBtn.Cursor = Cursors.Hand
         resources.ApplyResources(imageInputBtn, "imageInputBtn")
         imageInputBtn.ForeColor = Color.White
@@ -222,7 +223,7 @@ Partial Class Form1
         openFileDialog1.FileName = "openFileDialog"' 
         ' solveColourBtn
         ' 
-        solveColourBtn.BackColor = Color.Black
+        solveColourBtn.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         solveColourBtn.Cursor = Cursors.Hand
         resources.ApplyResources(solveColourBtn, "solveColourBtn")
         solveColourBtn.ForeColor = Color.White
@@ -231,7 +232,7 @@ Partial Class Form1
         ' 
         ' mazeColourBtn
         ' 
-        mazeColourBtn.BackColor = Color.Black
+        mazeColourBtn.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         mazeColourBtn.Cursor = Cursors.Hand
         resources.ApplyResources(mazeColourBtn, "mazeColourBtn")
         mazeColourBtn.ForeColor = Color.White
@@ -240,7 +241,7 @@ Partial Class Form1
         ' 
         ' bgColourBtn
         ' 
-        bgColourBtn.BackColor = Color.Black
+        bgColourBtn.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         bgColourBtn.Cursor = Cursors.Hand
         resources.ApplyResources(bgColourBtn, "bgColourBtn")
         bgColourBtn.ForeColor = Color.White
@@ -274,7 +275,7 @@ Partial Class Form1
         ' 
         ' statsPictureBox
         ' 
-        statsPictureBox.BackColor = Color.Black
+        statsPictureBox.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         resources.ApplyResources(statsPictureBox, "statsPictureBox")
         statsPictureBox.Name = "statsPictureBox"
         statsPictureBox.TabStop = False
@@ -282,31 +283,31 @@ Partial Class Form1
         ' genTimeLbl
         ' 
         resources.ApplyResources(genTimeLbl, "genTimeLbl")
-        genTimeLbl.BackColor = Color.Transparent
+        genTimeLbl.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         genTimeLbl.ForeColor = Color.White
         genTimeLbl.Name = "genTimeLbl"' 
         ' solveTimeLbl
         ' 
         resources.ApplyResources(solveTimeLbl, "solveTimeLbl")
-        solveTimeLbl.BackColor = Color.Transparent
+        solveTimeLbl.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         solveTimeLbl.ForeColor = Color.White
         solveTimeLbl.Name = "solveTimeLbl"' 
         ' drawTimeLbl
         ' 
         resources.ApplyResources(drawTimeLbl, "drawTimeLbl")
-        drawTimeLbl.BackColor = Color.Transparent
+        drawTimeLbl.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         drawTimeLbl.ForeColor = Color.White
         drawTimeLbl.Name = "drawTimeLbl"' 
         ' deadEndCountLbl
         ' 
         resources.ApplyResources(deadEndCountLbl, "deadEndCountLbl")
-        deadEndCountLbl.BackColor = Color.Transparent
+        deadEndCountLbl.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         deadEndCountLbl.ForeColor = Color.White
         deadEndCountLbl.Name = "deadEndCountLbl"' 
         ' totalTimeLbl
         ' 
         resources.ApplyResources(totalTimeLbl, "totalTimeLbl")
-        totalTimeLbl.BackColor = Color.Transparent
+        totalTimeLbl.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         totalTimeLbl.ForeColor = Color.White
         totalTimeLbl.Name = "totalTimeLbl"' 
         ' statusLbl
@@ -318,7 +319,7 @@ Partial Class Form1
         ' deadEndTimeLbl
         ' 
         resources.ApplyResources(deadEndTimeLbl, "deadEndTimeLbl")
-        deadEndTimeLbl.BackColor = Color.Transparent
+        deadEndTimeLbl.BackColor = Color.FromArgb(CByte(40), CByte(60), CByte(86))
         deadEndTimeLbl.ForeColor = Color.White
         deadEndTimeLbl.Name = "deadEndTimeLbl"' 
         ' helperBtn
@@ -336,12 +337,21 @@ Partial Class Form1
         ' heatMapAnimationTimer
         ' 
         ' 
+        ' cancelAnimationBtn
+        ' 
+        cancelAnimationBtn.BackColor = Color.MediumSlateBlue
+        resources.ApplyResources(cancelAnimationBtn, "cancelAnimationBtn")
+        cancelAnimationBtn.ForeColor = Color.White
+        cancelAnimationBtn.Name = "cancelAnimationBtn"
+        cancelAnimationBtn.UseVisualStyleBackColor = False
+        ' 
         ' Form1
         ' 
         resources.ApplyResources(Me, "$this")
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.White
         BackgroundImage = My.Resources.Resources.formBG
+        Controls.Add(cancelAnimationBtn)
         Controls.Add(helperBtn)
         Controls.Add(deadEndTimeLbl)
         Controls.Add(statusLbl)
@@ -428,4 +438,5 @@ Partial Class Form1
     Friend WithEvents helperBtn As PictureBox
     Friend WithEvents solvedPathAnimationTimer As Timer
     Friend WithEvents heatMapAnimationTimer As Timer
+    Friend WithEvents cancelAnimationBtn As Button
 End Class

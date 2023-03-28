@@ -87,7 +87,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Title.ZOrder" xml:space="preserve">
-    <value>35</value>
+    <value>36</value>
   </data>
   <data name="Label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -117,7 +117,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label1.ZOrder" xml:space="preserve">
-    <value>34</value>
+    <value>35</value>
   </data>
   <data name="Label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -151,7 +151,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label2.ZOrder" xml:space="preserve">
-    <value>33</value>
+    <value>34</value>
   </data>
   <data name="Label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -184,7 +184,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label3.ZOrder" xml:space="preserve">
-    <value>32</value>
+    <value>33</value>
   </data>
   <data name="Label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -217,7 +217,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label4.ZOrder" xml:space="preserve">
-    <value>31</value>
+    <value>32</value>
   </data>
   <data name="Label5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -250,7 +250,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label5.ZOrder" xml:space="preserve">
-    <value>30</value>
+    <value>31</value>
   </data>
   <data name="Label6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -283,7 +283,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label6.ZOrder" xml:space="preserve">
-    <value>29</value>
+    <value>30</value>
   </data>
   <data name="Label7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -316,7 +316,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label7.ZOrder" xml:space="preserve">
-    <value>28</value>
+    <value>29</value>
   </data>
   <data name="Label8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -349,7 +349,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label8.ZOrder" xml:space="preserve">
-    <value>27</value>
+    <value>28</value>
   </data>
   <data name="Label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -382,7 +382,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label9.ZOrder" xml:space="preserve">
-    <value>26</value>
+    <value>27</value>
   </data>
   <data name="Label10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -415,7 +415,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;Label10.ZOrder" xml:space="preserve">
-    <value>25</value>
+    <value>26</value>
   </data>
   <data name="widthTxtBox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 18pt</value>
@@ -455,7 +455,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;widthTxtBox.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>25</value>
   </data>
   <data name="heightTxtBox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 18pt</value>
@@ -494,7 +494,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;heightTxtBox.ZOrder" xml:space="preserve">
-    <value>23</value>
+    <value>24</value>
   </data>
   <data name="deadEndRemoverTxtBox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 18pt</value>
@@ -533,13 +533,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;deadEndRemoverTxtBox.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>23</value>
   </data>
   <data name="generateBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
   <data name="generateBtn.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 9pt</value>
+    <value>Segoe UI, 26.25pt</value>
   </data>
   <data name="generateBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -569,13 +569,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;generateBtn.ZOrder" xml:space="preserve">
-    <value>21</value>
+    <value>22</value>
   </data>
   <data name="solveBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
   <data name="solveBtn.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 9pt</value>
+    <value>Segoe UI, 26.25pt</value>
   </data>
   <data name="solveBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -605,10 +605,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;solveBtn.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>21</value>
+  </data>
+  <data name="downloadBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
   </data>
   <data name="downloadBtn.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 10.2pt</value>
+    <value>Segoe UI, 26.25pt</value>
   </data>
   <data name="downloadBtn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -620,7 +623,7 @@
     <value>3, 2, 3, 2</value>
   </data>
   <data name="downloadBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1220, 73</value>
+    <value>600, 73</value>
   </data>
   <data name="downloadBtn.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
@@ -638,7 +641,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;downloadBtn.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>20</value>
   </data>
   <data name="mazeEntryCombo.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -680,7 +683,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mazeEntryCombo.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>19</value>
   </data>
   <data name="generationCombo.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -722,7 +725,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;generationCombo.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>18</value>
   </data>
   <data name="solveCombo.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -767,7 +770,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;solveCombo.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>17</value>
   </data>
   <data name="imageInputBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -803,7 +806,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;imageInputBtn.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>16</value>
   </data>
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -845,7 +848,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;solveColourBtn.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="mazeColourBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -881,7 +884,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mazeColourBtn.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="bgColourBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -917,7 +920,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;bgColourBtn.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="mazeBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>672, 152</value>
@@ -941,7 +944,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mazeBox.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <metadata name="FolderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>301, 17</value>
@@ -977,10 +980,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;instantAnimationBtn.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="deadEndRemoverBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
+  </data>
+  <data name="deadEndRemoverBtn.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 26.25pt</value>
   </data>
   <data name="deadEndRemoverBtn.Location" type="System.Drawing.Point, System.Drawing">
     <value>1082, 871</value>
@@ -1004,7 +1010,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;deadEndRemoverBtn.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="statsPictureBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 871</value>
@@ -1025,7 +1031,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statsPictureBox.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="genTimeLbl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1055,7 +1061,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;genTimeLbl.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="solveTimeLbl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1088,7 +1094,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;solveTimeLbl.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="drawTimeLbl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1121,7 +1127,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;drawTimeLbl.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="deadEndCountLbl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1154,7 +1160,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;deadEndCountLbl.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="totalTimeLbl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1187,7 +1193,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;totalTimeLbl.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="statusLbl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1217,7 +1223,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statusLbl.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="deadEndTimeLbl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1250,7 +1256,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;deadEndTimeLbl.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="helperBtn.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 12</value>
@@ -1271,7 +1277,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;helperBtn.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <metadata name="solvedPathAnimationTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>472, 17</value>
@@ -1279,6 +1285,36 @@
   <metadata name="heatMapAnimationTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>649, 17</value>
   </metadata>
+  <data name="cancelAnimationBtn.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="cancelAnimationBtn.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 26.25pt</value>
+  </data>
+  <data name="cancelAnimationBtn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1292, 958</value>
+  </data>
+  <data name="cancelAnimationBtn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>600, 73</value>
+  </data>
+  <data name="cancelAnimationBtn.TabIndex" type="System.Int32, mscorlib">
+    <value>46</value>
+  </data>
+  <data name="cancelAnimationBtn.Text" xml:space="preserve">
+    <value>Cancel Animation</value>
+  </data>
+  <data name="&gt;&gt;cancelAnimationBtn.Name" xml:space="preserve">
+    <value>cancelAnimationBtn</value>
+  </data>
+  <data name="&gt;&gt;cancelAnimationBtn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cancelAnimationBtn.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cancelAnimationBtn.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
