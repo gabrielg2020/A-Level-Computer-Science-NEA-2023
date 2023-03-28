@@ -1,6 +1,7 @@
 ﻿Imports System.Threading
 Imports System.Collections.Generic
 Imports Maze.Form1
+Imports System.Text.Json
 
 Public Class Form1
     ' Class instanse used to randomize numbers
@@ -21,17 +22,23 @@ Public Class Form1
     Private bgColour As Color = Color.White
     Private mazeColour As Color = Color.Black
     Private solveColour As Color = Color.Silver
-    Private maxWeight As Integer = 0
     Private pinkColor As Color = Color.FromArgb(255, 0, 220) ' Pink color
     Private purpleColor As Color = Color.FromArgb(0, 0, 124) ' Purple color
     ' Animation Variables
     Private Const T As Integer = 10
-    Dim passedPath As New List(Of Point)
+    Private passedPath As New List(Of Point)
+    Private solvedVisited As New Queue(Of Point)
+    Private maxWeight As Integer
     ' Maze Generation/Solving Inputs
     Private generationAlgorithm As String
+    ' Used in Astar()
+    Public g_costs As New Dictionary(Of Point, Double)
+    ' Used in BFS()
+    Public branchingPoints As New List(Of Point)
     Private solveAlgorithm As String
     Private mazeWallCount As Integer = 0
     Public path As New Queue(Of Point)
+    Public helperPath As New Queue(Of Point)
     ' Controls when the from draws
     Private mazeImage As Bitmap
     Private mazeImageGraphics As Graphics
@@ -195,7 +202,7 @@ Public Class Form1
                 End If
             Next
         End Sub
-
+        ' Method to find dead-ends
         Public Sub deadEndFinder()
             Dim wallCount As Integer = 0
             ' Checks each wall
@@ -203,27 +210,11 @@ Public Class Form1
                 If wall = True And mazeWallBool = False Then
                     wallCount += 1
                 End If
-                If wallCount = 3 And Not Form1.deadEndPos.Contains(New Point(x, y)) Then
-                    Form1.deadEndPos.Add(New Point(x, y))
-                End If
             Next
-        End Sub
-
-        Public Function isDeadEnd()
-            Dim wallCount As Integer = 0
-            ' Checks each wall
-            For Each wall In walls
-                If wall = True And mazeWallBool = False Then
-                    wallCount += 1
-                End If
-            Next
-            If wallCount = 3 Then
-                Return True
-            Else
-                Return False
+            If wallCount = 3 And Not Form1.deadEndPos.Contains(New Point(x, y)) Then
+                Form1.deadEndPos.Add(New Point(x, y))
             End If
-        End Function
-
+        End Sub
         ' Method to break wall
         Public Function breakWall(ByVal d As Integer)
             ' Makes sure the cell isn't a maze wall
@@ -273,7 +264,6 @@ Public Class Form1
             End Select
             Return connectedCell(connectedCell.Count() - 1)
         End Function
-
         ' Method to check unvisted neighbours
         Public Function checkUnvistedNeighbours()
             Dim neighbours As New List(Of Point)
@@ -308,7 +298,7 @@ Public Class Form1
             End If
             Return neighbours
         End Function
-
+        ' Returns a boolean if cell has a connecter neighbour
         Function checkConnectedCell(d As Integer)
             Select Case d
                 Case 0 ' Check above
@@ -363,8 +353,10 @@ Public Class Form1
         solveCombo.SelectedIndex = 2 ' Default displays (Dijkstra's Algortimn)
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Random"
 
-        animationTimer.Interval = 100
-        animationTimer.Enabled = False
+        solvedPathAnimationTimer.Interval = 100
+        heatMapAnimationTimer.Interval = 50
+        heatMapAnimationTimer.Enabled = False
+        solvedPathAnimationTimer.Enabled = False
 
     End Sub
     Private Sub initializeMaze()
@@ -635,21 +627,23 @@ Public Class Form1
 
     ' Solving 
     Private Function distanceCalc(a As Point, b As Point) As Double
-        Return Math.Abs(a.X - a.X) + Math.Abs(b.Y - b.Y)
+        Return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y)
     End Function
     Private Sub dijkstra()
         ' Create a dictionary to store the distances and a priority queue to store unprocessed nodes
-        Dim distances As New Dictionary(Of Point, Double)
+        g_costs.Clear()
         Dim previous As New Dictionary(Of Point, Point)
         Dim pQueue As New PriorityQueue(Of Double, Point)()
 
         ' Initialize the distance for the start node and add it to the priority queue
-        distances(mazeEntry) = 0
+        g_costs(mazeEntry) = 0
         pQueue.Enqueue(0, mazeEntry)
 
         While Not pQueue.isEmpty()
             ' Get the node with the lowest distance from the priority queue and set it as the current node
             Dim current As Point = pQueue.Dequeue()
+
+            solvedVisited.Enqueue(current)
 
             ' If the current node is the destination node, the algorithm is complete
             If current = mazeExit Then
@@ -658,16 +652,17 @@ Public Class Form1
 
             For Each neighbor In maze(current.X, current.Y).connectedCell
                 ' Calculate the tentative distance from the start node to the neighbor through the current node
-                Dim tentative_distance As Double = distances(current) + 1 ' Assuming a distance of 1 between connected cells
+                Dim tentative_distance As Double = g_costs(current) + 1 ' Assuming a distance of 1 between connected cells
 
                 ' If the neighbor is not in the distances dictionary, add it with a large initial value
-                If Not distances.ContainsKey(neighbor) Then
-                    distances(neighbor) = Double.MaxValue
+                If Not g_costs.ContainsKey(neighbor) Then
+                    g_costs(neighbor) = Double.MaxValue
                 End If
 
                 ' If the tentative distance is less than the existing distance of the neighbor, update the neighbor's distance
-                If tentative_distance < distances(neighbor) Then
-                    distances(neighbor) = tentative_distance
+                If tentative_distance < g_costs(neighbor) Then
+                    g_costs(neighbor) = tentative_distance
+                    maxWeight = Math.Max(maxWeight, tentative_distance)
                     previous(neighbor) = current
 
                     ' If the neighbor is not in the priority queue, add it with the updated distance
@@ -687,20 +682,20 @@ Public Class Form1
             End If
         End While
 
-        ' Check if they want animations
+        ' Check If they want animations
         If instantAnimationBtn.Checked = True Then
             ' Mark the path as solved
             For Each node In path
                 maze(node.X, node.Y).mazeSolved = True
             Next
+            path.Clear()
         ElseIf instantAnimationBtn.Checked = False Then
             animationLock(True)
-            animationTimer.Enabled = True
+            heatMapAnimationTimer.Enabled = True
         End If
     End Sub
     Private Sub BFS()
         Dim queue As New Queue(Of Point)
-        Dim visitedNodes As New List(Of Point)
         Dim parents As New Dictionary(Of Point, Point)()
         Dim currentNode As Point
 
@@ -714,12 +709,16 @@ Public Class Form1
             End If
 
             For Each point In maze(currentNode.X, currentNode.Y).connectedCell
-                If Not visitedNodes.Contains(point) Then
-                    visitedNodes.Add(point)
+                If Not solvedVisited.Contains(point) Then
+                    solvedVisited.Enqueue(point)
                     parents(point) = currentNode
                     queue.Enqueue(point)
                 End If
             Next
+
+            If maze(currentNode.X, currentNode.Y).connectedCell.Count > 2 Then
+                branchingPoints.Add(currentNode)
+            End If
         End While
 
         ' Reconstruct the path
@@ -737,14 +736,15 @@ Public Class Form1
             For Each node In path
                 maze(node.X, node.Y).mazeSolved = True
             Next
+            path.Clear()
         ElseIf instantAnimationBtn.Checked = False Then
             animationLock(True)
-            animationTimer.Enabled = True
+            heatMapAnimationTimer.Enabled = True
         End If
     End Sub
-    Private Sub Astar()
+    Private Sub Astar(Optional ByVal helper As Boolean = False)
+        g_costs.Clear()
         ' Create a dictionary to store the g_costs and parent information for each point
-        Dim g_costs As New Dictionary(Of Point, Double)
         Dim parents As New Dictionary(Of Point, Point)
 
         ' Create the priority queue for open nodes
@@ -757,6 +757,9 @@ Public Class Form1
         While Not pQueue.isEmpty()
             ' Get the node with the lowest f_cost (g_cost + heuristic) from the priority queue and set it as the current node
             Dim current As Point = pQueue.Dequeue()
+
+            ' Add the current node to the visited list
+            solvedVisited.Enqueue(current)
 
             ' If the current node is the destination node, proceed to reconstruct the path
             If current = mazeExit Then
@@ -776,6 +779,7 @@ Public Class Form1
                 If tentative_g_cost < g_costs(neighbor) Then
                     parents(neighbor) = current
                     g_costs(neighbor) = tentative_g_cost
+                    maxWeight = Math.Max(maxWeight, tentative_g_cost)
                     Dim f_cost As Double = g_costs(neighbor) + distanceCalc(neighbor, mazeExit)
 
                     ' If the neighbor is not in the priority queue, add it with the calculated f_cost
@@ -795,21 +799,33 @@ Public Class Form1
             End If
         End While
 
-        ' Check if they want animations
-        If instantAnimationBtn.Checked = True Then
-            ' Mark the path as solved
-            For Each node In path
-                maze(node.X, node.Y).mazeSolved = True
-            Next
-        ElseIf instantAnimationBtn.Checked = False Then
-            animationLock(True)
-            animationTimer.Enabled = True
+        If helper = True Then
+            helperPath = New Queue(Of Point)(path)
+            path.Clear()
+        Else
+            ' Check if they want animations
+            If instantAnimationBtn.Checked = True Then
+                ' Mark the path as solved
+                For Each node In path
+                    maze(node.X, node.Y).mazeSolved = True
+                Next
+                path.Clear()
+            ElseIf instantAnimationBtn.Checked = False Then
+                animationLock(True)
+                heatMapAnimationTimer.Enabled = True
+            End If
         End If
+
     End Sub
     Private Sub wallFollower(type As String)
         Dim node As Point = mazeEntry
         Dim directionQueue As New CircularQueue(Of Integer)({0, 1, 2, 3})
         Dim index As Integer
+
+        ' Needs Helper
+        If instantAnimationBtn.Checked = False Then
+            Astar(helper:=True)
+        End If
 
         While node <> mazeExit
             If type = "LHR" Then
@@ -834,19 +850,108 @@ Public Class Form1
             End If
         End While
 
+
         ' Check if they want animations
         If instantAnimationBtn.Checked = True Then
             ' Mark the path as solved
             For Each node In path
                 maze(node.X, node.Y).mazeSolved = True
             Next
+            path.Clear()
         ElseIf instantAnimationBtn.Checked = False Then
             animationLock(True)
-            animationTimer.Enabled = True
+            heatMapAnimationTimer.Enabled = True
         End If
     End Sub
     ' Animation
-    Private Sub animate(ByVal path As Queue(Of Point))
+    Private Sub heatMapAnimationTimer_Tick(sender As Object, e As EventArgs) Handles heatMapAnimationTimer.Tick
+        ' Creating the heat map
+        If solveAlgorithm = "A*" Or solveAlgorithm = "Dijkstra's" Then
+            If solvedVisited.Count > 0 Then
+                Dim node As Point = solvedVisited.Dequeue
+                If node <> mazeEntry And node <> mazeExit Then
+                    Dim normalisedWeight As Double = g_costs(node) / maxWeight
+                    mazeImageGraphics.FillRectangle(New SolidBrush(interpolateColor(pinkColor, purpleColor, normalisedWeight)), node.X * M, node.Y * M, M, M)
+                    ' Draws walls
+                    maze(node.X, node.Y).drawWalls()
+                    ' Updates Maze box
+                    mazeBox.Image = mazeImage
+                    mazeBox.Update()
+                End If
+            Else
+                solvedVisited.Clear()
+                drawMaze()
+                heatMapAnimationTimer.Enabled = False
+                solvedPathAnimationTimer.Enabled = True
+            End If
+        ElseIf solveAlgorithm = "Wall Follower LHR" Or solveAlgorithm = "Wall Follower RHR" Then
+            If path.Count > 0 Then
+                Dim node As Point = path.Dequeue
+
+                ' Draw the previous cell in the solved path colour
+                If passedPath.Count > 0 Then
+                    Dim previousPath As Point = passedPath.Last()
+                    If helperPath.Contains(previousPath) Then
+                        mazeImageGraphics.FillRectangle(New SolidBrush(solveColour), previousPath.X * M, previousPath.Y * M, M, M)
+                    Else
+                        mazeImageGraphics.FillRectangle(New SolidBrush(Color.Aqua), previousPath.X * M, previousPath.Y * M, M, M)
+                    End If
+                    maze(previousPath.X, previousPath.Y).mazeSolved = True
+                    maze(previousPath.X, previousPath.Y).drawWalls()
+                End If
+
+                ' Draw the current cell in the yellow color
+                mazeImageGraphics.FillRectangle(New SolidBrush(Color.Yellow), node.X * M, node.Y * M, M, M)
+                maze(node.X, node.Y).drawWalls()
+                passedPath.Add(node)
+                ' Updates Maze box
+                mazeBox.Image = mazeImage
+                mazeBox.Update()
+            Else
+                ' Draw the last cell in the solved path color
+                If passedPath.Count > 0 Then
+                    Dim lastPath As Point = passedPath.Last()
+                    mazeImageGraphics.FillRectangle(New SolidBrush(solveColour), lastPath.X * M, lastPath.Y * M, M, M)
+                    maze(lastPath.X, lastPath.Y).drawWalls()
+                    maze(lastPath.X, lastPath.Y).mazeSolved = True
+                    drawMaze()
+                    ' Updates Maze box
+                    mazeBox.Image = mazeImage
+                    mazeBox.Update()
+                End If
+
+                helperPath.Clear()
+                path.Clear()
+                passedPath.Clear()
+                animationLock(False)
+                heatMapAnimationTimer.Enabled = False
+                solvedPathAnimationTimer.Enabled = False
+            End If
+        ElseIf solveAlgorithm = "Breath Frist Search" Then
+            If solvedVisited.Count > 0 Then
+                Dim node As Point = solvedVisited.Dequeue
+                If node <> mazeEntry And node <> mazeExit Then
+                    If branchingPoints.Contains(node) Then
+                        mazeImageGraphics.FillRectangle(New SolidBrush(Color.Yellow), node.X * M, node.Y * M, M, M)
+                    Else
+                        mazeImageGraphics.FillRectangle(New SolidBrush(solveColour), node.X * M, node.Y * M, M, M)
+                    End If
+                    ' Draws walls
+                    maze(node.X, node.Y).drawWalls()
+                    ' Updates Maze box
+                    mazeBox.Image = mazeImage
+                    mazeBox.Update()
+                End If
+            Else
+                solvedVisited.Clear()
+                drawMaze()
+                heatMapAnimationTimer.Enabled = False
+                solvedPathAnimationTimer.Enabled = True
+            End If
+        End If
+    End Sub
+    Private Sub solvedPathAnimationTimer_Tick(sender As Object, e As EventArgs) Handles solvedPathAnimationTimer.Tick, solvedPathAnimationTimer.Tick, solvedPathAnimationTimer.Tick
+        ' Creating the Solved Path
         If path.Count > 0 Then
             Dim currentPath As Point = path.Dequeue
 
@@ -879,15 +984,13 @@ Public Class Form1
                 mazeBox.Update()
             End If
 
-            animationTimer.Enabled = False
+            solvedPathAnimationTimer.Enabled = False
             animationLock(False)
             ' Discard Path
             path.Clear()
+
             passedPath.Clear()
         End If
-    End Sub
-    Private Sub animationTimer_Tick(sender As Object, e As EventArgs) Handles animationTimer.Tick
-        animate(path)
     End Sub
 
     Private Sub deadEndRemover()
@@ -1048,7 +1151,7 @@ Public Class Form1
         statusLbl.Text = "Status: Solving"
         statusLbl.Update()
         ' Checks what solving algorithm user has chosen
-        If solveAlgorithm = "Dijkstra's Algorithm" Then
+        If solveAlgorithm = "Dijkstra's" Then
             dijkstra()
         ElseIf solveAlgorithm = "Breath Frist Search" Then
             BFS()
@@ -1285,6 +1388,7 @@ Public Class Form1
         Me.Hide()
         Form2.Show()
     End Sub
+
 
 
 

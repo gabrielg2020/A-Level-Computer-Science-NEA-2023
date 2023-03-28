@@ -63,7 +63,8 @@ Partial Class Form1
         statusLbl = New Label()
         deadEndTimeLbl = New Label()
         helperBtn = New PictureBox()
-        animationTimer = New Timer(components)
+        solvedPathAnimationTimer = New Timer(components)
+        heatMapAnimationTimer = New Timer(components)
         CType(mazeBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(statsPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(helperBtn, ComponentModel.ISupportInitialize).BeginInit()
@@ -205,7 +206,7 @@ Partial Class Form1
         resources.ApplyResources(solveCombo, "solveCombo")
         solveCombo.ForeColor = Color.White
         solveCombo.FormattingEnabled = True
-        solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1"), resources.GetString("solveCombo.Items2"), resources.GetString("solveCombo.Items3"), resources.GetString("solveCombo.Items4"), resources.GetString("solveCombo.Items5")})
+        solveCombo.Items.AddRange(New Object() {resources.GetString("solveCombo.Items"), resources.GetString("solveCombo.Items1"), resources.GetString("solveCombo.Items2"), resources.GetString("solveCombo.Items3"), resources.GetString("solveCombo.Items4")})
         solveCombo.Name = "solveCombo"' 
         ' imageInputBtn
         ' 
@@ -329,7 +330,10 @@ Partial Class Form1
         helperBtn.Name = "helperBtn"
         helperBtn.TabStop = False
         ' 
-        ' animationTimer
+        ' solvedPathAnimationTimer
+        ' 
+        ' 
+        ' heatMapAnimationTimer
         ' 
         ' 
         ' Form1
@@ -422,5 +426,6 @@ Partial Class Form1
     Friend WithEvents statusLbl As Label
     Friend WithEvents deadEndTimeLbl As Label
     Friend WithEvents helperBtn As PictureBox
-    Friend WithEvents animationTimer As Timer
+    Friend WithEvents solvedPathAnimationTimer As Timer
+    Friend WithEvents heatMapAnimationTimer As Timer
 End Class

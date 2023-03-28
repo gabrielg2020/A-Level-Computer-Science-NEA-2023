@@ -731,7 +731,7 @@
     <value>Segoe UI, 29.25pt</value>
   </data>
   <data name="solveCombo.Items" xml:space="preserve">
-    <value>Dijkstra's Algorithm</value>
+    <value>Dijkstra's</value>
   </data>
   <data name="solveCombo.Items1" xml:space="preserve">
     <value>Breath Frist Search</value>
@@ -740,12 +740,9 @@
     <value>A*</value>
   </data>
   <data name="solveCombo.Items3" xml:space="preserve">
-    <value>Dead-End Filling</value>
-  </data>
-  <data name="solveCombo.Items4" xml:space="preserve">
     <value>Wall Follower LHR</value>
   </data>
-  <data name="solveCombo.Items5" xml:space="preserve">
+  <data name="solveCombo.Items4" xml:space="preserve">
     <value>Wall Follower RHR</value>
   </data>
   <data name="solveCombo.Location" type="System.Drawing.Point, System.Drawing">
@@ -1276,8 +1273,11 @@
   <data name="&gt;&gt;helperBtn.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="animationTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="solvedPathAnimationTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>472, 17</value>
+  </metadata>
+  <metadata name="heatMapAnimationTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>649, 17</value>
   </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1315,10 +1315,16 @@
   <data name="&gt;&gt;FolderBrowserDialog1.Type" xml:space="preserve">
     <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;animationTimer.Name" xml:space="preserve">
-    <value>animationTimer</value>
+  <data name="&gt;&gt;solvedPathAnimationTimer.Name" xml:space="preserve">
+    <value>solvedPathAnimationTimer</value>
   </data>
-  <data name="&gt;&gt;animationTimer.Type" xml:space="preserve">
+  <data name="&gt;&gt;solvedPathAnimationTimer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;heatMapAnimationTimer.Name" xml:space="preserve">
+    <value>heatMapAnimationTimer</value>
+  </data>
+  <data name="&gt;&gt;heatMapAnimationTimer.Type" xml:space="preserve">
     <value>System.Windows.Forms.Timer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
