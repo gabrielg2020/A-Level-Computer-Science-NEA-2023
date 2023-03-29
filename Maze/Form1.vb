@@ -38,6 +38,7 @@ Public Class Form1
     Public branchingPoints As New List(Of Point)
     Private solveAlgorithm As String
     Private mazeWallCount As Integer = 0
+    Private totalCells As Integer = 0
     Public path As New Queue(Of Point)
     Public helperPath As New Queue(Of Point)
     ' Controls when the from draws
@@ -266,7 +267,7 @@ Public Class Form1
             Return connectedCell(connectedCell.Count() - 1)
         End Function
         ' Method to check unvisted neighbours
-        Public Function checkUnvistedNeighbours()
+        Public Function checkUnvistedNeighbours() As List(Of Point)
             Dim neighbours As New List(Of Point)
 
             If mazeWallBool = True Then
@@ -327,6 +328,18 @@ Public Class Form1
         ' This call is required by the designer.
         InitializeComponent()
         ' Add any initialization after the InitializeComponent() call.
+        AddHandler helperBtn.Click, AddressOf helperBtn_Click
+        AddHandler imageInputBtn.Click, AddressOf imageInputBtn_Click
+        AddHandler bgColourBtn.Click, AddressOf bgColourBtn_Click
+        AddHandler mazeColourBtn.Click, AddressOf mazeColourBtn_Click
+        AddHandler solveColourBtn.Click, AddressOf solveColourBtn_Click
+        AddHandler generateBtn.Click, AddressOf generateBtn_Click
+        AddHandler solveBtn.Click, AddressOf solveBtn_Click
+        AddHandler deadEndRemoverBtn.Click, AddressOf deadEndRemoverBtn_Click
+        AddHandler downloadBtn.Click, AddressOf downloadBtn_Click
+        AddHandler cancelAnimationBtn.Click, AddressOf cancelAnimationBtn_Click
+        AddHandler solvedPathAnimationTimer.Tick, AddressOf solvedPathAnimationTimer_Tick
+        AddHandler heatMapAnimationTimer.Tick, AddressOf heatMapAnimationTimer_Tick
     End Sub
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -337,6 +350,7 @@ Public Class Form1
         solveCombo.SelectedIndex = 2 ' Default displays (Dijkstra's Algortimn)
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Random"
 
+        cancelAnimationBtn.Enabled = False
         solvedPathAnimationTimer.Interval = 100
         heatMapAnimationTimer.Interval = 50
         heatMapAnimationTimer.Enabled = False
@@ -365,6 +379,8 @@ Public Class Form1
                     maze(i, j).mazeWallBool = True
                     maze(i, j).visited = True
                     mazeWallCount += 1
+                Else
+                    totalCells += 1
                 End If
 
                 ' Giving each cell wall a start(0), end(1) and position on the screen
@@ -499,7 +515,20 @@ Public Class Form1
             Next
         Next
 
-        ' Redraw the unsolved maze
+        ' Checks what solving algorithm user has chosen
+        If solveAlgorithm = "Dijkstra's" Then
+            dijkstra()
+        ElseIf solveAlgorithm = "Breath Frist Search" Then
+            BFS()
+        ElseIf solveAlgorithm = "A*" Then
+            Astar()
+        ElseIf solveAlgorithm = "Wall Follower LHR" Then
+            wallFollower("LHR")
+        ElseIf solveAlgorithm = "Wall Follower RHR" Then
+            wallFollower("RHR")
+        End If
+
+        ' Redraw the maze
         drawMaze()
         mazeBox.Image = mazeImage
         mazeBox.Update()
@@ -527,6 +556,8 @@ Public Class Form1
             mazeColourBtn.Enabled = False
             solveColourBtn.BackColor = Color.FromArgb(19, 28, 40)
             solveColourBtn.Enabled = False
+            cancelAnimationBtn.BackColor = Color.MediumSlateBlue
+            cancelAnimationBtn.Enabled = True
             ' Rest TextBoxs
             widthTxtBox.BackColor = Color.FromArgb(19, 28, 40)
             widthTxtBox.Enabled = False
@@ -563,6 +594,8 @@ Public Class Form1
             mazeColourBtn.Enabled = True
             solveColourBtn.BackColor = Color.FromArgb(40, 60, 86)
             solveColourBtn.Enabled = True
+            cancelAnimationBtn.BackColor = Color.DarkSlateBlue
+            cancelAnimationBtn.Enabled = False
             ' Rest TextBoxs
             widthTxtBox.BackColor = Color.FromArgb(40, 60, 86)
             widthTxtBox.Enabled = True
@@ -587,54 +620,255 @@ Public Class Form1
         Return Color.FromArgb((r), (g), (b))
     End Function
     ' Generating
-    Private Sub randomisedDFS(Optional component As List(Of Point) = Nothing)
-        Randomize()
-        ' Backtracking stack
+    Private Sub randomisedDFS(ByVal x As Integer, ByVal y As Integer)
         Dim stack As New Stack(Of Point)
-        Dim node As Point
-        ' Checking if array was inputted
-        If component Is Nothing Then
-            stack.Push(New Point(rnd.Next(1, width), rnd.Next(1, height)))
-        Else
-            stack.Push(component(rnd.Next(0, component.Count())))
-        End If
-        Dim neigbours As New List(Of Point)
+        stack.Push(New Point(x, y))
         Dim direction As Integer
-        ' Until the stack is empty
-        While stack.Count <> 0
-            node = stack.Pop()
-            ' Check neighbours
-            neigbours = maze(node.X, node.Y).checkUnvistedNeighbours()
-            ' Checks if all neighbours are not empty 
-            If neigbours.All(Function(p) p.Equals(Point.Empty)) = False Then
-                stack.Push(node)
-                ' Make a new list that only contains the non empty values from neighbour
-                Dim validNeigbours As New List(Of Point)
-                For Each point In neigbours
-                    If point <> Point.Empty Then
-                        validNeigbours.Add(point)
-                    End If
+
+        While stack.Count > 0
+            Dim currentCell = stack.Peek()
+            Dim cell = maze(currentCell.X, currentCell.Y)
+
+            ' Mark current cell as visited
+            cell.visited = True
+
+            ' Get a list of unvisited neighbors
+            Dim unvisitedNeighbors = cell.checkUnvistedNeighbours()
+
+            If unvisitedNeighbors.All(Function(p) p.Equals(Point.Empty)) = True Then
+                stack.Pop()
+                Continue While
+            End If
+
+            ' Make a new list that only contains the non empty values from neighbour
+            Dim validNeigbours As New List(Of Point)
+            For Each point In unvisitedNeighbors
+                If point <> Point.Empty Then
+                    validNeigbours.Add(point)
+                End If
+            Next
+
+            ' Randomly pick a valid neighbour. Find the index of that point within the orginal neighbour list and set that to direction
+            Randomize()
+            direction = unvisitedNeighbors.IndexOf(validNeigbours(rnd.Next(0, validNeigbours.Count())))
+
+            ' Break the wall between the current cell and the chosen neighbor
+            Dim randomNeighbor = cell.breakWall(direction)
+
+            ' Add the neighbor to the stack
+            stack.Push(randomNeighbor)
+        End While
+    End Sub
+
+    Public Sub randomizedPrims(ByVal x As Integer, ByVal y As Integer)
+        ' Start with an arbitrary cell
+        Dim currentCell As Cell = maze(x, y)
+        currentCell.visited = True
+        Dim visitedCells As New List(Of Cell)
+        visitedCells.Add(currentCell)
+
+        ' List to store the walls
+        Dim walls As New List(Of Tuple(Of Point, Integer))
+
+        ' Add the walls of the initial cell to the list
+        For i As Integer = 0 To 3
+            If Not currentCell.walls(i) Then Continue For
+            walls.Add(Tuple.Create(New Point(x, y), i))
+        Next
+
+        ' While there are unvisited cells
+        While visitedCells.Count < totalCells AndAlso walls.Count > 0
+            ' Choose a wall connected to the visited cells uniformly at random
+            Dim randomIndex As Integer = rnd.Next(walls.Count)
+            Dim randomWall As Tuple(Of Point, Integer) = walls(randomIndex)
+            Dim cellCoords As Point = randomWall.Item1
+            Dim direction As Integer = randomWall.Item2
+            Dim cell As Cell = maze(cellCoords.X, cellCoords.Y)
+            ' If the wall separates a visited cell from an unvisited cell
+            Dim neighbour As Point = cell.checkUnvistedNeighbours()(direction)
+            If neighbour <> Point.Empty AndAlso Not maze(neighbour.X, neighbour.Y).visited Then
+                ' Remove the wall and mark the unvisited cell as visited
+                cell.breakWall(direction)
+                maze(neighbour.X, neighbour.Y).visited = True
+                visitedCells.Add(maze(neighbour.X, neighbour.Y))
+                ' Add the neighboring walls of the cell to the walls list
+                For i As Integer = 0 To 3
+                    If Not maze(neighbour.X, neighbour.Y).walls(i) Then Continue For
+                    walls.Add(Tuple.Create(New Point(neighbour.X, neighbour.Y), i))
                 Next
-                ' Randomly pick a valid neighbour. Find the index of that point within the orginal neighbour list and set that to direction
-                Randomize()
-                direction = neigbours.IndexOf(validNeigbours(rnd.Next(0, validNeigbours.Count())))
-                ' Break the wall
-                node = maze(node.X, node.Y).breakWall(direction)
-                ' Push to the stack
-                stack.Push(node)
-                ' Mark as visted
-                maze(node.X, node.Y).visited = True
+            End If
+
+            ' Remove the wall from the list to avoid reprocessing it
+            walls.RemoveAt(randomIndex)
+        End While
+    End Sub
+
+    Public Sub kruskals()
+        Dim neighbourCoords As Point
+
+        ' Create a list of all possible walls in the maze
+        Dim walls As New List(Of Tuple(Of Point, Integer))
+        For x As Integer = 0 To width - 1
+            For y As Integer = 0 To height - 1
+                For i As Integer = 0 To 1
+                    walls.Add(Tuple.Create(New Point(x, y), i))
+                Next
+            Next
+        Next
+
+        ' Shuffle the list of walls randomly
+        Dim random As New Random()
+        For i As Integer = walls.Count - 1 To 1 Step -1
+            Dim j As Integer = random.Next(i + 1)
+            Dim temp As Tuple(Of Point, Integer) = walls(i)
+            walls(i) = walls(j)
+            walls(j) = temp
+        Next
+
+        ' Initialize the sets for each cell
+        Dim sets As New Dictionary(Of Point, Integer)
+        Dim setId As Integer = 0
+        For x As Integer = 0 To width - 1
+            For y As Integer = 0 To height - 1
+                sets(New Point(x, y)) = setId
+                setId += 1
+            Next
+        Next
+
+        ' Iterate through the shuffled list of walls
+        For Each wall As Tuple(Of Point, Integer) In walls
+            Dim cellCoords As Point = wall.Item1
+            Dim direction As Integer = wall.Item2
+            Dim cell As Cell = maze(cellCoords.X, cellCoords.Y)
+            ' Calculate the neighboring cell coordinates based on the direction
+            If direction = 0 Then
+                neighbourCoords = New Point(cellCoords.X, cellCoords.Y - 1)
+            Else
+                neighbourCoords = New Point(cellCoords.X + 1, cellCoords.Y)
+            End If
+
+            ' Check if the neighboring cell is within the maze bounds
+            If neighbourCoords.X >= 0 AndAlso neighbourCoords.X < width AndAlso neighbourCoords.Y >= 0 AndAlso neighbourCoords.Y < height Then
+                ' Check if the cells connected by the wall are not in the same set
+                If sets(cellCoords) <> sets(neighbourCoords) Then
+                    ' Remove the wall to connect the cells
+                    cell.breakWall(direction) ' Merge the sets of the two cells
+                    Dim setIdToReplace As Integer = sets(neighbourCoords)
+                    Dim setIdToKeep As Integer = sets(cellCoords)
+                    For Each key As Point In sets.Keys.ToList()
+                        If sets(key) = setIdToReplace Then
+                            sets(key) = setIdToKeep
+                        End If
+                    Next
+                End If
+            End If
+        Next
+    End Sub
+    Public Sub aldousBroder()
+        Dim totalCells As Integer = width * height
+        Dim visitedCells As Integer = 0
+        Dim random As New Random()
+        Dim currentX As Integer = random.Next(width)
+        Dim currentY As Integer = random.Next(height)
+        Dim directions() As Point = {New Point(0, -1), New Point(1, 0), New Point(0, 1), New Point(-1, 0)}
+
+        ' Mark the starting cell as visited
+        maze(currentX, currentY).visited = True
+        visitedCells += 1
+
+        ' Continue until all cells have been visited
+        While visitedCells < totalCells
+            ' Move to a random neighboring cell
+            Dim randomDirectionIndex As Integer = random.Next(directions.Length)
+            Dim newX As Integer = currentX + directions(randomDirectionIndex).X
+            Dim newY As Integer = currentY + directions(randomDirectionIndex).Y
+
+            ' Check if the new position is within the maze bounds
+            If newX >= 0 AndAlso newX < width AndAlso newY >= 0 AndAlso newY < height Then
+                ' If the neighboring cell has not been visited yet, remove the wall between the current cell and the neighboring cell
+                If Not maze(newX, newY).visited Then
+                    maze(currentX, currentY).breakWall(randomDirectionIndex)
+                    maze(newX, newY).visited = True
+                    visitedCells += 1
+                End If
+
+                ' Set the current position to the new position
+                currentX = newX
+                currentY = newY
             End If
         End While
     End Sub
+
+
+
+    Private Sub recursiveDivision(Optional ByVal x As Integer = 1, Optional ByVal y As Integer = 1, Optional ByVal width As Integer = 0, Optional ByVal height As Integer = 0)
+        If width <= 0 Then
+            width = Me.width
+        End If
+        If height <= 0 Then
+            height = Me.height
+        End If
+
+        If width < 3 Or height < 3 Then
+            Return
+        End If
+
+        ' Randomly choose between horizontal and vertical division
+        Dim divideHorizontally As Boolean = (rnd.Next(0, 2) = 0)
+
+        If divideHorizontally Then
+            ' Randomly choose a row for horizontal division
+            Dim horizontalWall As Integer = rnd.Next(y + 1, y + height - 1)
+
+            ' Create a wall horizontally
+            For i As Integer = x To x + width - 1
+                If Not (i = mazeEntry.X AndAlso horizontalWall = mazeEntry.Y) AndAlso Not (i = mazeExit.X AndAlso horizontalWall = mazeExit.Y) Then
+                    maze(i, horizontalWall).walls(0) = True
+                    maze(i, horizontalWall - 1).walls(2) = True ' Update the neighboring cell's wall
+                End If
+            Next
+
+            ' Create a gap in the wall
+            Dim gap As Integer = rnd.Next(x, x + width)
+            maze(gap, horizontalWall).breakWall(0)
+            maze(gap, horizontalWall - 1).breakWall(2) ' Update the neighboring cell's wall
+
+            ' Recursively call the function for the partitions
+            recursiveDivision(x, y, width, horizontalWall - y)
+            recursiveDivision(x, horizontalWall + 1, width, y + height - (horizontalWall + 1))
+
+        Else
+            ' Randomly choose a column for vertical division
+            Dim verticalWall As Integer = rnd.Next(x + 1, x + width - 1)
+
+            ' Create a wall vertically
+            For i As Integer = y To y + height - 1
+                If Not (i = mazeEntry.Y AndAlso verticalWall = mazeEntry.X) AndAlso Not (i = mazeExit.Y AndAlso verticalWall = mazeExit.X) Then
+                    maze(verticalWall, i).walls(1) = True
+                    maze(verticalWall - 1, i).walls(3) = True ' Update the neighboring cell's wall
+                End If
+            Next
+
+            ' Create a gap in the wall
+            Dim gap As Integer = rnd.Next(y, y + height)
+            maze(verticalWall, gap).breakWall(1)
+            maze(verticalWall - 1, gap).breakWall(3) ' Update the neighboring cell's wall
+
+            ' Recursively call the function for the partitions
+            recursiveDivision(x, y, verticalWall - x, height)
+            recursiveDivision(verticalWall + 1, y, x + width - (verticalWall + 1), height)
+        End If
+    End Sub
+
 
     ' Solving 
     Private Function distanceCalc(a As Point, b As Point) As Double
         Return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y)
     End Function
     Private Sub dijkstra()
-        ' Clear the gWeight dictionary
+        ' Clear the gWeight dictionary and solvedVisted list
         gWeights.Clear()
+        solvedVisited.Clear()
 
         ' Initialize the parents dictionary and the priority queue
         Dim parents As New Dictionary(Of Point, Point)
@@ -691,7 +925,7 @@ Public Class Form1
         End While
 
         ' Check If they want animations
-        If instantAnimationBtn.Checked = True Then
+        If instantAnimationBtn.Checked = True Or cancelAnimation = True Then
             ' Mark the path as solved
             For Each node In path
                 maze(node.X, node.Y).mazeSolved = True
@@ -704,6 +938,10 @@ Public Class Form1
         End If
     End Sub
     Private Sub BFS()
+        ' Clear solvedVisted list and branchingPoints list
+        solvedVisited.Clear()
+        branchingPoints.Clear()
+
         ' Initialize the queue, parent dictionary and currentNod
         Dim queue As New Queue(Of Point)
         Dim parents As New Dictionary(Of Point, Point)()
@@ -746,7 +984,7 @@ Public Class Form1
         End While
 
         ' Check if they want animations
-        If instantAnimationBtn.Checked = True Then
+        If instantAnimationBtn.Checked = True Or cancelAnimation = True Then
             ' Mark the path as solved
             For Each node In path
                 maze(node.X, node.Y).mazeSolved = True
@@ -759,8 +997,9 @@ Public Class Form1
         End If
     End Sub
     Private Sub Astar(Optional ByVal helper As Boolean = False)
-        ' Clear the gWeight dictionary
+        ' Clear the gWeight dictionary and solvedVisted list
         gWeights.Clear()
+        solvedVisited.Clear()
 
         ' Initailize the parent dictionary and priority queue for open nodes
         Dim parents As New Dictionary(Of Point, Point)
@@ -822,7 +1061,7 @@ Public Class Form1
             path.Clear()
         Else
             ' Check if they want animations
-            If instantAnimationBtn.Checked = True Then
+            If instantAnimationBtn.Checked = True Or cancelAnimation = True Then
                 ' Mark the path as solved
                 For Each node In path
                     maze(node.X, node.Y).mazeSolved = True
@@ -880,7 +1119,7 @@ Public Class Form1
         End While
 
         ' Check if they want animations
-        If instantAnimationBtn.Checked = True Then
+        If instantAnimationBtn.Checked = True Or cancelAnimation = True Then
             ' Mark the path as solved
             For Each node In path
                 maze(node.X, node.Y).mazeSolved = True
@@ -893,7 +1132,7 @@ Public Class Form1
         End If
     End Sub
     ' Animation
-    Private Sub heatMapAnimationTimer_Tick(sender As Object, e As EventArgs) Handles heatMapAnimationTimer.Tick
+    Private Sub heatMapAnimationTimer_Tick(sender As Object, e As EventArgs)
         ' Cancel animation if needed
         If cancelAnimation = True Then
             heatMapAnimationTimer.Enabled = False
@@ -996,7 +1235,7 @@ Public Class Form1
             End If
         End If
     End Sub
-    Private Sub solvedPathAnimationTimer_Tick(sender As Object, e As EventArgs) Handles solvedPathAnimationTimer.Tick, solvedPathAnimationTimer.Tick, solvedPathAnimationTimer.Tick
+    Private Sub solvedPathAnimationTimer_Tick(sender As Object, e As EventArgs)
         ' Cancel animation if needed
         If cancelAnimation = True Then
             heatMapAnimationTimer.Enabled = False
@@ -1087,7 +1326,7 @@ Public Class Form1
         animationLock(False)
     End Sub
     ' USER INPUT START
-    Private Sub generateBtn_Click(sender As Object, e As EventArgs) Handles generateBtn.Click
+    Private Sub generateBtn_Click(sender As Object, e As EventArgs)
         ' Saves Maze Properties inputted by the user
         ' Checking that the values inputed for width and height are valid
         If Integer.TryParse(widthTxtBox.Text, width) And width > 2 And Integer.TryParse(heightTxtBox.Text, height) And height > 2 Then
@@ -1138,14 +1377,22 @@ Public Class Form1
         ' Checks what generation algorithm user has chosen
         If generationAlgorithm = "DFS Backtracker" Then
             If imageInputted = True Then
-                For Each component In imgComponents
-                    randomisedDFS(component)
-                Next
+                'For Each component In imgComponents
+                '    randomisedDFS(component)
+                'Next
             Else
-                randomisedDFS()
+                randomisedDFS(rnd.Next(1, width), rnd.Next(1, height))
             End If
-        ElseIf generationAlgorithm = "Wave Function Collapse" Then
+        ElseIf generationAlgorithm = "Recursive Division" Then
+            'recursiveDivision()
+        ElseIf generationAlgorithm = "Randomised Prims" Then
+            randomizedPrims(5, 5)
+        ElseIf generationAlgorithm = "Kruskal 's" Then
+            kruskals()
+        ElseIf generationAlgorithm = "Aldous-Border" Then
+            aldousBroder()
         End If
+
         generationTimer.Stop()
         ' Draws generate maze
         drawMaze()
@@ -1238,7 +1485,7 @@ Public Class Form1
         ' Resets Status
         statusLbl.Text = "Status: Doing Nothing"
     End Sub
-    Private Sub deadEndRemoverBtn_Click(sender As Object, e As EventArgs) Handles deadEndRemoverBtn.Click
+    Private Sub deadEndRemoverBtn_Click(sender As Object, e As EventArgs)
         ' Makes sure a maze has been generated 
         If mazeGenerated = False Then
             MsgBox("No maze generated!" & vbCrLf & "Please press the generate button", MsgBoxStyle.OkOnly, "No maze generated")
@@ -1308,19 +1555,19 @@ Public Class Form1
             MsgBox("No maze generated!" & vbCrLf & "Please press the generate button", MsgBoxStyle.OkOnly, "No maze generated")
         End If
     End Sub
-    Private Sub bgColourBtn_Click(sender As Object, e As EventArgs) Handles bgColourBtn.Click
+    Private Sub bgColourBtn_Click(sender As Object, e As EventArgs)
         bgColour = selectColour() ' Selects background colour 
         bgColourBtn.Text = bgColour.ToString
     End Sub
-    Private Sub mazeColourBtn_Click(sender As Object, e As EventArgs) Handles mazeColourBtn.Click
+    Private Sub mazeColourBtn_Click(sender As Object, e As EventArgs)
         mazeColour = selectColour() ' Selects maze colour 
         mazeColourBtn.Text = mazeColour.ToString
     End Sub
-    Private Sub solveColourBtn_Click(sender As Object, e As EventArgs) Handles solveColourBtn.Click
+    Private Sub solveColourBtn_Click(sender As Object, e As EventArgs)
         solveColour = selectColour() ' Selects solve colour 
         solveColourBtn.Text = solveColour.ToString
     End Sub
-    Private Sub downloadBtn_Click(sender As Object, e As EventArgs) Handles downloadBtn.Click
+    Private Sub downloadBtn_Click(sender As Object, e As EventArgs)
         downloadMaze()
     End Sub
     Private Function componentAnalysis(ByVal image As Bitmap) As List(Of List(Of Point))
@@ -1376,7 +1623,7 @@ Public Class Form1
         Return components
     End Function
 
-    Private Sub imageInputBtn_Click(sender As Object, e As EventArgs) Handles imageInputBtn.Click
+    Private Sub imageInputBtn_Click(sender As Object, e As EventArgs)
         ' Rest variable 
         If imageInputted = True Then
             inputImage.Dispose()
@@ -1444,7 +1691,7 @@ Public Class Form1
         Form2.Show()
     End Sub
 
-    Private Sub cancelAnimationBtn_Click(sender As Object, e As EventArgs) Handles cancelAnimationBtn.Click
+    Private Sub cancelAnimationBtn_Click(sender As Object, e As EventArgs)
         cancelAnimation = True
     End Sub
     ' USER INPUT END

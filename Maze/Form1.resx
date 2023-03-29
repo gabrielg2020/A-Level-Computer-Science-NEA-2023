@@ -623,7 +623,7 @@
     <value>3, 2, 3, 2</value>
   </data>
   <data name="downloadBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>600, 73</value>
+    <value>605, 73</value>
   </data>
   <data name="downloadBtn.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
@@ -695,13 +695,16 @@
     <value>DFS Backtracker</value>
   </data>
   <data name="generationCombo.Items1" xml:space="preserve">
-    <value>Wave Function Collapse</value>
-  </data>
-  <data name="generationCombo.Items2" xml:space="preserve">
     <value>Randomised Prims</value>
   </data>
+  <data name="generationCombo.Items2" xml:space="preserve">
+    <value>Kruskal 's</value>
+  </data>
   <data name="generationCombo.Items3" xml:space="preserve">
-    <value>s</value>
+    <value>Aldous-Border</value>
+  </data>
+  <data name="generationCombo.Items4" xml:space="preserve">
+    <value>Recursive Division</value>
   </data>
   <data name="generationCombo.Location" type="System.Drawing.Point, System.Drawing">
     <value>389, 362</value>
@@ -1292,10 +1295,10 @@
     <value>Segoe UI, 26.25pt</value>
   </data>
   <data name="cancelAnimationBtn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1292, 958</value>
+    <value>1287, 958</value>
   </data>
   <data name="cancelAnimationBtn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>600, 73</value>
+    <value>605, 73</value>
   </data>
   <data name="cancelAnimationBtn.TabIndex" type="System.Int32, mscorlib">
     <value>46</value>

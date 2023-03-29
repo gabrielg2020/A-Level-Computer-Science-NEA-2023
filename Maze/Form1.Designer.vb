@@ -197,7 +197,7 @@ Partial Class Form1
         resources.ApplyResources(generationCombo, "generationCombo")
         generationCombo.ForeColor = Color.White
         generationCombo.FormattingEnabled = True
-        generationCombo.Items.AddRange(New Object() {resources.GetString("generationCombo.Items"), resources.GetString("generationCombo.Items1"), resources.GetString("generationCombo.Items2"), resources.GetString("generationCombo.Items3")})
+        generationCombo.Items.AddRange(New Object() {resources.GetString("generationCombo.Items"), resources.GetString("generationCombo.Items1"), resources.GetString("generationCombo.Items2"), resources.GetString("generationCombo.Items3"), resources.GetString("generationCombo.Items4")})
         generationCombo.Name = "generationCombo"' 
         ' solveCombo
         ' 
@@ -331,15 +331,9 @@ Partial Class Form1
         helperBtn.Name = "helperBtn"
         helperBtn.TabStop = False
         ' 
-        ' solvedPathAnimationTimer
-        ' 
-        ' 
-        ' heatMapAnimationTimer
-        ' 
-        ' 
         ' cancelAnimationBtn
         ' 
-        cancelAnimationBtn.BackColor = Color.MediumSlateBlue
+        cancelAnimationBtn.BackColor = Color.DarkSlateBlue
         resources.ApplyResources(cancelAnimationBtn, "cancelAnimationBtn")
         cancelAnimationBtn.ForeColor = Color.White
         cancelAnimationBtn.Name = "cancelAnimationBtn"
