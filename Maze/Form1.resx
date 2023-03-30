@@ -1318,6 +1318,9 @@
   <data name="&gt;&gt;cancelAnimationBtn.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <metadata name="generationPointTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>836, 17</value>
+  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -1364,6 +1367,12 @@
     <value>heatMapAnimationTimer</value>
   </data>
   <data name="&gt;&gt;heatMapAnimationTimer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;generationPointTimer.Name" xml:space="preserve">
+    <value>generationPointTimer</value>
+  </data>
+  <data name="&gt;&gt;generationPointTimer.Type" xml:space="preserve">
     <value>System.Windows.Forms.Timer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

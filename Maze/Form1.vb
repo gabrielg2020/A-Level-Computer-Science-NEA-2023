@@ -2,6 +2,7 @@
 Imports System.Collections.Generic
 Imports Maze.Form1
 Imports System.Text.Json
+Imports System.Windows.Forms.AxHost
 
 Public Class Form1
     ' Class instanse used to randomize numbers
@@ -30,8 +31,29 @@ Public Class Form1
     Private solvedVisited As New Queue(Of Point)
     Private maxWeight As Integer
     Public cancelAnimation As Boolean = False
+    Public resetType As String
     ' Maze Generation/Solving Inputs
     Private generationAlgorithm As String
+
+    ' Used in randomisedDFS
+    Dim generationStack As New Stack(Of Point)
+    ' Used in randomizedPrims
+    Private visitedCells As New List(Of Cell)
+    Private primsWalls As New List(Of Tuple(Of Point, Integer))
+    ' Used in kurskals
+    Private kurskWalls As New List(Of Tuple(Of Point, Integer))
+    Private kursSets As New Dictionary(Of Point, Integer)
+    Private kursNeighbourCoords As Point
+    Private kursCurrentWallIndex As Integer = 0
+    ' Used in aldousBroder
+    Private ABtotalCells As Integer
+    Private ABvisitedCells As Integer = 0
+    Private random As New Random()
+    Private currentX As Integer
+    Private currentY As Integer
+    Private directions() As Point = {New Point(0, -1), New Point(1, 0), New Point(0, 1), New Point(-1, 0)}
+    Private ABhasBeenAnimated As Boolean = False
+
     ' Used in Astar()
     Public gWeights As New Dictionary(Of Point, Double)
     ' Used in BFS()
@@ -266,6 +288,7 @@ Public Class Form1
             End Select
             Return connectedCell(connectedCell.Count() - 1)
         End Function
+
         ' Method to check unvisted neighbours
         Public Function checkUnvistedNeighbours() As List(Of Point)
             Dim neighbours As New List(Of Point)
@@ -381,6 +404,12 @@ Public Class Form1
                     mazeWallCount += 1
                 Else
                     totalCells += 1
+                End If
+
+                If generationAlgorithm = "Recursive Division" Then
+                    For w As Integer = 0 To 3
+                        maze(i, j).walls(w) = False
+                    Next
                 End If
 
                 ' Giving each cell wall a start(0), end(1) and position on the screen
@@ -502,6 +531,7 @@ Public Class Form1
         drawTimer.Stop()
     End Sub
     Private Sub resetMaze()
+        instantAnimationBtn.Checked = True
         ' Clear the collections
         solvedVisited.Clear()
         helperPath.Clear()
@@ -515,23 +545,50 @@ Public Class Form1
             Next
         Next
 
-        ' Checks what solving algorithm user has chosen
-        If solveAlgorithm = "Dijkstra's" Then
-            dijkstra()
-        ElseIf solveAlgorithm = "Breath Frist Search" Then
-            BFS()
-        ElseIf solveAlgorithm = "A*" Then
-            Astar()
-        ElseIf solveAlgorithm = "Wall Follower LHR" Then
-            wallFollower("LHR")
-        ElseIf solveAlgorithm = "Wall Follower RHR" Then
-            wallFollower("RHR")
+        If resetType = "G" Then
+            ' Checks what generation algorithm user has chosen
+            If generationAlgorithm = "DFS Backtracker" Then
+                If imageInputted = True Then
+                    'For Each component In imgComponents
+                    '    randomisedDFS(component)
+                    'Next
+                Else
+                    randomisedDFS(rnd.Next(1, width), rnd.Next(1, height))
+                End If
+            ElseIf generationAlgorithm = "Randomised Prims" Then
+                randomizedPrims(5, 5)
+            ElseIf generationAlgorithm = "Kruskal 's" Then
+                kruskals()
+            ElseIf generationAlgorithm = "Aldous-Border" Then
+                width += 1
+                height += 1
+                aldousBroder(1, 1)
+                width -= 1
+                height -= 1
+            End If
+        ElseIf resetType = "S" Then
+            ' Checks what solving algorithm user has chosen
+            If solveAlgorithm = "Dijkstra's" Then
+                dijkstra()
+            ElseIf solveAlgorithm = "Breath Frist Search" Then
+                BFS()
+            ElseIf solveAlgorithm = "A*" Then
+                Astar()
+            ElseIf solveAlgorithm = "Wall Follower LHR" Then
+                wallFollower("LHR")
+            ElseIf solveAlgorithm = "Wall Follower RHR" Then
+                wallFollower("RHR")
+            End If
         End If
+
+
 
         ' Redraw the maze
         drawMaze()
         mazeBox.Image = mazeImage
         mazeBox.Update()
+
+        instantAnimationBtn.Checked = False
     End Sub
     Private Sub animationLock(Lock As Boolean) ' Locks all inputs to prevent backlogging and crashes
         If Lock = True Then
@@ -621,245 +678,451 @@ Public Class Form1
     End Function
     ' Generating
     Private Sub randomisedDFS(ByVal x As Integer, ByVal y As Integer)
-        Dim stack As New Stack(Of Point)
-        stack.Push(New Point(x, y))
-        Dim direction As Integer
+        generationStack.Push(New Point(x, y))
 
-        While stack.Count > 0
-            Dim currentCell = stack.Peek()
-            Dim cell = maze(currentCell.X, currentCell.Y)
+        ' Check if they want animations
+        If instantAnimationBtn.Checked = False Then ' Want Animations
+            animationLock(True)
+            generationPointTimer.Enabled = True
+        Else
+            Dim direction As Integer
 
-            ' Mark current cell as visited
-            cell.visited = True
+            While generationStack.Count > 0
+                Dim currentCell = generationStack.Peek()
+                Dim cell = maze(currentCell.X, currentCell.Y)
 
-            ' Get a list of unvisited neighbors
-            Dim unvisitedNeighbors = cell.checkUnvistedNeighbours()
+                ' Mark current cell as visited
+                cell.visited = True
 
-            If unvisitedNeighbors.All(Function(p) p.Equals(Point.Empty)) = True Then
-                stack.Pop()
-                Continue While
-            End If
+                ' Get a list of unvisited neighbors
+                Dim unvisitedNeighbors = cell.checkUnvistedNeighbours()
 
-            ' Make a new list that only contains the non empty values from neighbour
-            Dim validNeigbours As New List(Of Point)
-            For Each point In unvisitedNeighbors
-                If point <> Point.Empty Then
-                    validNeigbours.Add(point)
+                If unvisitedNeighbors.All(Function(p) p.Equals(Point.Empty)) = True Then
+                    generationStack.Pop()
+                    Continue While
                 End If
-            Next
 
-            ' Randomly pick a valid neighbour. Find the index of that point within the orginal neighbour list and set that to direction
-            Randomize()
-            direction = unvisitedNeighbors.IndexOf(validNeigbours(rnd.Next(0, validNeigbours.Count())))
+                ' Make a new list that only contains the non empty values from neighbour
+                Dim validNeigbours As New List(Of Point)
+                For Each point In unvisitedNeighbors
+                    If point <> Point.Empty Then
+                        validNeigbours.Add(point)
+                    End If
+                Next
 
-            ' Break the wall between the current cell and the chosen neighbor
-            Dim randomNeighbor = cell.breakWall(direction)
+                ' Randomly pick a valid neighbour. Find the index of that point within the orginal neighbour list and set that to direction
+                Randomize()
+                direction = unvisitedNeighbors.IndexOf(validNeigbours(rnd.Next(0, validNeigbours.Count())))
 
-            ' Add the neighbor to the stack
-            stack.Push(randomNeighbor)
-        End While
+                ' Break the wall between the current cell and the chosen neighbor
+                Dim randomNeighbor = cell.breakWall(direction)
+
+                ' Add the neighbor to the generationStack
+                generationStack.Push(randomNeighbor)
+            End While
+        End If
     End Sub
 
     Public Sub randomizedPrims(ByVal x As Integer, ByVal y As Integer)
+        visitedCells.Clear()
+        primsWalls.Clear()
+
         ' Start with an arbitrary cell
         Dim currentCell As Cell = maze(x, y)
         currentCell.visited = True
-        Dim visitedCells As New List(Of Cell)
         visitedCells.Add(currentCell)
-
-        ' List to store the walls
-        Dim walls As New List(Of Tuple(Of Point, Integer))
 
         ' Add the walls of the initial cell to the list
         For i As Integer = 0 To 3
             If Not currentCell.walls(i) Then Continue For
-            walls.Add(Tuple.Create(New Point(x, y), i))
+            primsWalls.Add(Tuple.Create(New Point(x, y), i))
         Next
 
-        ' While there are unvisited cells
-        While visitedCells.Count < totalCells AndAlso walls.Count > 0
-            ' Choose a wall connected to the visited cells uniformly at random
-            Dim randomIndex As Integer = rnd.Next(walls.Count)
-            Dim randomWall As Tuple(Of Point, Integer) = walls(randomIndex)
-            Dim cellCoords As Point = randomWall.Item1
-            Dim direction As Integer = randomWall.Item2
-            Dim cell As Cell = maze(cellCoords.X, cellCoords.Y)
-            ' If the wall separates a visited cell from an unvisited cell
-            Dim neighbour As Point = cell.checkUnvistedNeighbours()(direction)
-            If neighbour <> Point.Empty AndAlso Not maze(neighbour.X, neighbour.Y).visited Then
-                ' Remove the wall and mark the unvisited cell as visited
-                cell.breakWall(direction)
-                maze(neighbour.X, neighbour.Y).visited = True
-                visitedCells.Add(maze(neighbour.X, neighbour.Y))
-                ' Add the neighboring walls of the cell to the walls list
-                For i As Integer = 0 To 3
-                    If Not maze(neighbour.X, neighbour.Y).walls(i) Then Continue For
-                    walls.Add(Tuple.Create(New Point(neighbour.X, neighbour.Y), i))
-                Next
-            End If
+        ' Check if they want animations
+        If instantAnimationBtn.Checked = False Then ' Want Animations
+            animationLock(True)
+            generationPointTimer.Enabled = True
+        Else
+            ' While there are unvisited cells
+            While visitedCells.Count < totalCells AndAlso primsWalls.Count > 0
+                ' Choose a wall connected to the visited cells uniformly at random
+                Dim randomIndex As Integer = rnd.Next(primsWalls.Count)
+                Dim randomWall As Tuple(Of Point, Integer) = primsWalls(randomIndex)
+                Dim cellCoords As Point = randomWall.Item1
+                Dim direction As Integer = randomWall.Item2
+                Dim cell As Cell = maze(cellCoords.X, cellCoords.Y)
+                ' If the wall separates a visited cell from an unvisited cell
+                Dim neighbour As Point = cell.checkUnvistedNeighbours()(direction)
+                If neighbour <> Point.Empty AndAlso Not maze(neighbour.X, neighbour.Y).visited Then
+                    ' Remove the wall and mark the unvisited cell as visited
+                    cell.breakWall(direction)
+                    maze(neighbour.X, neighbour.Y).visited = True
+                    visitedCells.Add(maze(neighbour.X, neighbour.Y))
+                    ' Add the neighboring walls of the cell to the walls list
+                    For i As Integer = 0 To 3
+                        If Not maze(neighbour.X, neighbour.Y).walls(i) Then Continue For
+                        primsWalls.Add(Tuple.Create(New Point(neighbour.X, neighbour.Y), i))
+                    Next
+                End If
 
-            ' Remove the wall from the list to avoid reprocessing it
-            walls.RemoveAt(randomIndex)
-        End While
+                ' Remove the wall from the list to avoid reprocessing it
+                primsWalls.RemoveAt(randomIndex)
+            End While
+        End If
     End Sub
 
     Public Sub kruskals()
-        Dim neighbourCoords As Point
+        kurskWalls.Clear()
 
         ' Create a list of all possible walls in the maze
-        Dim walls As New List(Of Tuple(Of Point, Integer))
+        Dim k As New List(Of Tuple(Of Point, Integer))
         For x As Integer = 0 To width - 1
             For y As Integer = 0 To height - 1
                 For i As Integer = 0 To 1
-                    walls.Add(Tuple.Create(New Point(x, y), i))
+                    If maze(x, y).mazeWallBool = False Then
+                        kurskWalls.Add(Tuple.Create(New Point(x, y), i))
+                    End If
                 Next
             Next
         Next
 
         ' Shuffle the list of walls randomly
         Dim random As New Random()
-        For i As Integer = walls.Count - 1 To 1 Step -1
+        For i As Integer = kurskWalls.Count - 1 To 1 Step -1
             Dim j As Integer = random.Next(i + 1)
-            Dim temp As Tuple(Of Point, Integer) = walls(i)
-            walls(i) = walls(j)
-            walls(j) = temp
+            Dim temp As Tuple(Of Point, Integer) = kurskWalls(i)
+            kurskWalls(i) = kurskWalls(j)
+            kurskWalls(j) = temp
         Next
 
         ' Initialize the sets for each cell
-        Dim sets As New Dictionary(Of Point, Integer)
+
         Dim setId As Integer = 0
         For x As Integer = 0 To width - 1
             For y As Integer = 0 To height - 1
-                sets(New Point(x, y)) = setId
+                kursSets(New Point(x, y)) = setId
                 setId += 1
             Next
         Next
 
-        ' Iterate through the shuffled list of walls
-        For Each wall As Tuple(Of Point, Integer) In walls
-            Dim cellCoords As Point = wall.Item1
-            Dim direction As Integer = wall.Item2
-            Dim cell As Cell = maze(cellCoords.X, cellCoords.Y)
-            ' Calculate the neighboring cell coordinates based on the direction
-            If direction = 0 Then
-                neighbourCoords = New Point(cellCoords.X, cellCoords.Y - 1)
-            Else
-                neighbourCoords = New Point(cellCoords.X + 1, cellCoords.Y)
-            End If
 
-            ' Check if the neighboring cell is within the maze bounds
-            If neighbourCoords.X >= 0 AndAlso neighbourCoords.X < width AndAlso neighbourCoords.Y >= 0 AndAlso neighbourCoords.Y < height Then
-                ' Check if the cells connected by the wall are not in the same set
-                If sets(cellCoords) <> sets(neighbourCoords) Then
-                    ' Remove the wall to connect the cells
-                    cell.breakWall(direction) ' Merge the sets of the two cells
-                    Dim setIdToReplace As Integer = sets(neighbourCoords)
-                    Dim setIdToKeep As Integer = sets(cellCoords)
-                    For Each key As Point In sets.Keys.ToList()
-                        If sets(key) = setIdToReplace Then
-                            sets(key) = setIdToKeep
-                        End If
-                    Next
+        ' Check if they want animations
+        If instantAnimationBtn.Checked = False Then ' Want Animations
+            animationLock(True)
+            generationPointTimer.Enabled = True
+        Else
+            ' Iterate through the shuffled list of walls
+            For Each wall As Tuple(Of Point, Integer) In kurskWalls
+                Dim cellCoords As Point = wall.Item1
+                Dim direction As Integer = wall.Item2
+                Dim cell As Cell = maze(cellCoords.X, cellCoords.Y)
+                ' Calculate the neighboring cell coordinates based on the direction
+                If direction = 0 Then
+                    kursNeighbourCoords = New Point(cellCoords.X, cellCoords.Y - 1)
+                Else
+                    kursNeighbourCoords = New Point(cellCoords.X + 1, cellCoords.Y)
                 End If
-            End If
-        Next
+
+                ' Check if the neighboring cell is within the maze bounds
+                If kursNeighbourCoords.X >= 0 AndAlso kursNeighbourCoords.X < width AndAlso kursNeighbourCoords.Y >= 0 AndAlso kursNeighbourCoords.Y < height Then
+                    ' Check if the cells connected by the wall are not in the same set
+                    If kursSets(cellCoords) <> kursSets(kursNeighbourCoords) Then
+                        ' Remove the wall to connect the cells
+                        cell.breakWall(direction) ' Merge the sets of the two cells
+                        Dim setIdToReplace As Integer = kursSets(kursNeighbourCoords)
+                        Dim setIdToKeep As Integer = kursSets(cellCoords)
+                        For Each key As Point In kursSets.Keys.ToList()
+                            If kursSets(key) = setIdToReplace Then
+                                kursSets(key) = setIdToKeep
+                            End If
+                        Next
+                    End If
+                End If
+            Next
+            kursCurrentWallIndex = 0
+        End If
     End Sub
-    Public Sub aldousBroder()
-        Dim totalCells As Integer = width * height
-        Dim visitedCells As Integer = 0
-        Dim random As New Random()
-        Dim currentX As Integer = random.Next(width)
-        Dim currentY As Integer = random.Next(height)
-        Dim directions() As Point = {New Point(0, -1), New Point(1, 0), New Point(0, 1), New Point(-1, 0)}
+
+    Public Sub aldousBroder(startX As Integer, startY As Integer)
+        ABtotalCells = (width - 2) * (height - 2)
+        currentX = startX
+        currentY = startY
+
+        If ABhasBeenAnimated = False Then
+            ABvisitedCells = 0
+        End If
+
 
         ' Mark the starting cell as visited
         maze(currentX, currentY).visited = True
-        visitedCells += 1
+        ABvisitedCells += 1
 
-        ' Continue until all cells have been visited
-        While visitedCells < totalCells
-            ' Move to a random neighboring cell
-            Dim randomDirectionIndex As Integer = random.Next(directions.Length)
-            Dim newX As Integer = currentX + directions(randomDirectionIndex).X
-            Dim newY As Integer = currentY + directions(randomDirectionIndex).Y
-
-            ' Check if the new position is within the maze bounds
-            If newX >= 0 AndAlso newX < width AndAlso newY >= 0 AndAlso newY < height Then
-                ' If the neighboring cell has not been visited yet, remove the wall between the current cell and the neighboring cell
-                If Not maze(newX, newY).visited Then
-                    maze(currentX, currentY).breakWall(randomDirectionIndex)
-                    maze(newX, newY).visited = True
-                    visitedCells += 1
-                End If
-
-                ' Set the current position to the new position
-                currentX = newX
-                currentY = newY
-            End If
-        End While
-    End Sub
-
-
-
-    Private Sub recursiveDivision(Optional ByVal x As Integer = 1, Optional ByVal y As Integer = 1, Optional ByVal width As Integer = 0, Optional ByVal height As Integer = 0)
-        If width <= 0 Then
-            width = Me.width
-        End If
-        If height <= 0 Then
-            height = Me.height
-        End If
-
-        If width < 3 Or height < 3 Then
-            Return
-        End If
-
-        ' Randomly choose between horizontal and vertical division
-        Dim divideHorizontally As Boolean = (rnd.Next(0, 2) = 0)
-
-        If divideHorizontally Then
-            ' Randomly choose a row for horizontal division
-            Dim horizontalWall As Integer = rnd.Next(y + 1, y + height - 1)
-
-            ' Create a wall horizontally
-            For i As Integer = x To x + width - 1
-                If Not (i = mazeEntry.X AndAlso horizontalWall = mazeEntry.Y) AndAlso Not (i = mazeExit.X AndAlso horizontalWall = mazeExit.Y) Then
-                    maze(i, horizontalWall).walls(0) = True
-                    maze(i, horizontalWall - 1).walls(2) = True ' Update the neighboring cell's wall
-                End If
-            Next
-
-            ' Create a gap in the wall
-            Dim gap As Integer = rnd.Next(x, x + width)
-            maze(gap, horizontalWall).breakWall(0)
-            maze(gap, horizontalWall - 1).breakWall(2) ' Update the neighboring cell's wall
-
-            ' Recursively call the function for the partitions
-            recursiveDivision(x, y, width, horizontalWall - y)
-            recursiveDivision(x, horizontalWall + 1, width, y + height - (horizontalWall + 1))
-
+        ' Check if they want animations
+        If instantAnimationBtn.Checked = False Then ' Want Animations
+            animationLock(True)
+            generationPointTimer.Enabled = True
         Else
-            ' Randomly choose a column for vertical division
-            Dim verticalWall As Integer = rnd.Next(x + 1, x + width - 1)
+            ' Continue until all cells have been visited
+            While ABvisitedCells < ABtotalCells
+                ' Move to a random neighboring cell
+                Dim randomDirectionIndex As Integer = rnd.Next(directions.Length)
+                Dim newX As Integer = currentX + directions(randomDirectionIndex).X
+                Dim newY As Integer = currentY + directions(randomDirectionIndex).Y
 
-            ' Create a wall vertically
-            For i As Integer = y To y + height - 1
-                If Not (i = mazeEntry.Y AndAlso verticalWall = mazeEntry.X) AndAlso Not (i = mazeExit.Y AndAlso verticalWall = mazeExit.X) Then
-                    maze(verticalWall, i).walls(1) = True
-                    maze(verticalWall - 1, i).walls(3) = True ' Update the neighboring cell's wall
+                ' Check if the new position is within the maze bounds, excluding the border cells
+                If newX > 0 AndAlso newX < width - 1 AndAlso newY > 0 AndAlso newY < height - 1 Then
+                    ' If the neighboring cell has not been visited yet, remove the wall between the current cell and the neighboring cell
+                    If Not maze(newX, newY).visited Then
+                        maze(currentX, currentY).breakWall(randomDirectionIndex)
+                        maze(newX, newY).visited = True
+                        ABvisitedCells += 1
+                    End If
+
+                    ' Set the current position to the new position
+                    currentX = newX
+                    currentY = newY
                 End If
-            Next
-
-            ' Create a gap in the wall
-            Dim gap As Integer = rnd.Next(y, y + height)
-            maze(verticalWall, gap).breakWall(1)
-            maze(verticalWall - 1, gap).breakWall(3) ' Update the neighboring cell's wall
-
-            ' Recursively call the function for the partitions
-            recursiveDivision(x, y, verticalWall - x, height)
-            recursiveDivision(verticalWall + 1, y, x + width - (verticalWall + 1), height)
+            End While
+            ABhasBeenAnimated = False
         End If
     End Sub
 
+    Private Sub generationPointTimer_Tick(sender As Object, e As EventArgs) Handles generationPointTimer.Tick
+        ' Cancel animation if needed
+        If cancelAnimation = True Then
+            generationPointTimer.Enabled = False
+            resetType = "G"
+            resetMaze()
+            animationLock(False)
+            cancelAnimation = False
+            Exit Sub
+        End If
+
+        If generationAlgorithm = "DFS Backtracker" Then
+            If generationStack.Count > 0 Then
+                Dim currentCell = generationStack.Peek()
+                Dim cell = maze(currentCell.X, currentCell.Y)
+
+                ' Highlight the top of the stack
+                If currentCell <> mazeEntry And currentCell <> mazeExit Then
+                    mazeImageGraphics.FillRectangle(New SolidBrush(Color.Yellow), currentCell.X * M, currentCell.Y * M, M, M)
+                    maze(currentCell.X, currentCell.Y).drawWalls()
+                End If
+
+
+                ' Mark current cell as visited
+                cell.visited = True
+
+                ' Get a list of unvisited neighbors
+                Dim unvisitedNeighbors = cell.checkUnvistedNeighbours()
+
+                If unvisitedNeighbors.All(Function(p) p.Equals(Point.Empty)) = True Then
+                    generationStack.Pop()
+                Else
+                    ' Make a new list that only contains the non empty values from neighbour
+                    Dim validNeigbours As New List(Of Point)
+                    For Each point In unvisitedNeighbors
+                        If point <> Point.Empty Then
+                            validNeigbours.Add(point)
+                        End If
+                    Next
+
+                    ' Randomly pick a valid neighbour. Find the index of that point within the orginal neighbour list and set that to direction
+                    Dim direction = unvisitedNeighbors.IndexOf(validNeigbours(rnd.Next(0, validNeigbours.Count())))
+
+                    ' Break the wall between the current cell and the chosen neighbor
+                    Dim randomNeighbor = cell.breakWall(direction)
+
+                    ' Add the neighbor to the stack
+                    generationStack.Push(randomNeighbor)
+                End If
+
+                ' Update the maze and the maze display
+                mazeBox.Image = mazeImage
+                mazeBox.Update()
+
+                ' Resrt the top of the stack
+                If currentCell <> mazeEntry And currentCell <> mazeExit Then
+                    mazeImageGraphics.FillRectangle(New SolidBrush(Color.White), currentCell.X * M, currentCell.Y * M, M, M)
+                    maze(currentCell.X, currentCell.Y).drawWalls()
+                End If
+            Else
+                drawMaze()
+                ' Update the maze and the maze display
+                mazeBox.Image = mazeImage
+                mazeBox.Update()
+
+                animationLock(False)
+                ' Stop the timer when the maze is complete
+                generationPointTimer.Enabled = False
+            End If
+        ElseIf generationAlgorithm = "Randomised Prims" Then
+            If visitedCells.Count < totalCells AndAlso primsWalls.Count > 0 Then
+                Dim randomIndex As Integer = rnd.Next(primsWalls.Count)
+                Dim randomWall As Tuple(Of Point, Integer) = primsWalls(randomIndex)
+                Dim cellCoords As Point = randomWall.Item1
+                Dim direction As Integer = randomWall.Item2
+                Dim cell As Cell = maze(cellCoords.X, cellCoords.Y)
+
+                ' Highlight all walls that could be collapsed
+                For Each wall As Tuple(Of Point, Integer) In primsWalls
+                    If wall.Item1 <> mazeEntry And wall.Item1 <> mazeExit Then
+                        mazeImageGraphics.FillRectangle(New SolidBrush(Color.Yellow), wall.Item1.X * M, wall.Item1.Y * M, M, M)
+                        maze(wall.Item1.X, wall.Item1.Y).drawWalls()
+                    End If
+                Next
+
+                mazeBox.Image = mazeImage
+                mazeBox.Update()
+                ' Rest all walls that could be collapsed
+                For Each wall As Tuple(Of Point, Integer) In primsWalls
+                    If wall.Item1 <> mazeEntry And wall.Item1 <> mazeExit Then
+                        mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), wall.Item1.X * M, wall.Item1.Y * M, M, M)
+                        maze(wall.Item1.X, wall.Item1.Y).drawWalls()
+                    End If
+                Next
+
+                Dim neighbour As Point = cell.checkUnvistedNeighbours()(direction)
+                If neighbour <> Point.Empty AndAlso Not maze(neighbour.X, neighbour.Y).visited Then
+                    ' Remove the wall and mark the unvisited cell as visited
+                    Dim conCell As Point = cell.breakWall(direction) ' Merge the sets of the two cells
+                    If neighbour <> mazeEntry And neighbour <> mazeExit Then
+                        mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), neighbour.X * M, neighbour.Y * M, M, M)
+                        maze(neighbour.X, neighbour.Y).drawWalls()
+                    End If
+
+
+                    ' Draw the cell background and fill
+                    If New Point(cell.x, cell.y) <> mazeEntry And New Point(cell.x, cell.y) <> mazeExit Then
+                        mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                        cell.drawWalls()
+                    End If
+                    ' Update the maze and the maze display
+                    maze(neighbour.X, neighbour.Y).visited = True
+                    visitedCells.Add(maze(neighbour.X, neighbour.Y))
+
+                    ' Add the neighboring walls of the cell to the walls list
+                    For i As Integer = 0 To 3
+                        If Not maze(neighbour.X, neighbour.Y).walls(i) Then Continue For
+                        primsWalls.Add(Tuple.Create(New Point(neighbour.X, neighbour.Y), i))
+                    Next
+                End If
+                ' Remove the wall from the list to avoid reprocessing it
+                primsWalls.RemoveAt(randomIndex)
+            Else
+                drawMaze()
+                ' Update the maze and the maze display
+                mazeBox.Image = mazeImage
+                mazeBox.Update()
+
+                animationLock(False)
+                ' Stop the timer when the maze is complete
+                generationPointTimer.Enabled = False
+            End If
+        ElseIf generationAlgorithm = "Kruskal 's" Then
+            If kursCurrentWallIndex < kurskWalls.Count Then
+                Dim wall As Tuple(Of Point, Integer) = kurskWalls(kursCurrentWallIndex)
+                Dim cellCoords As Point = wall.Item1
+                Dim direction As Integer = wall.Item2
+                Dim cell As Cell = maze(cellCoords.X, cellCoords.Y)
+                ' Calculate the neighboring cell coordinates based on the direction
+                If direction = 0 Then
+                    kursNeighbourCoords = New Point(cellCoords.X, cellCoords.Y - 1)
+                Else
+                    kursNeighbourCoords = New Point(cellCoords.X + 1, cellCoords.Y)
+                End If
+
+                ' Check if the neighboring cell is within the maze bounds
+                If kursNeighbourCoords.X >= 0 AndAlso kursNeighbourCoords.X < width AndAlso kursNeighbourCoords.Y >= 0 AndAlso kursNeighbourCoords.Y < height Then
+                    ' Check if the cells connected by the wall are not in the same set
+                    If kursSets(cellCoords) <> kursSets(kursNeighbourCoords) Then
+                        ' Remove the wall to connect the cells
+                        cell.breakWall(direction) ' Merge the sets of the two cells
+                        ' Remove the wall to connect the cells
+                        Dim conCell As Point = cell.breakWall(direction) ' Merge the sets of the two cells
+                        ' Draw the cell background and fill
+                        If New Point(cell.x, cell.y) <> mazeEntry And New Point(cell.x, cell.y) <> mazeExit Then
+                            mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), cell.wallPos(0, 0).X, cell.wallPos(1, 0).Y, M, M)
+                            cell.drawWalls()
+                        End If
+
+                        If maze(conCell.X, conCell.Y).mazeWallBool = False And conCell <> mazeEntry And conCell <> mazeExit Then
+                            mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), maze(conCell.X, conCell.Y).wallPos(0, 0).X, maze(conCell.X, conCell.Y).wallPos(1, 0).Y, M, M)
+                            maze(conCell.X, conCell.Y).drawWalls()
+                        End If
+                        mazeBox.Image = mazeImage
+                        mazeBox.Update()
+
+                        generationPointTimer.Enabled = False
+                        Dim setIdToReplace As Integer = kursSets(kursNeighbourCoords)
+                        Dim setIdToKeep As Integer = kursSets(cellCoords)
+                        For Each key As Point In kursSets.Keys.ToList()
+                            If kursSets(key) = setIdToReplace Then
+                                kursSets(key) = setIdToKeep
+                            End If
+                        Next
+                    End If
+                End If
+
+                ' Increment the wall index
+                kursCurrentWallIndex += 1
+                generationPointTimer.Enabled = True
+            Else
+                ' Stop the timer when the algorithm is finished
+                animationLock(False)
+                generationPointTimer.Enabled = False
+
+            End If
+        ElseIf generationAlgorithm = "Aldous-Border" Then
+            ABhasBeenAnimated = True
+            ' Continue until all cells have been visited
+            If ABvisitedCells < ABtotalCells Then
+                ' Move to a random neighboring cell
+                Dim randomDirectionIndex As Integer = rnd.Next(directions.Length)
+                Dim newX As Integer = currentX + directions(randomDirectionIndex).X
+                Dim newY As Integer = currentY + directions(randomDirectionIndex).Y
+
+                ' Check if the new position is within the maze bounds, excluding the border cells
+                If newX > 0 AndAlso newX < width - 1 AndAlso newY > 0 AndAlso newY < height - 1 Then
+                    ' If the neighboring cell has not been visited yet, remove the wall between the current cell and the neighboring cell
+                    If Not maze(newX, newY).visited Then
+                        Dim conCell As Point
+                        conCell = maze(currentX, currentX).breakWall(randomDirectionIndex)
+
+                        If New Point(currentX, currentX) <> mazeEntry And New Point(currentX, currentX) <> mazeExit Then
+                            mazeImageGraphics.FillRectangle(New SolidBrush(Color.Yellow), maze(currentX, currentX).wallPos(0, 0).X, maze(currentX, currentX).wallPos(1, 0).Y, M, M)
+                            maze(currentX, currentX).drawWalls()
+                        End If
+
+                        If maze(conCell.X, conCell.Y).mazeWallBool = False And conCell <> mazeEntry And conCell <> mazeExit Then
+                            mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), maze(conCell.X, conCell.Y).wallPos(0, 0).X, maze(conCell.X, conCell.Y).wallPos(1, 0).Y, M, M)
+                            maze(conCell.X, conCell.Y).drawWalls()
+                        End If
+
+                        mazeBox.Image = mazeImage
+                        mazeBox.Update()
+
+                        maze(newX, newY).visited = True
+                        ABvisitedCells += 1
+                    End If
+                    If New Point(currentX, currentX) <> mazeEntry And New Point(currentX, currentX) <> mazeExit Then
+                        mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), maze(currentX, currentX).wallPos(0, 0).X, maze(currentX, currentX).wallPos(1, 0).Y, M, M)
+                        maze(currentX, currentX).drawWalls()
+                    End If
+
+
+                    ' Set the current position to the new position
+                    currentX = newX
+                    currentY = newY
+                End If
+            Else
+                ABhasBeenAnimated = False
+                ' Stop the timer when the algorithm is finished
+                animationLock(False)
+                generationPointTimer.Enabled = False
+            End If
+        End If
+    End Sub
 
     ' Solving 
     Private Function distanceCalc(a As Point, b As Point) As Double
@@ -1137,6 +1400,7 @@ Public Class Form1
         If cancelAnimation = True Then
             heatMapAnimationTimer.Enabled = False
             solvedPathAnimationTimer.Enabled = False
+            resetType = "S"
             resetMaze()
             animationLock(False)
             cancelAnimation = False
@@ -1240,6 +1504,7 @@ Public Class Form1
         If cancelAnimation = True Then
             heatMapAnimationTimer.Enabled = False
             solvedPathAnimationTimer.Enabled = False
+            resetType = "S"
             resetMaze()
             animationLock(False)
             cancelAnimation = False
@@ -1376,21 +1641,41 @@ Public Class Form1
 
         ' Checks what generation algorithm user has chosen
         If generationAlgorithm = "DFS Backtracker" Then
-            If imageInputted = True Then
-                'For Each component In imgComponents
-                '    randomisedDFS(component)
-                'Next
+            If imageInputted Then
+                For Each component In imgComponents
+                    Dim point As Point = component(rnd.Next(0, component.Count))
+                    randomisedDFS(point.X, point.Y)
+                Next
             Else
                 randomisedDFS(rnd.Next(1, width), rnd.Next(1, height))
             End If
-        ElseIf generationAlgorithm = "Recursive Division" Then
-            'recursiveDivision()
         ElseIf generationAlgorithm = "Randomised Prims" Then
-            randomizedPrims(5, 5)
+            If imageInputted Then
+                For Each component In imgComponents
+                    Dim point As Point = component(rnd.Next(0, component.Count))
+                    randomizedPrims(point.X, point.Y)
+                Next
+            Else
+                randomizedPrims(rnd.Next(1, width), rnd.Next(1, height))
+            End If
         ElseIf generationAlgorithm = "Kruskal 's" Then
-            kruskals()
+            If imageInputted Then
+                MsgBox("You can't use this algorithm with mazes." & vbCrLf & "Try another one!", MsgBoxStyle.OkOnly, "Invalid Input")
+                Exit Sub
+            Else
+                kruskals()
+            End If
         ElseIf generationAlgorithm = "Aldous-Border" Then
-            aldousBroder()
+            If imageInputted Then
+                MsgBox("You can't use this algorithm with mazes." & vbCrLf & "Try another one!", MsgBoxStyle.OkOnly, "Invalid Input")
+                Exit sub
+            Else
+                width += 1
+                height += 1
+                aldousBroder(rnd.Next(1, width), rnd.Next(1, height))
+                width -= 1
+                height -= 1
+            End If
         End If
 
         generationTimer.Stop()
@@ -1583,30 +1868,30 @@ Public Class Form1
                 If Not visited(x, y) And image.GetPixel(x, y) = Color.FromArgb(255, 255, 255) Then
                     ' Create a list to store the pixels in the component
                     Dim component As New List(Of Point)()
-                    ' Create a stack to store the pixels that need to be checked
-                    Dim stack As New Stack(Of Point)()
-                    stack.Push(New Point(x, y))
+                    ' Create a generationStack to store the pixels that need to be checked
+                    Dim generationStack As New Stack(Of Point)()
+                    generationStack.Push(New Point(x, y))
                     ' Until all pixels have been checked
-                    While stack.Count > 0
+                    While generationStack.Count > 0
                         ' Store the current pixel
-                        Dim pixel As Point = stack.Pop()
+                        Dim pixel As Point = generationStack.Pop()
                         ' If this pixel has not been visted and is white
                         If Not visited(pixel.X, pixel.Y) And image.GetPixel(pixel.X, pixel.Y) = Color.FromArgb(255, 255, 255) Then
                             visited(pixel.X, pixel.Y) = True
                             ' Add to the componet
                             component.Add(pixel)
-                            ' Add neighbours to the stack
+                            ' Add neighbours to the generationStack
                             If pixel.X > 0 Then
-                                stack.Push(New Point(pixel.X - 1, pixel.Y))
+                                generationStack.Push(New Point(pixel.X - 1, pixel.Y))
                             End If
                             If pixel.X < image.Width - 1 Then
-                                stack.Push(New Point(pixel.X + 1, pixel.Y))
+                                generationStack.Push(New Point(pixel.X + 1, pixel.Y))
                             End If
                             If pixel.Y > 0 Then
-                                stack.Push(New Point(pixel.X, pixel.Y - 1))
+                                generationStack.Push(New Point(pixel.X, pixel.Y - 1))
                             End If
                             If pixel.Y < image.Height - 1 Then
-                                stack.Push(New Point(pixel.X, pixel.Y + 1))
+                                generationStack.Push(New Point(pixel.X, pixel.Y + 1))
                             End If
                         End If
                     End While

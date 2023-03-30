@@ -66,6 +66,7 @@ Partial Class Form1
         solvedPathAnimationTimer = New Timer(components)
         heatMapAnimationTimer = New Timer(components)
         cancelAnimationBtn = New Button()
+        generationPointTimer = New Timer(components)
         CType(mazeBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(statsPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(helperBtn, ComponentModel.ISupportInitialize).BeginInit()
@@ -339,6 +340,9 @@ Partial Class Form1
         cancelAnimationBtn.Name = "cancelAnimationBtn"
         cancelAnimationBtn.UseVisualStyleBackColor = False
         ' 
+        ' generationPointTimer
+        ' 
+        ' 
         ' Form1
         ' 
         resources.ApplyResources(Me, "$this")
@@ -433,4 +437,5 @@ Partial Class Form1
     Friend WithEvents solvedPathAnimationTimer As Timer
     Friend WithEvents heatMapAnimationTimer As Timer
     Friend WithEvents cancelAnimationBtn As Button
+    Friend WithEvents generationPointTimer As Timer
 End Class
