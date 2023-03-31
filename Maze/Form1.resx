@@ -69,13 +69,13 @@
     <value>574, 0</value>
   </data>
   <data name="Title.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 128</value>
+    <value>705, 128</value>
   </data>
   <data name="Title.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="Title.Text" xml:space="preserve">
-    <value>Maze Generation</value>
+    <value>Maze Visualiser</value>
   </data>
   <data name="&gt;&gt;Title.Name" xml:space="preserve">
     <value>Title</value>
@@ -1043,7 +1043,7 @@
     <value>Segoe UI, 15.75pt</value>
   </data>
   <data name="genTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 935</value>
+    <value>23, 914</value>
   </data>
   <data name="genTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>171, 30</value>
@@ -1076,7 +1076,7 @@
     <value>NoControl</value>
   </data>
   <data name="solveTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 965</value>
+    <value>23, 944</value>
   </data>
   <data name="solveTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>118, 30</value>
@@ -1109,7 +1109,7 @@
     <value>NoControl</value>
   </data>
   <data name="drawTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 995</value>
+    <value>23, 974</value>
   </data>
   <data name="drawTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>117, 30</value>
@@ -1142,7 +1142,7 @@
     <value>NoControl</value>
   </data>
   <data name="deadEndCountLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>321, 935</value>
+    <value>317, 914</value>
   </data>
   <data name="deadEndCountLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>170, 30</value>
@@ -1175,7 +1175,7 @@
     <value>NoControl</value>
   </data>
   <data name="totalTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>321, 995</value>
+    <value>317, 974</value>
   </data>
   <data name="totalTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>113, 30</value>
@@ -1238,7 +1238,7 @@
     <value>NoControl</value>
   </data>
   <data name="deadEndTimeLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>321, 965</value>
+    <value>317, 944</value>
   </data>
   <data name="deadEndTimeLbl.Size" type="System.Drawing.Size, System.Drawing">
     <value>159, 30</value>

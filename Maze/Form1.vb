@@ -26,7 +26,7 @@ Public Class Form1
     Private pinkColor As Color = Color.FromArgb(255, 0, 220) ' Pink color
     Private purpleColor As Color = Color.FromArgb(0, 0, 124) ' Purple color
     ' Animation Variables
-    Private Const T As Integer = 10
+    Private Const T As Integer = 50
     Private passedPath As New List(Of Point)
     Private solvedVisited As New Queue(Of Point)
     Private maxWeight As Integer
@@ -34,8 +34,7 @@ Public Class Form1
     Public resetType As String
     ' Maze Generation/Solving Inputs
     Private generationAlgorithm As String
-
-    ' Used in randomisedDFS
+    ' Used in DFSbacktracker
     Dim generationStack As New Stack(Of Point)
     ' Used in randomizedPrims
     Private visitedCells As New List(Of Cell)
@@ -46,14 +45,13 @@ Public Class Form1
     Private kursNeighbourCoords As Point
     Private kursCurrentWallIndex As Integer = 0
     ' Used in aldousBroder
-    Private ABtotalCells As Integer
-    Private ABvisitedCells As Integer = 0
+    Private abTotalCells As Integer
+    Private abVisitedCells As Integer = 0
     Private random As New Random()
     Private currentX As Integer
     Private currentY As Integer
     Private directions() As Point = {New Point(0, -1), New Point(1, 0), New Point(0, 1), New Point(-1, 0)}
-    Private ABhasBeenAnimated As Boolean = False
-
+    Private abHasBeenAnimated As Boolean = False
     ' Used in Astar()
     Public gWeights As New Dictionary(Of Point, Double)
     ' Used in BFS()
@@ -192,27 +190,16 @@ Public Class Form1
         Public x As Integer
         Public y As Integer
         ' Wall Properties
-        Public walls As New List(Of Boolean)
+        Public walls As New List(Of Boolean)({True, True, True, True})
         Public wallPos(3, 1) As Point
         ' Cell Type
         Public mazeWallBool As Boolean = False
         Public mazeEntryBool As Boolean = False
         Public mazeExitBool As Boolean = False
         Public mazeSolved As Boolean = False
-        Private deadEnd As Boolean = False
         ' Generate/Solve Properties
-        Public weight As Integer = 0
-        Public heuristicWeight As Integer = 0
         Public visited As Boolean = False
         Public connectedCell As New List(Of Point)
-
-
-        ' Sets all cells with all walls 
-        Public Sub New()
-            For i As Integer = 0 To 3
-                walls.Add(True)
-            Next
-        End Sub
 
         ' Method to draw walls
         Public Sub drawWalls()
@@ -324,7 +311,7 @@ Public Class Form1
             Return neighbours
         End Function
         ' Returns a boolean if cell has a connecter neighbour
-        Function checkConnectedCell(d As Integer)
+        Public Function checkConnectedCell(d As Integer)
             Select Case d
                 Case 0 ' Check above
                     If connectedCell.Contains(New Point(x, y - 1)) Then
@@ -374,8 +361,9 @@ Public Class Form1
         mazeEntryCombo.SelectedIndex = 0 ' Default displays "Random"
 
         cancelAnimationBtn.Enabled = False
-        solvedPathAnimationTimer.Interval = 100
-        heatMapAnimationTimer.Interval = 50
+        solvedPathAnimationTimer.Interval = T
+        heatMapAnimationTimer.Interval = T
+        generationPointTimer.Interval = T
         heatMapAnimationTimer.Enabled = False
         solvedPathAnimationTimer.Enabled = False
 
@@ -404,12 +392,6 @@ Public Class Form1
                     mazeWallCount += 1
                 Else
                     totalCells += 1
-                End If
-
-                If generationAlgorithm = "Recursive Division" Then
-                    For w As Integer = 0 To 3
-                        maze(i, j).walls(w) = False
-                    Next
                 End If
 
                 ' Giving each cell wall a start(0), end(1) and position on the screen
@@ -546,25 +528,42 @@ Public Class Form1
         Next
 
         If resetType = "G" Then
-            ' Checks what generation algorithm user has chosen
             If generationAlgorithm = "DFS Backtracker" Then
-                If imageInputted = True Then
-                    'For Each component In imgComponents
-                    '    randomisedDFS(component)
-                    'Next
+                If imageInputted Then
+                    For Each component In imgComponents
+                        Dim point As Point = component(rnd.Next(0, component.Count))
+                        DFSbacktracker(point.X, point.Y)
+                    Next
                 Else
-                    randomisedDFS(rnd.Next(1, width), rnd.Next(1, height))
+                    DFSbacktracker(rnd.Next(1, width), rnd.Next(1, height))
                 End If
             ElseIf generationAlgorithm = "Randomised Prims" Then
-                randomizedPrims(5, 5)
+                If imageInputted Then
+                    For Each component In imgComponents
+                        Dim point As Point = component(rnd.Next(0, component.Count))
+                        randomisedPrims(point.X, point.Y)
+                    Next
+                Else
+                    randomisedPrims(rnd.Next(1, width), rnd.Next(1, height))
+                End If
             ElseIf generationAlgorithm = "Kruskal 's" Then
-                kruskals()
+                If imageInputted Then
+                    MsgBox("You can't use this algorithm with mazes." & vbCrLf & "Try another one!", MsgBoxStyle.OkOnly, "Invalid Input")
+                    Exit Sub
+                Else
+                    kruskals()
+                End If
             ElseIf generationAlgorithm = "Aldous-Border" Then
-                width += 1
-                height += 1
-                aldousBroder(1, 1)
-                width -= 1
-                height -= 1
+                If imageInputted Then
+                    MsgBox("You can't use this algorithm with mazes." & vbCrLf & "Try another one!", MsgBoxStyle.OkOnly, "Invalid Input")
+                    Exit Sub
+                Else
+                    width += 1
+                    height += 1
+                    aldousBroder(rnd.Next(1, width), rnd.Next(1, height))
+                    width -= 1
+                    height -= 1
+                End If
             End If
         ElseIf resetType = "S" Then
             ' Checks what solving algorithm user has chosen
@@ -670,14 +669,14 @@ Public Class Form1
         End If
     End Sub
     ' Interpolate between two colors based on a ratio (0.0 to 1.0)
-    Function interpolateColor(color1 As Color, color2 As Color, ratio As Double) As Color
+    Function interpolateColour(color1 As Color, color2 As Color, ratio As Double) As Color
         Dim r As Double = Int(color1.R) + (Int(color2.R) - Int(color1.R)) * ratio
         Dim g As Double = Int(color1.G) + (Int(color2.G) - Int(color1.G)) * ratio
         Dim b As Double = Int(color1.B) + (Int(color2.B) - Int(color1.B)) * ratio
         Return Color.FromArgb((r), (g), (b))
     End Function
     ' Generating
-    Private Sub randomisedDFS(ByVal x As Integer, ByVal y As Integer)
+    Private Sub DFSbacktracker(ByVal x As Integer, ByVal y As Integer)
         generationStack.Push(New Point(x, y))
 
         ' Check if they want animations
@@ -723,7 +722,8 @@ Public Class Form1
         End If
     End Sub
 
-    Public Sub randomizedPrims(ByVal x As Integer, ByVal y As Integer)
+    Public Sub randomisedPrims(ByVal x As Integer, ByVal y As Integer)
+        ' Clear visitedCells and primsWalls to prepare for the new maze generation
         visitedCells.Clear()
         primsWalls.Clear()
 
@@ -743,7 +743,7 @@ Public Class Form1
             animationLock(True)
             generationPointTimer.Enabled = True
         Else
-            ' While there are unvisited cells
+            ' Continue until all cells are visited and there are no more walls to process
             While visitedCells.Count < totalCells AndAlso primsWalls.Count > 0
                 ' Choose a wall connected to the visited cells uniformly at random
                 Dim randomIndex As Integer = rnd.Next(primsWalls.Count)
@@ -772,6 +772,7 @@ Public Class Form1
     End Sub
 
     Public Sub kruskals()
+        ' Clear the kurskWalls list to prepare for the new maze generation
         kurskWalls.Clear()
 
         ' Create a list of all possible walls in the maze
@@ -787,7 +788,6 @@ Public Class Form1
         Next
 
         ' Shuffle the list of walls randomly
-        Dim random As New Random()
         For i As Integer = kurskWalls.Count - 1 To 1 Step -1
             Dim j As Integer = random.Next(i + 1)
             Dim temp As Tuple(Of Point, Integer) = kurskWalls(i)
@@ -796,7 +796,6 @@ Public Class Form1
         Next
 
         ' Initialize the sets for each cell
-
         Dim setId As Integer = 0
         For x As Integer = 0 To width - 1
             For y As Integer = 0 To height - 1
@@ -804,7 +803,6 @@ Public Class Form1
                 setId += 1
             Next
         Next
-
 
         ' Check if they want animations
         If instantAnimationBtn.Checked = False Then ' Want Animations
@@ -844,18 +842,18 @@ Public Class Form1
     End Sub
 
     Public Sub aldousBroder(startX As Integer, startY As Integer)
-        ABtotalCells = (width - 2) * (height - 2)
+        abTotalCells = (width - 2) * (height - 2)
         currentX = startX
         currentY = startY
 
-        If ABhasBeenAnimated = False Then
-            ABvisitedCells = 0
+        If abHasBeenAnimated = False Then
+            abVisitedCells = 0
         End If
 
 
         ' Mark the starting cell as visited
         maze(currentX, currentY).visited = True
-        ABvisitedCells += 1
+        abVisitedCells += 1
 
         ' Check if they want animations
         If instantAnimationBtn.Checked = False Then ' Want Animations
@@ -863,7 +861,7 @@ Public Class Form1
             generationPointTimer.Enabled = True
         Else
             ' Continue until all cells have been visited
-            While ABvisitedCells < ABtotalCells
+            While abVisitedCells < abTotalCells
                 ' Move to a random neighboring cell
                 Dim randomDirectionIndex As Integer = rnd.Next(directions.Length)
                 Dim newX As Integer = currentX + directions(randomDirectionIndex).X
@@ -875,7 +873,7 @@ Public Class Form1
                     If Not maze(newX, newY).visited Then
                         maze(currentX, currentY).breakWall(randomDirectionIndex)
                         maze(newX, newY).visited = True
-                        ABvisitedCells += 1
+                        abVisitedCells += 1
                     End If
 
                     ' Set the current position to the new position
@@ -883,7 +881,7 @@ Public Class Form1
                     currentY = newY
                 End If
             End While
-            ABhasBeenAnimated = False
+            abHasBeenAnimated = False
         End If
     End Sub
 
@@ -1074,9 +1072,9 @@ Public Class Form1
 
             End If
         ElseIf generationAlgorithm = "Aldous-Border" Then
-            ABhasBeenAnimated = True
+            abHasBeenAnimated = True
             ' Continue until all cells have been visited
-            If ABvisitedCells < ABtotalCells Then
+            If abVisitedCells < abTotalCells Then
                 ' Move to a random neighboring cell
                 Dim randomDirectionIndex As Integer = rnd.Next(directions.Length)
                 Dim newX As Integer = currentX + directions(randomDirectionIndex).X
@@ -1103,7 +1101,7 @@ Public Class Form1
                         mazeBox.Update()
 
                         maze(newX, newY).visited = True
-                        ABvisitedCells += 1
+                        abVisitedCells += 1
                     End If
                     If New Point(currentX, currentX) <> mazeEntry And New Point(currentX, currentX) <> mazeExit Then
                         mazeImageGraphics.FillRectangle(New SolidBrush(bgColour), maze(currentX, currentX).wallPos(0, 0).X, maze(currentX, currentX).wallPos(1, 0).Y, M, M)
@@ -1116,7 +1114,7 @@ Public Class Form1
                     currentY = newY
                 End If
             Else
-                ABhasBeenAnimated = False
+                abHasBeenAnimated = False
                 ' Stop the timer when the algorithm is finished
                 animationLock(False)
                 generationPointTimer.Enabled = False
@@ -1416,7 +1414,7 @@ Public Class Form1
                 If node <> mazeEntry And node <> mazeExit Then
                     ' Calculate the normalized weight and draw heat map
                     Dim normalisedWeight As Double = gWeights(node) / maxWeight
-                    mazeImageGraphics.FillRectangle(New SolidBrush(interpolateColor(pinkColor, purpleColor, normalisedWeight)), node.X * M, node.Y * M, M, M)
+                    mazeImageGraphics.FillRectangle(New SolidBrush(interpolateColour(pinkColor, purpleColor, normalisedWeight)), node.X * M, node.Y * M, M, M)
 
                     ' Draws walls and update the maze box
                     maze(node.X, node.Y).drawWalls()
@@ -1644,19 +1642,19 @@ Public Class Form1
             If imageInputted Then
                 For Each component In imgComponents
                     Dim point As Point = component(rnd.Next(0, component.Count))
-                    randomisedDFS(point.X, point.Y)
+                    DFSbacktracker(point.X, point.Y)
                 Next
             Else
-                randomisedDFS(rnd.Next(1, width), rnd.Next(1, height))
+                DFSbacktracker(rnd.Next(1, width), rnd.Next(1, height))
             End If
         ElseIf generationAlgorithm = "Randomised Prims" Then
             If imageInputted Then
                 For Each component In imgComponents
                     Dim point As Point = component(rnd.Next(0, component.Count))
-                    randomizedPrims(point.X, point.Y)
+                    randomisedPrims(point.X, point.Y)
                 Next
             Else
-                randomizedPrims(rnd.Next(1, width), rnd.Next(1, height))
+                randomisedPrims(rnd.Next(1, width), rnd.Next(1, height))
             End If
         ElseIf generationAlgorithm = "Kruskal 's" Then
             If imageInputted Then
