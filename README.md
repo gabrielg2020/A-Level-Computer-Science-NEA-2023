@@ -1,4 +1,5 @@
 # Maze Visualiser
+# Score Received: 100%🎉
 A Visual Basic desktop application to visualise different generation and solving algorithms.
 
 This was made for the **Non-exam Assessment (*NEA*)** in the AQA A-Level Computer Science course. [See Specification](https://filestore.aqa.org.uk/resources/computing/specifications/AQA-7516-7517-SP-2015.PDF)
@@ -41,6 +42,3 @@ Unlisted YouTube playlist include tests outlined in [NEA Document](./Computer%20
 **NOTE: Some videos are quiet... my mum was sleeping...**
 
 [**Testing Playlist**](https://www.youtube.com/playlist?list=PL3YAEsPABRrxRmNFIRFjes7XDmWsjn9kN)
-
-## Results
-75/75
