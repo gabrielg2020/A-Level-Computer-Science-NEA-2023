@@ -9,7 +9,10 @@ Made and Submitted early 2023.
 - Image input, to generate mazes within images.
 - Custom made generation and solving animations with ability to cancel animation.
 - Support for multiple generation algorithms like:
-  - fill in...
+  - Depth First Search Backtracker
+  - Randomised Prims
+  - Kruskal's
+  - Aldous-Border
 - Support for multiple solving algorithms like:
   - Dijksta's
   - Breath First Search
